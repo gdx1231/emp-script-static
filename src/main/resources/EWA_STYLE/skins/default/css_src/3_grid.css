@@ -1,0 +1,62 @@
+
+/* 网格主样式 */
+.EWA_GRID_TABLE {
+	border: 1px;
+	background-color: #BBB;
+}
+
+/* 网格头部 */
+.EWA_GRID_H {
+	font-weight: bold;
+	text-align: center;
+	background-color: #eee;
+	color: #111;
+	border-left: 1px solid #FFF;
+	border-top: 1px solid #FFF;
+}
+
+/* 网格左 */
+.EWA_GRID_L {
+	font-weight: bold;
+	background-color: #eee;
+	color: #111;
+	border-left: 1px solid #FFF;
+	border-top: 1px solid #FFF;
+}
+
+/* 网格内容 */
+.EWA_GRID {
+	text-align: right;
+	background-color: white;
+	color: #000;
+}
+
+.ewa_grid_ul {
+	list-style-type: none;
+	list-style-image: none;
+	padding-bottom: 0px;
+	margin: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+}
+.ewa_grid_ul::after {
+	content:"";
+	display:block;
+	clear:both;
+}
+.ewa_grid_li {
+	list-style-type: none;
+	list-style-image: none;
+	padding-bottom: 0px;
+	margin: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	float: left;
+	position: relative;
+}
+
+.ewa_grid_li_end {
+	float: none;
+}

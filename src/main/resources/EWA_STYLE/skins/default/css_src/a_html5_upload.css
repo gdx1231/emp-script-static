@@ -1,0 +1,102 @@
+/*html5 upload */
+.ewa_htm5_upload_box {
+	height: 115px;
+	width: 100%;
+	overflow: auto;
+}
+
+.ewa_app_upload_form {
+	margin: 5px;
+	width: 70px;
+	height: 100px;
+	float: left;
+	border: 1px solid #fff;
+	cursor: pointer;
+	opacity: 0.7;
+	background-color: #f1f1f1;
+	text-align: center;
+	position: relative;
+}
+/* 上传文件的 + 号 */
+.ewa_app_upload_form:before {
+	font-family: FontAwesome;
+    content: "\f067";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 30px;
+    width: 60px;
+    line-height: 60px;
+    height: 60px;
+    background: green;
+    border-radius: 100%;
+    color: white;
+	
+}
+.ewa_app_upload_form:hover {
+	opacity: 1;
+}
+
+.ewa_app_upload_form input {
+	width: 70px;
+	height: 70px;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.ewa_app_upload_form1 {
+	margin: 6px;
+	padding: 0px;
+	width: 70px;
+	height: 100px;
+	float: left;
+	background-color: #f1f1f1;
+}
+
+.ewa_app_upload_form1 .img {
+	height: 70px;
+}
+
+.ewa_app_upload_form1 .name {
+	height: 18px;
+	position: relative;
+}
+
+.ewa_app_upload_form1 .name div {
+	height: 18px;
+	text-align: center;
+	color: #333;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 70px;
+	white-space: nowrap;
+}
+
+.ewa_app_upload_form1 img {
+	max-width: 60px;
+	max-height: 60px;
+}
+
+.ewa_app_upload_form1 .name div.ewa-app-upload-process {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 18px;
+	line-height: 18px;
+	color: #fff;
+	width: 100%;
+	background-color: rgba(62, 230, 130, 0.5);
+	display: none;
+}
+
+.ewa_app_upload_form1 .name div.ewa-app-upload-process1 {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 18px;
+	line-height: 18px;
+	background: blue;
+	color: #fff;
+	width: 0;
+	display: none;
+}

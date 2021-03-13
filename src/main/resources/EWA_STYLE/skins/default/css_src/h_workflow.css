@@ -1,0 +1,57 @@
+/* 工作流节点BOX */
+.ewa_wf_box {
+	position: absolute;
+	width: 80px;
+	height: 50px;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	z-index: 100;
+	font-size: 12px;
+	background-color: #ccc;
+	border-radius: 5px;
+	box-shadow: 3px 3px 3px 2px #BFBFBF;
+}
+.ewa_wf_box[title]:after {
+    content: '\f05a';
+    display: block;
+    position: absolute;
+    top: -5px;
+    right: -4px;
+    font-family: FontAwesome;
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+}
+/* 工作流节点 */
+.ewa_wf_unit {
+	cursor: pointer;
+	width: 38px;
+	height: 38px;
+}
+
+/* 工作流节点图标 */
+.ewa_wf_unit_img {
+	cursor: pointer;
+	background-image: url('../../images/workflow/wf_no_x.png');
+	width: 38px;
+	height: 38px;
+	background-repeat: no-repeat;
+}
+
+/* 工作流节点图标 */
+.ewa_wf_unit_img1 {
+	cursor: pointer;
+	background-image: url('../../images/workflow/null.gif?a=1');
+	width: 38px;
+	height: 38px;
+}
+
+/* 工作流节点图标 */
+.ewa_wf_unit_img2 {
+	cursor: pointer;
+	background-image: url('../../images/workflow/nullaend.gif');
+	width: 38px;
+	height: 38px;
+}

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>monaco-editor-0.7.0</title>
+<link rel="stylesheet" href="../../../third-party/monaco-editor-0.7.0/min/vs/editor/editor.main.css">
+<style type="text/css" media="screen">
+#code {
+	margin: 0;
+	position: absolute;
+	top: 0px;
+	bottom: 20px;
+	left: 0;
+	right: 0;
+}
+
+.ace_replace_form {
+	display: block !important;
+}
+
+#status {
+	position: absolute;
+	bottom: 0;
+	height: 20px;
+	left: 0;
+	width: 100%;
+	line-height: 20px;
+	font-size: 12px;
+	font-family: "Microsoft YaHei", "微软雅黑", tahoma, Verdana, Arial,
+		sans-serif, arial, STHeiti, 宋体;
+	line-height: 20px;
+	overflow: hidden;
+}
+
+.light #status a {
+	color: #333;
+}
+
+.light #status a:hover {
+	color: #08c;
+}
+
+#status a {
+	color: #f1f1f1;
+	text-decoration: none;
+	margin-left: 10px;
+}
+
+#status a:hover {
+	color: red;
+}
+
+body {
+	overflow: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background-color: #000000;
+} /* 滚动条的滑轨背景颜色 */
+::-webkit-scrollbar-thumb {
+	background-color: rgba(77, 77, 77, 0.4);
+} /* 滑块颜色 */
+::-webkit-scrollbar-button {
+	background-color: red;
+} /* 滑轨两头的监听按钮颜色 */
+::-webkit-scrollbar-corner {
+	background-color: rgba(77, 77, 77, 0.4);
+} /* 横向滚动条和纵向滚动条相交处尖角的颜色 */
+</style>
+</head>
+<body>
+	<pre id="code"></pre>
+	<div id='status'>
+		<a href="javascript:beautify_code()" title="(Cmd+Shift+F)">格式化代码</a> <a id='check_sql' href="javascript: checkSQL()">检查SQL语法</a>
+		<span style='float: right'> <a>Theme:</a> <select id="theme" size="1" onchange="change_code_theme(this)">
+				<option value="vs">vs</option>
+				<option value="vs-dark">vs-dark</option>
+				<option value="hc-black">hc-black</option>
+		</select></span>
+	</div>
+
+	<script type="text/javascript" src="../../../EWA_STYLE/js/js_jquery/EWA_ALL.min.2.0.js"></script>
+	<script type="text/javascript" src="../../../EWA_DEFINE/js/EWAC.js"></script>
+	<script src="../../../thrid-party/js-beautify/js/lib/beautify.js"></script>
+	<script src="../../../thrid-party/js-beautify/js/lib/beautify-html.js"></script>
+	<script src="../../../thrid-party/js-beautify/js/lib/beautify-css.js"></script>
+
+	<script>
+		var require = {
+			paths : {
+				'vs' : '../../../third-party/monaco-editor-0.7.0/min/vs'
+			}
+		};
+	</script>
+
+	<script src="../../../third-party/monaco-editor-0.7.0/min/vs/loader.js"></script>
+	<script src="../../../third-party/monaco-editor-0.7.0/min/vs/editor/editor.main.nls.js"></script>
+	<script src="../../../third-party/monaco-editor-0.7.0/min/vs/editor/editor.main.js"></script>
+
+
+	<script type="text/javascript">
+		var editor, beautify, mode;
+		var parent_textarea;
+		function update() {
+			if (parent_textarea) {
+				parent_textarea.value = getText();
+			}
+		}
+		
+		function aa() {
+			var iframes = window.parent.document.getElementsByTagName('iframe');
+			for (var i = 0; i < iframes.length; i++) {
+				var o = iframes[i];
+				if (o.contentWindow == window) {
+					var textareas = o.parentNode.parentNode.getElementsByTagName('textarea');
+					if (textareas.length > 0) {
+						//存放markdown的数据
+						parent_textarea = textareas[0];
+					} else {
+						// alert('parent textarea not found');
+					}
+				}
+			}
+			
+			if (!window.parent.__TYPE__) {
+				return;
+			}
+			editor = null;
+			var markType = window.parent.__TYPE__;
+
+			var val = window.parent.__VAL__;
+			if (val == null) {
+				val = "";
+			}
+			//console.log(markType,val);
+			document.getElementById('check_sql').style.display = 'none';
+			if (markType == 'sql') {
+				mode = monaco.editor.createModel(val, "sql");
+				document.getElementById('check_sql').style.display = '';
+			} else if (markType == 'jscript' || markType == 'js') {
+				mode = monaco.editor.createModel(val, "javascript");
+			} else if (markType == 'xml') {
+				mode = monaco.editor.createModel(val, "xml");
+			} else if (markType == 'css') {
+				mode = monaco.editor.createModel(val, "css");
+			} else if (markType == 'json') {
+				mode = monaco.editor.createModel(val, "json");
+			} else {
+				mode = monaco.editor.createModel(val, "html");
+			}
+			if (document.getElementById('code')) {
+				document.body.removeChild(document.getElementById('code'));
+				var pre = document.createElement('pre');
+				pre.id = 'code';
+				document.body.appendChild(pre);
+			}
+
+			var theme_code = "vs-dark";
+			if (window.localStorage && window.localStorage["EWA_CODE_THENE"]) {
+				var v = window.localStorage["EWA_CODE_THENE"];
+				var obj = document.getElementById('theme');
+				for (var i = 0; i < theme.options.length; i++) {
+					var v1 = obj.options[i].value;
+					if (v1 == v) {
+						theme_code = v1;
+						obj.value = v1;
+						break;
+					}
+				}
+			}
+
+			require([ 'vs/editor/editor.main' ], function() {
+				editor = monaco.editor.create(document.getElementById('code'), {
+					model : mode,
+					'theme' : theme_code,
+					readOnly : markType == 'xml',
+					folding : true,
+					lineHeight : 25,
+					fontSize : 14,
+					wordWrap : true
+				});
+				//格式化
+				editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KEY_F, function(a) {
+					beautify_code();
+				});
+
+				//保存
+				editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function(a) {
+					try {
+						parent.parent.save();
+						top.saveXml();
+					} catch (e) {
+						console.log(e);
+					}
+				});
+				if (markType == 'json') {
+					beautify_code();
+				}
+
+				window.onresize = function() {
+					if (editor) {
+						editor.layout();
+					}
+				};
+			});
+			//自动更新关联的textarea
+			document.body.onblur=update;
+		}
+		function beautify_code() {
+			var p = editor.getPosition();
+			var s;
+			var modeid = mode.getModeId();
+			if (modeid == 'javascript' || modeid == 'json') {
+				s = js_beautify(getText());
+			} else if (modeid == 'html' || modeid == 'xml') {
+				s = html_beautify(getText());
+			} else if (modeid == 'css') {
+				s = css_beautify(getText());
+			} else if (modeid == 'sql') {
+				beautify_code_sql();
+				return;
+			} else {
+				$Tip('不支持类型格式化');
+				return;
+			}
+			editor.setValue(s, 1);
+			editor.setPosition(p);
+		}
+		function beautify_code_sql() {
+
+		}
+		function checkSQL() {
+
+		}
+		function style_html(s1) {
+			var s = html_beautify(s1);
+			return s;
+		}
+		function getText() {
+			return editor.getValue();
+		}
+		function setText(t) {
+			editor.setValue(editor.getValue() + t, 1);
+		}
+		function change_code_theme(obj) {
+			editor.updateOptions({
+				'theme' : obj.value
+			});
+			window.localStorage["EWA_CODE_THENE"] = obj.value;
+		}
+		aa();
+	</script>
+</body>
+</html>

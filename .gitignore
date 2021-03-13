@@ -1,0 +1,17 @@
+/bin/
+*.bak
+.DS_Store
+/build/
+*.class
+/target/
+*.log
+/src/test/*.*
+/.idea/
+/.settings/
+/.project
+/zoom-integrate.iml
+/.factorypath
+/.classpath
+/.vscode
+ewa_conf.xml
+ewa_conf_console.xml

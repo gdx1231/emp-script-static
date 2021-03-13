@@ -1,0 +1,51 @@
+.ewa-h5-take-photo {
+	width: 100%;
+	height: 360px;
+	background: #111;
+}
+
+.ewa-h5-take-photo-wrap {
+	width: 480px;
+	height: 100%;
+	position: relative;
+	margin: auto;
+}
+
+.ewa-h5-take-photo-img, .ewa-h5-take-photo-vod, .ewa-h5-take-photo-can {
+	width: 100%;
+	height: 100%;
+	display: none;
+	position: absolute;
+	z-index: 1;
+	border: 1px solid transparent;
+}
+
+.ewa-h5-take-photo-but {
+	position: absolute;
+	z-index: 3;
+	bottom: 5px;
+	height: 30px;
+	text-align: center;
+	width: 100%;
+}
+
+.ewa-h5-take-photo-process {
+	position: absolute;
+	z-index: 2;
+	bottom: 5px;
+	height: 30px;
+	text-align: center;
+	width: 100%;
+	line-height: 30px;
+	color: #fff;
+	font-size: 16px;
+}
+
+.ewa-h5-take-photo-process1 {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 30px;
+	background-color: rgba(62, 230, 130, 0.5);
+	display: none;
+}

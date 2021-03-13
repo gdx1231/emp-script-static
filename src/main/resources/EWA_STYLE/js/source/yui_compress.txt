@@ -1,0 +1,5 @@
+cat EWA.js EWA_UI.js EWA_FRAME.js EWA_WF.js tmp.js EWA_BK.js >EWA_ALL.js
+java -jar yuicompressor-2.4.8.jar --charset utf-8 EWA_ALL.js -o EWA_ALL.min.2.0.js 
+
+java -jar compiler.jar --js EWA_ALL.js --create_source_map EWA_ALL.min.2.0.js.map --source_map_format=V3 --js_output_file EWA_ALL.compiler.js  
+cat EWA_ALL.compiler.js EWA_S_MAP.js > EWA_ALL.min.2.0.js

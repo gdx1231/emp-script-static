@@ -1,0 +1,106 @@
+.ewa_cb_box {
+	background: white;
+	border: 1px solid #ddd;
+	-webkit-box-shadow: 0 3px 17px rgba(0, 0, 0, .3);
+	-moz-box-shadow: 0 3px 17px rgba(0, 0, 0, .3);
+	box-shadow: 0 3px 17px rgba(0, 0, 0, .3);
+	width: 100%;
+	float: left;
+	margin-top: 10px;
+}
+
+.ewa_cb_box ul {
+	margin: 0px;
+	padding: 0px;
+	clear: both;
+	border-bottom: 1px solid #f6faff;
+	height: 27px;
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+}
+
+.ewa_cb_box .ewa_lf_func_dact {
+	color: #000;
+	font-size: 13px;
+}
+
+.ewa_cb_box .ewa_lf_func_act {
+	color: Red;
+	font-size: 13px;
+}
+
+.ewa_cb_box li {
+	margin: 0px;
+	float: left;
+	TEXT-OVERFLOW: ellipsis;
+	height: 27px;
+}
+
+.ewa_cb_box .am0 {
+	width: 70px;
+	font-size: 13px;
+	background-color: #f6faff;
+	line-height: 27px;
+	padding-left: 10px;
+	overflow: hidden;
+	white-space: nowrap;
+	TEXT-OVERFLOW: ellipsis;
+	padding-left: 10px;
+}
+
+.ewa_cb_box .am1 {
+	width: 140px;
+	font-size: 13px;
+	line-height: 27px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.ewa_cb_box .am1_txt {
+	width: 120px;
+	font-size: 13px;
+	overflow: hidden;
+	white-space: nowrap;
+	float: left;
+}
+
+.ewa_cb_box .am1_edit {
+	height: 18px;
+	width: 18px;
+	display: block;
+	float: right;
+	cursor: pointer;
+}
+
+.ewa_cb_box .am1_edit img {
+	height: 18px;
+	width: 18px;
+	border: 0px;
+}
+
+.ewa_cb_subject {
+	font-size: 14px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: #f6faff;
+	border-bottom: 1px solid #becfdd;
+	color: #333333;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 20px;
+}
+
+.ewa_cb_subject_expand {
+	border: 1px solid #111;
+	margin: 0px;
+	padding: 0px;
+	margin-top: 5px;
+	display: block;
+	height: 10px;
+	width: 15px;
+	border: 1px solid #ccc;
+	cursor: pointer;
+	float: left;
+	display: block;
+}

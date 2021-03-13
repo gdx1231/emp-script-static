@@ -1,0 +1,115 @@
+.ewa-tree-node-marked .ewa-node-caption>span {
+	background-color: blue;
+	color: #fff;
+}
+
+.ewa-node-caption {
+	cursor: pointer;
+}
+/* Tree 关闭图标 */
+.TD00A {
+	width: 20px;
+	height: 18px;
+	display: block;
+	/*background-image: url('../../images/tree/bluesky/clo.gif');*/
+	background-image:
+		url(data:image/gif;base64,R0lGODlhFAASAJECAAAAAICAgP///wAAACH5BAEAAAIALAAAAAAUABIAAAIqlI+pK8EPY5MUhotxdIo/DxweA4qbAKTp5LRJaYwLPFnzlmXV3vF+/ygAADs=);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.TD00A div {
+	width: 20px;
+}
+
+/* Tree 打开图标 */
+.TD00B {
+	width: 20px;
+	height: 18px;
+	/*background-image: url('../../images/tree/bluesky/ope.gif');*/
+	background-image:
+		url(data:image/gif;base64,R0lGODlhFAASAJECAAAAAICAgP///wAAACH5BAEAAAIALAAAAAAUABIAAAInlI+pK8EPY5MUhotxdIo/j4CLaJCJA6Tp5LTnuMGW/GVZhXf5rj8FADs=);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.TD00A div {
+	width: 20px;
+}
+
+/* Tree 关闭图标1（例如书） */
+.TD01A {
+	width: 20px;
+	height: 18px;
+	/*background-image: url('../../images/tree/bluesky/book_close.gif');*/
+	background-image:
+		url(data:image/gif;base64,R0lGODlhEAAPAKIAAAAAAP///2iJ6oCAgP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQAA8AAAM7SLoEwHA5IV5Uk1LLstZcA3xkJVXlZ41oujWgW3mtCgyYCt4Bnu+8QMBx2gyEQmJng1RGRjfnRRRaJAAAOw==);
+	background-repeat: no-repeat;
+}
+
+.TD01A div {
+	width: 20px;
+}
+
+/* Tree 打开图标1（例如书） */
+.TD01B {
+	width: 20px;
+	/*background-image: url('../../images/tree/bluesky/book_open.gif');*/
+	background-image:
+		url(data:image/gif;base64,R0lGODlhEAAPAKIAAAAAAP///2iJ6sDAwICAgP///wAAAAAAACH5BAEAAAUALAAAAAAQAA8AAANMWEra/mSwR4EI0pHtbAjT9k2Kh4mfBADl9QEDNgYCawbwd9K2i8cxEK9wy6UIwyJwViMKXEZQrOm85DZBqhOH1Q0blqd4zOqszmhAAgA7);
+	background-repeat: no-repeat;
+}
+
+.TD01B div {
+	width: 20px;
+}
+
+/* Tree 交叉图标 */
+.TD00C {
+	width: 20px;
+	height: 18px;
+	/*background-image: url('../../images/tree/bluesky/cro.gif');*/
+	background-image:
+		url(data:image/gif;base64,R0lGODlhFAASAIABAICAgP///yH5BAEAAAEALAAAAAAUABIAAAIcjI+pG8APY5O0uorfzRy5P4EdtI1caWJoSq1IAQA7);
+	background-repeat: no-repeat;
+}
+
+.TD00C div {
+	width: 20px;
+}
+
+/* Tree 结束 */
+.TD00D {
+	width: 20px;
+	height: 18px;
+	/*background-image: url('../../images/tree/bluesky/croend.gif');*/
+	background-image:
+		url(data:image/gif;base64,R0lGODlhFAASAIABAICAgP///yH5BAEAAAEALAAAAAAUABIAAAIYjI+pG8APY5O0uorfzRy5P4HdSJbmiUoFADs=);
+	background-repeat: no-repeat;
+}
+
+.TD00D div {
+	width: 20px;
+}
+
+.TD10A {
+	
+}
+
+/* Tree 背景线 */
+.TD10B {
+	/*background-image: url('../../images/tree/bluesky/lin.gif');*/
+	background-image:
+		url(data:image/gif;base64,R0lGODlhFAASAIABAICAgP///yH5BAEAAAEALAAAAAAUABIAAAIYjI+pG8APY5O0uorfzRzt3n1gJo6WGUIFADs=);
+	background-repeat: repeat-y;
+}
+
+/* Tree ROOT图标 */
+.CAPTION {
+	width: 16px;
+	height: 15px;
+	/*background-image: url('../../images/tree/bluesky/ywl.gif');*/
+	background-image:
+		url(data:image/gif;base64,R0lGODlhEAAQAMQfACVN1e7t7tbU1s7Mzhs4nDxn/JGPkVN6/ezr7PDv8PLx8niW/cnHyWWI/b26vShS40ly/ODe4Cxb/CpX8dLP0pybnR4+rObk5qWkprCvsWCE/cPBw6Cfoevp6wAAAP///yH5BAEAAB8ALAAAAAAQABAAAAV1oCeO5PidnhJ0bBskiHd+XleSg4zGUCH9k4cnoqMlbqNL0QN7JRSwjiCzDJRySE8gEukgEBuPgEJmOERWEiOr5XoR68VCIy+IjjhPgyTUBpwIZwcTEwUFACIMGBUcHAYGeiSIbAcQBxqHRTMoABaeBASam1khADs=);
+	background-repeat: no-repeat;
+}

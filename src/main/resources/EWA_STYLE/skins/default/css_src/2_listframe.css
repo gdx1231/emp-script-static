@@ -1,0 +1,444 @@
+/* 列表的图标 */
+.ewa-lf-frame .ewa-with-icon>label.fa {
+	position: static;
+	display: inline;
+	margin-right: 4px;
+}
+/* search-date-range */
+.ewa-lf-search-menu>div {
+	display: none;
+}
+
+.ewa-lf-search-menu>div.EWA_POP_MAIN {
+	display: block;
+	border: 1px solid #ddd;
+	background-color: #fefefe;
+	border-radius: 3px;
+}
+
+.ewa-lf-search-menu>div.EWA_POP_MAIN table {
+	padding: 3px 5px;
+}
+
+/* search-text-type */
+.ewa-lf-search-types {
+	margin: 5px;
+}
+
+.ewa-lf-search-types a {
+	display: block;
+	line-height: 2;
+	margin-left: 15px;
+	white-spacing: nowrap;
+}
+
+.ewa-lf-search-types>div:hover {
+	background: aliceblue;
+}
+
+.ewa-lf-search-type {
+	border: 1px solid #ccc;
+	margin-left: 4px;
+	margin-right: 4px;
+	padding-left: 4px;
+	padding-right: 4px;
+	font-weight: normal;
+}
+
+.ewa-lf-search {
+	padding: 5px;
+	background: aliceblue;
+}
+
+.ewa-lf-search-main {
+	width: 100%;
+}
+
+.ewa-lf-search-des {
+	width: 30px;
+	text-align: center;
+}
+
+.ewa-lf-search-des:after {
+	content: "\f002";
+	font-family: FontAwesome;
+	font-size: 16px;
+	color: #08c;
+}
+
+.ewa-lf-search-item {
+	float: left;
+	margin: 3px;
+	height: 21px;
+}
+
+.ewa-lf-search-item-title .fa {
+	margin-left: 4px;
+}
+
+.ewa-lf-search-item-ctl {
+	padding-left: 5px;
+}
+
+.ewa-lf-search-item-ctl input {
+	width: 60px;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px
+		rgba(255, 255, 255, 0.1);
+	border: 1px solid #dadada;
+	border-radius: 3px;
+	background: #fff;
+	height: 21px;
+	box-sizing: border-box;
+}
+
+.ewa-lf-search-item-ctl input[type=radio], .ewa-lf-search-item-ctl input[type=checkbox]
+	{
+	width: auto;
+	height: auto;
+}
+
+.ewa-lf-search-item-ctl select {
+	width: 60px;
+	-webkit-appearance: menulist-button;
+	-webkit-font-smoothing: antialiased;
+	-webkit-rtl-ordering: logical;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px
+		rgba(255, 255, 255, 0.1);
+	border: 1px solid #dadada !important;
+	border-radius: 3px;
+	background: #fff;
+	height: 21px;
+}
+
+.ewa-lf-search-item-ctl input[t=date] {
+	width: 78px;
+	text-align: center;
+}
+/* 列表中点击文字快速选择 */
+.ewa-lf-search-text-click {
+	cursor: pointer;
+}
+
+.ewa-lf-search-text-click:before {
+	font-family: FontAwesome;
+	content: '\f0b0';
+	margin-right: 2px;
+	color: #ccc;
+}
+
+.ewa-lf-search-type-text .ewa-lf-search-type {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	color: transparent;
+	padding: 0;
+	margin: 0;
+	display: block;
+	border: 0;
+	border-bottom: 1px solid #ccc;
+}
+
+.ewa-lf-search-type-text .ewa-lf-search-type:hover {
+	color: transparent;
+	border-bottom: 1px solid red;
+}
+
+.ewa-lf-search-type-text .ewa-lf-search-item-title {
+	padding: 0 3px;
+}
+
+.ewa-lf-search-type-text .ewa-lf-search-item-title:hover {
+	color: red;
+}
+
+.ewa-lf-search-type-text .ewa-lf-search-type:before {
+	position: absolute;
+	color: brown;
+	left: -5px;
+	top: 0px;
+	font-size: 9px;
+}
+/* equals */
+.ewa-lf-search-type-text .ewa-lf-search-type[tag=eq]:before {
+	content: "E";
+}
+/* left like */
+.ewa-lf-search-type-text .ewa-lf-search-type[tag=llk]:before {
+	content: "L";
+}
+/* right like */
+.ewa-lf-search-type-text .ewa-lf-search-type[tag=rlk]:before {
+	content: "R";
+}
+
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl {
+	position: relative;
+	width: 60px;
+}
+
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div {
+	position: absolute;
+	display: flex;
+	width: 60px;
+	min-width: 60px;
+	overflow: hidden;
+	flex-direction: column;
+	z-index: 1;
+	top: 0;
+	background-color: #eee;
+	padding: 0px 2px;
+	height: 21px;
+	border: 1px solid #dadada;
+	box-sizing: border-box;
+	border-radius: 3px;
+}
+
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div:hover {
+	max-height: 300px;
+	overflow: auto;
+	width: auto;
+	height: auto;
+	flex-direction: column;
+}
+
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div input {
+	display: none
+}
+
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div label {
+	display: none
+}
+
+.ewa-lf-search-fix-m1 input:checked {
+	display: inline !important
+}
+
+.ewa-lf-search-fix-m1 input:checked+label {
+	display: inline !important
+}
+
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div:hover input {
+	display: inline
+}
+
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div:hover label {
+	display: inline
+}
+
+/* ListFRAME 主样式 */
+.ewa_lf_func {
+	height: 30px;
+	background-color: #4675a3;
+	line-height: 30px;
+	color: #fff;
+}
+
+.ewa_lf_func>div:after {
+	content: "";
+	clear: both;
+	display: block;
+}
+
+/* ListFRAME 标题样式 */
+.ewa_lf_func_caption {
+	float: left;
+	cursor: pointer;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 100%;
+}
+
+/* ListFRAME 功能键 未激活 */
+.ewa_lf_func_dact {
+	float: left;
+	padding-left: 5px;
+	padding-right: 5px;
+	height: 100%;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.ewa_lf_func_dact:hover {
+	color: #f1f1f1;
+	background: #136291;
+}
+/* ListFRAME 分割符 */
+.ewa_lf_func_split {
+	float: left;
+	width: 4px;
+	height: 10px;
+	padding: 0px;
+	margin: 0px;
+}
+/*回收站*/
+.ewa-lf-func-recycle {
+	float: right;
+	margin-right: 4px;
+	cursor: pointer;
+	-webkit-user-select: none;
+}
+
+.ewa-lf-func-recycle:hover {
+	color: #fff;
+}
+
+.ewa-lf-func-recycle-yes {
+	background: rgba(255, 255, 255, 0.7);
+	color: #08c;
+}
+/* ??? */
+.EWA_LF_BUT_ACT {
+	FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#dddddddd',
+		endColorStr='#ffFFFFFF', gradientType='0');
+	color: #000;
+	border-left: 1px solid #FFF;
+	border-right: 1px solid #AAA;
+	border-top: 1px solid #aaa;
+	height: 25px;
+	padding: 5px;
+	float: left;
+}
+
+.EWA_LF_BUT_DACT {
+	FILTER: progid:DXImageTransform.Microsoft.Gradient(     
+		            startColorStr=              
+		              '#ffFFFFFF', endColorStr=                             
+		     '#dddddddd', gradientType=           
+		                     '0');
+	color: #111;
+	border-left: 1px solid #FFF;
+	border-right: 1px solid #AAA;
+	border-top: 1px solid #fff;
+	height: 25px;
+	padding: 5px;
+	float: left;
+}
+
+.EWA_GRID_IMG {
+	max-height: 20px;
+	max-width: 20px;
+	cursor: pointer;
+	border: 0px;
+}
+
+.EWA_GRID_BG_IMG {
+	width: 80px;
+	height: 50px;
+	background-size: contain;
+	border: 1px solid #ccc;
+	background-position: center center;
+	margin: auto;
+	cursor: pointer;
+	display: block;
+	background-repeat: no-repeat;
+}
+/* listframe ref edit */
+.ewa-lf-ref-buts {
+	position: absolute;
+	font-size: 16px;
+	display: none;
+}
+
+.ewa-lf-ref-buts b {
+	font-size: 24px;
+	cursor: pointer;
+}
+
+.ewa-lf-ref-buts b:hover {
+	text-shadow: 1px 1px 20px;
+}
+
+.ewa-lf-ref-buts .fa-check {
+	color: green;
+}
+
+.ewa-lf-ref-buts .fa-close {
+	color: red;
+}
+
+.ewa-lf-ref-error-msg {
+	position: absolute;
+	color: red;
+	background-color: #ccc;
+	padding: 5px 10px;
+}
+
+/*list frame split page*/
+.ewa-lf-frame-split {
+	width: auto;
+	float: right;
+}
+
+.ewa-lf-data-row>td {
+	height: 25px;
+	padding: 4px;
+}
+
+.ewa-lf-data-row>td.EWA_TD_M {
+	/* width: auto; */
+	
+}
+/* 表格滑动浮动颜色 */
+.ewa_grid_mover {
+	background-color: #fffad8;
+	height: 22px;
+}
+
+/* 表格滑动选中颜色 */
+.ewa_grid_down {
+	height: 22px;
+	/*
+	background-color: lightblue;*/
+	background-color: #e1f6ff;
+}
+/* ListFrame 分组 */
+.EWA_LF_GROUP {
+	background-color: #ddd;
+	padding-left: 5px;
+	font-weight: bold;
+	height: 18px;
+}
+
+/* ListFrame 编辑 */
+td.ewa-lf-edit {
+	position: relative;
+}
+
+.EWA_LF_EDIT_CTRL {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.EWA_LF_EDIT_CTRL>input, .EWA_LF_EDIT_CTRL>select, .EWA_LF_EDIT_CTRL>div
+	{
+	position: relative;
+}
+
+.EWA_LF_EDIT {
+	cursor: pointer;
+	height: 100%;
+	border-bottom: 1px solid #ccc;
+}
+/* listframe 计算值*/
+.ewa-lf-sub-td {
+	text-align: right;
+}
+
+.ewa-lf-sub {
+	color: blue;
+}
+
+.ewa-lf-fm-money {
+	text-align: right;
+}
+
+.ewa-lf-frame .ewa-lf-data-row hr {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}

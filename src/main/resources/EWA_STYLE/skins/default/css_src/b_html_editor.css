@@ -1,0 +1,93 @@
+/* 2018-09-03 修正chrome 底下黑边的问题 */
+.ewa-editor iframe {
+	display: block;
+}
+
+/* html editor*/
+.ewa-editor a {
+	text-decoration: none;
+	position: relative;
+}
+/* fixed firefox */
+.ewa-editor td.ewa-ui-dialog-cover {
+	height: 100%;
+}
+
+.ewa-editor-buts {
+	height: 25px;
+	border-bottom: 1px solid #c1c1c1;
+	background: #fff;
+}
+
+.ewa-editor .fa {
+	font-size: 16px;
+	width: 30px;
+	line-height: 30px;
+	color: #333;
+	text-align: center;
+}
+
+.ewa-editor .fa:hover {
+	background: aliceblue;
+}
+
+.ewa-editor-but-spt {
+	color: #c1cdc1;
+	line-height: 25px;
+	font-size: 14px;
+	margin: 0 3px;
+}
+
+.ewa-editor-pop {
+	white-space: nowrap;
+	background: #fff;
+	box-shadow: 1px 1px 13px #cdcdcd;
+	min-width: 200px;
+}
+
+.ewa-editor-pop td {
+	
+}
+
+.ewa-editor-pop * {
+	margin: 0px;
+	padding: 0px;
+}
+
+.ewa-editor-pop a {
+	display: block;
+	line-height: 1;
+	white-space: nowrap;
+	padding: 2px;
+	text-decoration: none;
+}
+
+.ewa-editor-pop a:hover {
+	background: #efefef;
+}
+
+.ewa-edit-pop-color {
+	width: 16px;
+	height: 16px;
+	margin-right: 3px;
+}
+
+.ewa-edit-pop-color:hover {
+	box-shadow: 1px 1px 12px #333;
+}
+
+.ewa-editor-for {
+	border-bottom: 2px solid #08c;
+	font-size: 14px !important;
+	line-height: 25px !important;
+	width: 20px !important;
+	padding: 2px 3px 0px 3px !important;
+}
+
+.ewa-editor-bg {
+	font-size: 14px !important;
+	line-height: 25px !important;
+	width: 20px !important;
+	padding: 2px 3px 0px 3px !important;
+	background-color: #ccc;
+}

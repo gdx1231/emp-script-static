@@ -1,0 +1,59 @@
+/* 地址 */
+.ewa-icon-addr:before {
+	font-family: FontAwesome;
+	content: "\f278";
+}
+/* 电话 */
+.ewa-icon-tele:before {
+	font-family: FontAwesome;
+	content: "\f095";
+}
+/* 传真 */
+.ewa-icon-fax:before {
+	font-family: FontAwesome;
+	content: "\f1ac";
+}
+/* 城市 */
+.ewa-icon-city:before {
+	font-family: FontAwesome;
+	content: "\f041";
+}
+/* 网址 */
+.ewa-icon-ie:before, .ewa-icon-web:before {
+	font-family: FontAwesome;
+	content: "\f26b";
+}
+/* 邮箱 */
+.ewa-icon-email:before {
+	font-family: FontAwesome;
+	content: "\f003";
+}
+/* 邮政编码 */
+.ewa-icon-zip:before {
+	font-family: FontAwesome;
+	content: "\f096";
+}
+
+.ewa-file-ext-color-pdf {
+	color: darkred
+}
+
+.ewa-file-ext-color-word {
+	color: #29298e
+}
+
+.ewa-file-ext-color-excel {
+	color: green
+}
+
+.ewa-file-ext-color-powerpoint {
+	color: darkorange
+}
+
+.ewa-file-ext-color-image {
+	color: lightseagreen
+}
+
+.ewa-file-ext-color-text {
+	color: #333
+}

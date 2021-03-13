@@ -1,0 +1,84 @@
+/* 左右 */
+.ewa-frameset-H5, .ewa-frameset-V5, .ewa-frameset-cover {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.ewa-frameset-cover {
+	z-index: 10000000;
+	display: none;
+}
+
+.ewa-frameset-split {
+	position: absolute;
+	z-index: 1;
+	background: rgba(111, 111, 111, 0.1);
+}
+
+.ewa-frameset-one {
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: auto;
+	z-index: 0;
+}
+
+.ewa-frameset-two {
+	position: absolute;
+	overflow: auto;
+	z-index: 0;
+}
+
+.ewa-frameset-H5 .ewa-frameset-one {
+	left: 0;
+	width: 200px;
+	height: 100%;
+	width: 200px;
+}
+
+.ewa-frameset-H5 .ewa-frameset-two {
+	left: 201px;
+	height: 100%;
+	right: 0;
+	top: 0;
+}
+
+.ewa-frameset-H5 .ewa-frameset-split {
+	top: 0;
+	left: 200px;
+	width: 5px;
+	height: 100%;
+	cursor: ew-resize;
+}
+
+.ewa-frameset-H5 .ewa-frameset-cover {
+	cursor: ew-resize;
+}
+
+.ewa-frameset-V5 .ewa-frameset-one {
+	height: 50%;
+	width: 100%;
+}
+
+.ewa-frameset-V5 .ewa-frameset-two {
+	left: 0;
+	top: 50%;
+	width: 100%;
+	bottom: 0;
+	height: auto;
+}
+
+.ewa-frameset-V5 .ewa-frameset-split {
+	left: 0;
+	cursor: ns-resize;
+	height: 5px;
+	width: 100%;
+	top: 50%;
+}
+
+.ewa-frameset-V5 .ewa-frameset-cover {
+	cursor: ns-resize;
+}

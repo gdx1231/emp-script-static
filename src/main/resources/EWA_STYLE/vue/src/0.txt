@@ -1,0 +1,2 @@
+(function(call){
+	// call 可能

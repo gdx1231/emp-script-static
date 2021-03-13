@@ -1,0 +1,558 @@
+/* calendar */
+.ewa-ui-date {
+	border: 1px solid #aaa;
+	background-color: #E1E1E1;
+}
+
+.ewa-ui-date select {
+	height: 25px;
+}
+
+/* 左右箭头 */
+.ewa-ui-date .ewa-ui-date-prev, .ewa-ui-date .ewa-ui-date-next {
+	cursor: pointer;
+	font-size: 20px;
+	margin: 0 2px;
+	color: darkgray;
+}
+
+.ewa-ui-date .ewa-ui-date-prev:hover, .ewa-ui-date .ewa-ui-date-next:hover {
+	color: orange;
+}
+
+.ewa-ui-days {
+	border-top: 1px solid darkgray;
+	border-left: 1px solid darkgray;
+	border-right: 1px solid white;
+	border-bottom: 1px solid white;
+	text-align: center;
+	background: #f1f1f1;
+}
+
+.ewa-ui-days th {
+	background: #7B9ACB;
+	color: #B3D3EC;
+	width: 28px;
+	height: 20px;
+}
+
+.ewa-ui-days td {
+	width: 28px;
+	height: 20px;
+	border: 1px solid rgb(241, 241, 241);
+	cursor: pointer;
+}
+
+.ewa-ui-days td>div {
+	width: 28px;
+	height: 20px;
+}
+
+.ewa-ui-days  .ewa-ui-date-blur {
+	border: 1px solid #fff;
+	background: orange;
+}
+
+.ewa-ui-days .ewa-ui-date-selected {
+	background: blue;
+	color: white;
+}
+
+.ewa-ui-date-today-day {
+	cursor: pointer
+}
+
+.ewa-ui-date-today-day:hover {
+	color: red;
+}
+
+.ewa-ui-date-today-clear {
+	cursor: pointer;
+	color: blue;
+}
+
+.ewa-ui-date-today-clear:hover {
+	color: red;
+}
+
+.ewa-ui-date-close {
+	cursor: pointer;
+}
+
+.ewa-ui-date-close:hover {
+	color: red;
+}
+
+/** calendar-year **/
+/* 禁止访问的日期 */
+.ewa-ui-calendar-year-deny {
+	background: rgba(111, 111, 111, 0.1) !important;
+	color: #ccc !important;
+	font-style: italic !important;
+	cursor: not-allowed !important;
+}
+
+.ewa-ui-calendar-year .ewa-ui-date {
+	float: left;
+	margin: 10px;
+	border: 0;
+}
+
+.ewa-ui-calendar-year .ewa-ui-days th {
+	cursor: pointer;
+}
+
+.ewa-ui-calendar-year .ewa-ui-days th:hover {
+	color: red;
+}
+
+.ewa-ui-calendar-year .ewa-ui-days td {
+	position: relative;
+}
+
+.ewa-ui-calendar-year-chooese:after {
+	content: '\f00c';
+	font-family: FontAwesome;
+	color: lightcoral;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+.ewa-ui-calendar-year-chooese.N:after {
+	font-size: 12px;
+	width: 16px;
+	height: 16px;
+	color: #08c;
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 4px;
+    transform: scale(0.8);
+    transform-origin: top left;
+}
+/* 红色背景 */
+.ewa-ui-calendar-year-chooese.N.all-invalid::after {
+	background-color: rgba(255, 0, 0, 0.7);
+	color: #fff;
+}
+/* 绿色背景 */
+.ewa-ui-calendar-year-chooese.N.all-valid::after {
+	background-color: rgba(0, 100, 0 , 0.78);
+	color: #fff;
+}
+
+.ewa-ui-calendar-year-chooese.N1:after {
+	content: '1';
+}
+
+.ewa-ui-calendar-year-chooese.N2:after {
+	content: '2';
+}
+
+.ewa-ui-calendar-year-chooese.N3:after {
+	content: '3';
+}
+
+.ewa-ui-calendar-year-chooese.N4:after {
+	content: '4';
+}
+
+.ewa-ui-calendar-year-chooese.N5:after {
+	content: '5';
+}
+
+.ewa-ui-calendar-year-chooese.N6:after {
+	content: '6';
+}
+
+.ewa-ui-calendar-year-chooese.N7:after {
+	content: '7';
+}
+
+.ewa-ui-calendar-year-chooese.N8:after {
+	content: '8';
+}
+
+.ewa-ui-calendar-year-chooese.N9:after {
+	content: '9';
+}
+
+.ewa-ui-calendar-year-chooese.N10:after {
+	content: '10';
+}
+
+.ewa-ui-calendar-year-chooese.N11:after {
+	content: '11';
+}
+
+.ewa-ui-calendar-year-chooese.N12:after {
+	content: '12';
+}
+
+.ewa-ui-calendar-year-chooese.N13:after {
+	content: '13';
+}
+
+.ewa-ui-calendar-year-chooese.N14:after {
+	content: '14';
+}
+
+.ewa-ui-calendar-year-chooese.N15:after {
+	content: '15';
+}
+
+.ewa-ui-calendar-year-chooese.N16:after {
+	content: '16';
+}
+
+.ewa-ui-calendar-year-chooese.N17:after {
+	content: '17';
+}
+
+.ewa-ui-calendar-year-chooese.N18:after {
+	content: '18';
+}
+
+.ewa-ui-calendar-year-chooese.N19:after {
+	content: '19';
+}
+
+.ewa-ui-calendar-year-chooese.N20:after {
+	content: '20';
+}
+
+.ewa-ui-calendar-year-chooese.N21:after {
+	content: '21';
+}
+
+.ewa-ui-calendar-year-chooese.N22:after {
+	content: '22';
+}
+
+.ewa-ui-calendar-year-chooese.N23:after {
+	content: '23';
+}
+
+.ewa-ui-calendar-year-chooese.N24:after {
+	content: '24';
+}
+
+.ewa-ui-calendar-year-chooese.N25:after {
+	content: '25';
+}
+
+.ewa-ui-calendar-year-chooese.N26:after {
+	content: '26';
+}
+
+.ewa-ui-calendar-year-chooese.N27:after {
+	content: '27';
+}
+
+.ewa-ui-calendar-year-chooese.N28:after {
+	content: '28';
+}
+
+.ewa-ui-calendar-year-chooese.N29:after {
+	content: '29';
+}
+
+.ewa-ui-calendar-year-chooese.N30:after {
+	content: '30';
+}
+
+.ewa-ui-calendar-year-chooese.N31:after {
+	content: '31';
+}
+
+.ewa-ui-calendar-year-chooese.N32:after {
+	content: '32';
+}
+
+.ewa-ui-calendar-year-chooese.N33:after {
+	content: '33';
+}
+
+.ewa-ui-calendar-year-chooese.N34:after {
+	content: '34';
+}
+
+.ewa-ui-calendar-year-chooese.N35:after {
+	content: '35';
+}
+
+.ewa-ui-calendar-year-chooese.N36:after {
+	content: '36';
+}
+
+.ewa-ui-calendar-year-chooese.N37:after {
+	content: '37';
+}
+
+.ewa-ui-calendar-year-chooese.N38:after {
+	content: '38';
+}
+
+.ewa-ui-calendar-year-chooese.N39:after {
+	content: '39';
+}
+
+.ewa-ui-calendar-year-chooese.N40:after {
+	content: '40';
+}
+
+.ewa-ui-calendar-year-chooese.N41:after {
+	content: '41';
+}
+
+.ewa-ui-calendar-year-chooese.N42:after {
+	content: '42';
+}
+
+.ewa-ui-calendar-year-chooese.N43:after {
+	content: '43';
+}
+
+.ewa-ui-calendar-year-chooese.N44:after {
+	content: '44';
+}
+
+.ewa-ui-calendar-year-chooese.N45:after {
+	content: '45';
+}
+
+.ewa-ui-calendar-year-chooese.N46:after {
+	content: '46';
+}
+
+.ewa-ui-calendar-year-chooese.N47:after {
+	content: '47';
+}
+
+.ewa-ui-calendar-year-chooese.N48:after {
+	content: '48';
+}
+
+.ewa-ui-calendar-year-chooese.N49:after {
+	content: '49';
+}
+
+.ewa-ui-calendar-year-chooese.N50:after {
+	content: '50';
+}
+
+.ewa-ui-calendar-year-chooese.N51:after {
+	content: '51';
+}
+
+.ewa-ui-calendar-year-chooese.N52:after {
+	content: '52';
+}
+
+.ewa-ui-calendar-year-chooese.N53:after {
+	content: '53';
+}
+
+.ewa-ui-calendar-year-chooese.N54:after {
+	content: '54';
+}
+
+.ewa-ui-calendar-year-chooese.N55:after {
+	content: '55';
+}
+
+.ewa-ui-calendar-year-chooese.N56:after {
+	content: '56';
+}
+
+.ewa-ui-calendar-year-chooese.N57:after {
+	content: '57';
+}
+
+.ewa-ui-calendar-year-chooese.N58:after {
+	content: '58';
+}
+
+.ewa-ui-calendar-year-chooese.N59:after {
+	content: '59';
+}
+
+.ewa-ui-calendar-year-chooese.N60:after {
+	content: '60';
+}
+
+.ewa-ui-calendar-year-chooese.N61:after {
+	content: '61';
+}
+
+.ewa-ui-calendar-year-chooese.N62:after {
+	content: '62';
+}
+
+.ewa-ui-calendar-year-chooese.N63:after {
+	content: '63';
+}
+
+.ewa-ui-calendar-year-chooese.N64:after {
+	content: '64';
+}
+
+.ewa-ui-calendar-year-chooese.N65:after {
+	content: '65';
+}
+
+.ewa-ui-calendar-year-chooese.N66:after {
+	content: '66';
+}
+
+.ewa-ui-calendar-year-chooese.N67:after {
+	content: '67';
+}
+
+.ewa-ui-calendar-year-chooese.N68:after {
+	content: '68';
+}
+
+.ewa-ui-calendar-year-chooese.N69:after {
+	content: '69';
+}
+
+.ewa-ui-calendar-year-chooese.N70:after {
+	content: '70';
+}
+
+.ewa-ui-calendar-year-chooese.N71:after {
+	content: '71';
+}
+
+.ewa-ui-calendar-year-chooese.N72:after {
+	content: '72';
+}
+
+.ewa-ui-calendar-year-chooese.N73:after {
+	content: '73';
+}
+
+.ewa-ui-calendar-year-chooese.N74:after {
+	content: '74';
+}
+
+.ewa-ui-calendar-year-chooese.N75:after {
+	content: '75';
+}
+
+.ewa-ui-calendar-year-chooese.N76:after {
+	content: '76';
+}
+
+.ewa-ui-calendar-year-chooese.N77:after {
+	content: '77';
+}
+
+.ewa-ui-calendar-year-chooese.N78:after {
+	content: '78';
+}
+
+.ewa-ui-calendar-year-chooese.N79:after {
+	content: '79';
+}
+
+.ewa-ui-calendar-year-chooese.N80:after {
+	content: '80';
+}
+
+.ewa-ui-calendar-year-chooese.N81:after {
+	content: '81';
+}
+
+.ewa-ui-calendar-year-chooese.N82:after {
+	content: '82';
+}
+
+.ewa-ui-calendar-year-chooese.N83:after {
+	content: '83';
+}
+
+.ewa-ui-calendar-year-chooese.N84:after {
+	content: '84';
+}
+
+.ewa-ui-calendar-year-chooese.N85:after {
+	content: '85';
+}
+
+.ewa-ui-calendar-year-chooese.N86:after {
+	content: '86';
+}
+
+.ewa-ui-calendar-year-chooese.N87:after {
+	content: '87';
+}
+
+.ewa-ui-calendar-year-chooese.N88:after {
+	content: '88';
+}
+
+.ewa-ui-calendar-year-chooese.N89:after {
+	content: '89';
+}
+
+.ewa-ui-calendar-year-chooese.N90:after {
+	content: '90';
+}
+
+.ewa-ui-calendar-year-chooese.N91:after {
+	content: '91';
+}
+
+.ewa-ui-calendar-year-chooese.N92:after {
+	content: '92';
+}
+
+.ewa-ui-calendar-year-chooese.N93:after {
+	content: '93';
+}
+
+.ewa-ui-calendar-year-chooese.N94:after {
+	content: '94';
+}
+
+.ewa-ui-calendar-year-chooese.N95:after {
+	content: '95';
+}
+
+.ewa-ui-calendar-year-chooese.N96:after {
+	content: '96';
+}
+
+.ewa-ui-calendar-year-chooese.N97:after {
+	content: '97';
+}
+
+.ewa-ui-calendar-year-chooese.N98:after {
+	content: '98';
+}
+
+.ewa-ui-calendar-year-chooese.N99:after {
+	content: '99';
+}
+
+.ewa-ui-calendar-year-chooese.NP:after {
+	content: '...';
+}
+
+.ewa-ui-calendar-year-item {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.ewa-ui-calendar-year-item:before {
+	font-family: FontAwesome;
+}
+
+.ewa-ui-calendar-year-item:after {
+	font-family: FontAwesome;
+}

@@ -1,0 +1,43 @@
+
+/* 菜单图标 */
+.ewa_menu_m0 {
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat;
+}
+
+/* 菜单文字 */
+.ewa_menu_m1 {
+	height: 17px;
+	padding-left: 2px;
+	padding-right: 2px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+/* 菜单条目主样式 */
+.ewa_menu_m {
+	padding-left: 5px;
+	padding-top: 2px;
+}
+
+/* 下拉菜单条目选中主样式 */
+.ewa_menu_m_mv1 {
+	padding-left: 5px;
+	padding-top: 2px;
+	background-color: #ddd;
+}
+
+/* 菜单条目分割 */
+.ewa_menu_split {
+	border-top: 1px solid #ccc;
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+
+/* 主菜单栏样式 */
+.EWA_MENU {
+	background-color: #fff;
+	box-shadow: 3px 3px 6px -2px #ccc;
+	border-bottom: 1px solid #ccc;
+}
