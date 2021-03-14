@@ -1,8 +1,14 @@
+/* light css */
 .light {
 	color: #222222;
 	background: #fff;
 	scrollbar-color: #aaa rgba(55, 55, 55, 0);
 	scrollbar-width: none;
+}
+/* define_right switch bar */
+.light #TABS {
+	background: #f1f1f1;
+	box-shadow: 0px 0px 1px #111;
 }
 
 .light #header, .light .ewa_tab {
@@ -70,13 +76,13 @@
 	padding: 0;
 }
 
-.light .ewa_tab_act .bg_c, .light .BUT1 {
+.light .ewa_tab_act .bg_c, .light .but1 {
 	background: #dedede;
 	color: #222;
 	text-shadow: 1px 1px 11px whitesmoke;
 }
 
-.light .ewa_tab_dact .bg_c, .light .BUT0 {
+.light .ewa_tab_dact .bg_c, .light .but0 {
 	background: #fff;
 	color: #4a4a4a;
 }

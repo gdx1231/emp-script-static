@@ -17,6 +17,19 @@ public class Resources {
 
 	public static Resource getResource(String path) {
 		String ext = FilenameUtils.getExtension(path);
+
+		// for compatible
+		if (path.equals("/EWA_STYLE/js/EWA_ALL.js")) {
+			path = "/EWA_STYLE/js/ewa.js";
+		} else if(path.equals("/EWA_STYLE/js/src/main/resources/EWA_STYLE/js/source/EWA_ALL.js")) {
+			path = "/EWA_STYLE/js/ewa.js";
+		} else if(path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.min.2.0.js")) {
+			path = "/EWA_STYLE/js/ewa.min.js";
+		} else if(path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.2.0.js")) {
+			path = "/EWA_STYLE/js/ewa.js";
+		}
+		
+
 		URL url = Resources.class.getResource(path);
 		Resource r = new Resource();
 		r.setPath(path);
@@ -34,7 +47,7 @@ public class Resources {
 			r.setType("text/plain");
 		} else if (ext.equalsIgnoreCase("json")) {
 			r.setType("text/json");
-		}  else if (ext.equalsIgnoreCase("css")) {
+		} else if (ext.equalsIgnoreCase("css")) {
 			r.setType("text/css");
 		} else if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("png")
 				|| ext.equalsIgnoreCase("gif")) {

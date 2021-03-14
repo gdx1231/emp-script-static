@@ -1,5 +1,14 @@
+/* common css */
+input, select {
+	box-sizing: border-box;
+}
+/* define_right switch bar */
+#TABS {
+    height: 30px;
+    vertical-align: bottom;
+}
 .unselect {
-	postion: relative;
+	position: relative;
 	-webkit-user-select: none;
 	user-select: none;
 	-moz-user-select: none;
@@ -67,9 +76,11 @@
 	z-index: 4;
 	display: none;
 }
+
 #TD2 {
 	padding: 0px;
 }
+
 .ewa_menu_m0 {
 	margin-left: 4px;
 	background-size: cover;
@@ -98,13 +109,15 @@
 	-o-filter: grayscale(100%);
 	filter: grayscale(100%);
 }
+
 .ewa_menu_m0.fa {
-    line-height: 16px;
-    font-size: 14px;
-    text-align: right;
+	line-height: 16px;
+	font-size: 14px;
+	text-align: right;
 }
+
 table.ewa_menu_table {
-    margin-right: 5px;
+	margin-right: 5px;
 }
 
 .ewa_menu_m_mv1 .ewa_menu_m0 img {
@@ -184,8 +197,9 @@ table.ewa_menu_table {
 table, td, input, select, span, body {
 	border: 0;
 }
-#tabs{
-	padding-bottom:4px;
+
+#tabs {
+	padding-bottom: 4px;
 }
 
 td#props tr, #props table {
@@ -219,15 +233,17 @@ td#props tr, #props table {
 select[size] {
 	height: auto !important;
 }
-.ewa_lf_func_caption{
-    padding: 0px 5px;
-    font-size: 14px;
-    line-height: 30px;
+
+.ewa_lf_func_caption {
+	padding: 0px 5px;
+	font-size: 14px;
+	line-height: 30px;
 }
-.ewa_lf_func_dact ,.ewa_lf_func_act {
-    padding: 0px 5px;
-    font-size: 14px;
-    line-height: 30px;
+
+.ewa_lf_func_dact, .ewa_lf_func_act {
+	padding: 0px 5px;
+	font-size: 14px;
+	line-height: 30px;
 }
 
 ::-webkit-scrollbar {

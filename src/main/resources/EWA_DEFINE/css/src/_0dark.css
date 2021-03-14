@@ -1,12 +1,14 @@
-/***
-   **/
+/* dark css */
 .dark {
 	color: #e1e1e1;
 	background: #303130;
 	scrollbar-color: #aaa rgba(55, 55, 55, 0);
 	scrollbar-width: none;
 }
-
+.dark #TABS {
+    background: #363636;
+    box-shadow: 0px 0px 1px #000;
+}
 .dark #header, .dark .ewa_tab {
 	background: #252525;
 	box-shadow: 0 1px 0 0 #353535 inset;
@@ -62,13 +64,13 @@
 	padding: 0;
 }
 
-.dark .ewa_tab_act .bg_c, .dark .BUT1 {
+.dark .ewa_tab_act .bg_c, .dark .but1 {
 	background: #303130;
 	color: #e1e1e1;
 	text-shadow: 1px 1px 11px whitesmoke;
 }
 
-.dark .ewa_tab_dact .bg_c, .dark .BUT0 {
+.dark .ewa_tab_dact .bg_c, .dark .but0 {
 	background: #444242;
 	color: #bbb;
 }

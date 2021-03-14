@@ -1,12 +1,14 @@
-/***
-   **/
+/* dark css */
 .dark {
 	color: #e1e1e1;
 	background: #303130;
 	scrollbar-color: #aaa rgba(55, 55, 55, 0);
 	scrollbar-width: none;
 }
-
+.dark #TABS {
+    background: #363636;
+    box-shadow: 0px 0px 1px #000;
+}
 .dark #header, .dark .ewa_tab {
 	background: #252525;
 	box-shadow: 0 1px 0 0 #353535 inset;
@@ -62,13 +64,13 @@
 	padding: 0;
 }
 
-.dark .ewa_tab_act .bg_c, .dark .BUT1 {
+.dark .ewa_tab_act .bg_c, .dark .but1 {
 	background: #303130;
 	color: #e1e1e1;
 	text-shadow: 1px 1px 11px whitesmoke;
 }
 
-.dark .ewa_tab_dact .bg_c, .dark .BUT0 {
+.dark .ewa_tab_dact .bg_c, .dark .but0 {
 	background: #444242;
 	color: #bbb;
 }
@@ -228,11 +230,17 @@
 
 .dark .TD10B, .dark .TD00D, .dark .TD00C {
 	background-image: none;
-}.light {
+}/* light css */
+.light {
 	color: #222222;
 	background: #fff;
 	scrollbar-color: #aaa rgba(55, 55, 55, 0);
 	scrollbar-width: none;
+}
+/* define_right switch bar */
+.light #TABS {
+	background: #f1f1f1;
+	box-shadow: 0px 0px 1px #111;
 }
 
 .light #header, .light .ewa_tab {
@@ -300,13 +308,13 @@
 	padding: 0;
 }
 
-.light .ewa_tab_act .bg_c, .light .BUT1 {
+.light .ewa_tab_act .bg_c, .light .but1 {
 	background: #dedede;
 	color: #222;
 	text-shadow: 1px 1px 11px whitesmoke;
 }
 
-.light .ewa_tab_dact .bg_c, .light .BUT0 {
+.light .ewa_tab_dact .bg_c, .light .but0 {
 	background: #fff;
 	color: #4a4a4a;
 }
@@ -441,8 +449,17 @@
 
 .light .TD10B, .light .TD00D, .light .TD00C {
 	background-image: none;
-}.unselect {
-	postion: relative;
+}/* common css */
+input, select {
+	box-sizing: border-box;
+}
+/* define_right switch bar */
+#TABS {
+    height: 30px;
+    vertical-align: bottom;
+}
+.unselect {
+	position: relative;
 	-webkit-user-select: none;
 	user-select: none;
 	-moz-user-select: none;
@@ -510,9 +527,11 @@
 	z-index: 4;
 	display: none;
 }
+
 #TD2 {
 	padding: 0px;
 }
+
 .ewa_menu_m0 {
 	margin-left: 4px;
 	background-size: cover;
@@ -541,13 +560,15 @@
 	-o-filter: grayscale(100%);
 	filter: grayscale(100%);
 }
+
 .ewa_menu_m0.fa {
-    line-height: 16px;
-    font-size: 14px;
-    text-align: right;
+	line-height: 16px;
+	font-size: 14px;
+	text-align: right;
 }
+
 table.ewa_menu_table {
-    margin-right: 5px;
+	margin-right: 5px;
 }
 
 .ewa_menu_m_mv1 .ewa_menu_m0 img {
@@ -627,8 +648,9 @@ table.ewa_menu_table {
 table, td, input, select, span, body {
 	border: 0;
 }
-#tabs{
-	padding-bottom:4px;
+
+#tabs {
+	padding-bottom: 4px;
 }
 
 td#props tr, #props table {
@@ -662,15 +684,17 @@ td#props tr, #props table {
 select[size] {
 	height: auto !important;
 }
-.ewa_lf_func_caption{
-    padding: 0px 5px;
-    font-size: 14px;
-    line-height: 30px;
+
+.ewa_lf_func_caption {
+	padding: 0px 5px;
+	font-size: 14px;
+	line-height: 30px;
 }
-.ewa_lf_func_dact ,.ewa_lf_func_act {
-    padding: 0px 5px;
-    font-size: 14px;
-    line-height: 30px;
+
+.ewa_lf_func_dact, .ewa_lf_func_act {
+	padding: 0px 5px;
+	font-size: 14px;
+	line-height: 30px;
 }
 
 ::-webkit-scrollbar {
