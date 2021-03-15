@@ -3800,10 +3800,10 @@ function EWA_UI_DiaNewClass() {
 		this.index = index;
 
 		this.Id = ('_EWA_UI_DIA_' + Math.random()).replace('.', '');
-		var ss = [ "<div id='" + this.Id + "' class='ewa-ui-dialog'>" ];
+		var ss = ["<div id='" + this.Id + "' class='ewa-ui-dialog'>"];
 		// cover
 		ss.push("<div id='" + this.Id + "_cover'  class='ewa-ui-dialog-cover' style='position: fixed;z-index: " + index
-				+ ";'></div>");
+			+ ";'></div>");
 		// box-start
 		var mv = " EWA_WND_ID='" + this.Id + "'";
 		var win = "window";
@@ -3814,21 +3814,21 @@ function EWA_UI_DiaNewClass() {
 		mv += " onmouseout=\"" + aa + "OnMouseOut(this.parentNode.parentNode);\"";
 		// mv += " style='cursor:pointer' ";
 		ss.push("<div id='" + this.Id + "_box' " + " class='ewa-ui-dialog-box' " + " style='position: fixed;z-index: "
-				+ this._GetIndex() + ";'>");
+			+ this._GetIndex() + ";'>");
 		ss.push("<div style='position:relative;'>");
 		// title
 		if (!noHeader) {
 			ss.push("<div  id='" + this.Id + "_title'  class='ewa-ui-dialog-title'" + mv + " style=''>"
-					+ "<span style='margin-left: 5px;'></span><a href='javascript:class_" + this.Id
-					+ ".Close();' class='fa'" + " style=''>&#xf00d</a></div>");
+				+ "<span style='margin-left: 5px;'></span><a href='javascript:class_" + this.Id
+				+ ".Close();' class='fa'" + " style=''>&#xf00d</a></div>");
 		} else {
 			ss.push("<div id='" + this.Id + "_title' class='ewa-ui-dialog-title-noheader'" + " style=''>"
-					+ "<a href='javascript:class_" + this.Id + ".Close();' class='fa'"
-					+ " style='text-decoration:none;padding:2px 2px 3px 3px;display:block'>&#xf00d</a></div>");
+				+ "<a href='javascript:class_" + this.Id + ".Close();' class='fa'"
+				+ " style='text-decoration:none;padding:2px 2px 3px 3px;display:block'>&#xf00d</a></div>");
 		}
 		// content
 		ss.push("<div  id='" + this.Id + "_content' class='ewa-ui-dialog-content'"
-				+ " style='width: 100%;overflow: auto;'></div>");
+			+ " style='width: 100%;overflow: auto;'></div>");
 		ss.push("</div>");
 		// box-end-div
 		ss.push("</div>");
@@ -3838,14 +3838,14 @@ function EWA_UI_DiaNewClass() {
 
 		// 关闭按钮颜色
 		$(".ewa-ui-dialog-title a.fa").css({
-			"color" : "#aaa"
+			"color": "#aaa"
 		}).hover(function() {
 			$(this).css({
-				"color" : "orangered"
+				"color": "orangered"
 			});
 		}, function() {
 			$(this).css({
-				"color" : "#aaa"
+				"color": "#aaa"
 			});
 		});
 		var obj = $('#' + this.Id + "_box");
@@ -3908,7 +3908,7 @@ function EWA_UI_DiaNewClass() {
 				c._ChkIframeLoaded(callback);
 			}, 222);
 		} else {// 直接显示html的方式，调用回调
-			if(callback){
+			if (callback) {
 				callback(this);
 			}
 		}
@@ -3938,7 +3938,7 @@ function EWA_UI_DiaNewClass() {
 		w = w[0];
 		try {// not same domain
 			if (w.contentWindow && w.contentWindow.document && w.contentWindow.document.readyState == 'complete'
-					&& w.contentWindow.$) {
+				&& w.contentWindow.$) {
 				try {
 					this._IframeLoaded(w.contentWindow, callback);
 				} catch (e1) {
@@ -3991,7 +3991,6 @@ function EWA_UI_DiaNewClass() {
 	};
 	this.AutoSize = function() {
 		var content = $(this.getContent());
-
 		if (!this._isUrl) {
 			var w, h;
 			var objEWA = content.find('#Test1');
@@ -3999,8 +3998,8 @@ function EWA_UI_DiaNewClass() {
 				w = objEWA.outerWidth();
 				h = objEWA.outerHeight();
 			} else {
-				h = cnt[0].scrollHeight;
-				w = cnt[0].scrollWidth;
+				h = content[0].scrollHeight;
+				w = content[0].scrollWidth;
 			}
 			this.SetSize(w, h);
 			this.MoveCenter();
@@ -4190,10 +4189,10 @@ $DialogInstall = function(url, title, width, height, noHeader, callback) {
 				var obj = dia.getTitleContainer();
 				if (obj) {
 					var css = {
-						"background-color" : "transparent",
-						"display" : "block",
-						"float" : "left",
-						"font-size" : "14px"
+						"background-color": "transparent",
+						"display": "block",
+						"float": "left",
+						"font-size": "14px"
 					};
 					reshow.css(css);
 					var cap = reshow.find('.ewa_lf_func_caption');

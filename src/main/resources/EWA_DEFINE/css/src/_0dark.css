@@ -25,7 +25,7 @@
 	background: #303130;
 }
 
-.dark .EWA_POP_MAIN {
+.dark .EWA_POP_MAIN , .dark .ewa-ui-dialog-box{
 	color: #f1f1f1;
 	outline: 5px solid #494949;
 	-webkit-box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.65);
@@ -33,10 +33,10 @@
 	box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.65);
 	background-color: #494949 !important;
 	text-shadow: 0px 1px 0px #2c2c2c;
-	line-height: 24px;
+	border-color: transparent;
 }
 
-.dark .EWA_POP_TITLE_L, .dark  .EWA_POP_TITLE_R {
+.dark .EWA_POP_TITLE_L, .dark  .EWA_POP_TITLE_R, .dark .ewa-ui-dialog-title {
 	background-image: none;
 	background: #494949;
 	text-shadow: none;
@@ -46,7 +46,7 @@
 	border-bottom: 0;
 }
 
-.dark .EWA_POP_CNT {
+.dark .EWA_POP_CNT, .dark .ewa-ui-dialog-content {
 	background: transparent !important;
 }
 

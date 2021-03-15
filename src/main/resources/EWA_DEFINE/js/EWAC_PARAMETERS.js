@@ -699,15 +699,20 @@ if (!Node.prototype.swapNode) {
 		}
 	}
 }
+
+// 打开选择隐含字段的列表
 function popHiddenFields(obj) {
 	var v = obj.title;
 	var cnt = loadHiddenFields(v);
-	ddd = EWA.UI.Dialog.Pop(cnt, obj, true);
-	setTimeout(function () {
-		ddd.Move(100, 20);
-		ddd.SetCaption("选择参数");
-	}, 100);
 	window['ewa_hidden_obj'] = obj;
+	
+	/*ddd = EWA.UI.Dialog.Pop(cnt, obj, true);
+	ddd.SetNewSize(420,240);
+	ddd.Move(100, 20);
+	ddd.SetCaption("选择参数");
+	*/
+	ddd = $DialogHtml(cnt, '选择参数');
+	ddd.AutoSize();
 }
 function okHiddenFields(obj) {
 	var ipts = obj.parentNode.getElementsByTagName('table')[0].getElementsByTagName('input');
@@ -722,9 +727,12 @@ function okHiddenFields(obj) {
 	window['ewa_hidden_obj'].value = s;
 	window['ewa_hidden_obj'].setAttribute('title', s);
 	window['ewa_hidden_obj'].setAttribute('ewa_value', s);
-	ddd.CloseWindow();
+	//ddd.CloseWindow();
+	ddd.Close();
+	
 	window['ewa_hidden_obj'].focus();
 }
+// 创建隐含字段的列表
 function loadHiddenFields(ref) {
 	var map = {};
 	var vv = ref.split(',');
@@ -734,6 +742,7 @@ function loadHiddenFields(ref) {
 	}
 	EWA.OW.Load();
 	var w = EWA.OW.PWin;
+	// IDE的对象下拉框
 	var opts = w.$X('EWAC_SELECT_TYPE').options;
 	var ss = [];
 	ss.push('<div><div style="width:410px;height:200px;overflow:auto"><table style="width:400px;">');
@@ -743,9 +752,10 @@ function loadHiddenFields(ref) {
 			continue;
 		}
 		var v = opt.value.replace('Items$', '');
+		let id =  'item_'+v;
 		var chk = map[v.toUpperCase()] ? ' checked ' : '';
 		var t = opt.text;
-		ss.push('<tr><td width=20><input type=checkbox ' + chk + ' value="' + v + '"></td><td>' + t + "</td></tr>");
+		ss.push('<tr><td width=20><input id="'+id+'" type=checkbox ' + chk + ' value="' + v + '"></td><td><label for="'+id+'">' + t + "</label></td></tr>");
 	}
 	ss.push("</table></div><hr><input type=button onclick='okHiddenFields(this)' value='确定'></div>");
 	return ss.join('');
