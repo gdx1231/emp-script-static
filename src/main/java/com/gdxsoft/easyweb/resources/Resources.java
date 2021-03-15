@@ -15,20 +15,25 @@ public class Resources {
 	 */
 	private static Logger LOGGER = LoggerFactory.getLogger(Resources.class);
 
+	/**
+	 * Get the EWA static files, js, css, images ...
+	 * 
+	 * @param path static path
+	 * @return the resource
+	 */
 	public static Resource getResource(String path) {
 		String ext = FilenameUtils.getExtension(path);
 
 		// for compatible
 		if (path.equals("/EWA_STYLE/js/EWA_ALL.js")) {
 			path = "/EWA_STYLE/js/ewa.js";
-		} else if(path.equals("/EWA_STYLE/js/src/main/resources/EWA_STYLE/js/source/EWA_ALL.js")) {
+		} else if (path.equals("/EWA_STYLE/js/src/main/resources/EWA_STYLE/js/source/EWA_ALL.js")) {
 			path = "/EWA_STYLE/js/ewa.js";
-		} else if(path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.min.2.0.js")) {
+		} else if (path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.min.2.0.js")) {
 			path = "/EWA_STYLE/js/ewa.min.js";
-		} else if(path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.2.0.js")) {
+		} else if (path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.2.0.js")) {
 			path = "/EWA_STYLE/js/ewa.js";
 		}
-		
 
 		URL url = Resources.class.getResource(path);
 		Resource r = new Resource();
