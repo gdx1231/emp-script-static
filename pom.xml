@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gdxsoft.easyweb</groupId>
 	<artifactId>emp-script-static</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<name>EmpScript static files</name>
 	<description>EmpScript static files</description>
 
@@ -14,6 +14,11 @@
 			<name>郭磊</name>
 			<url>www.gdxsoft.com</url>
 			<email>guolei@gdxsoft.com</email>
+		</developer>
+		<developer>
+			<id>jinzhappeng</id>
+			<name>靳朝鹏</name>
+			<email>jinzhaopeng@126.com</email>
 		</developer>
 	</developers>
 
