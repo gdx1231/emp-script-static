@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>MarkDown</title>
+<!-- <link rel="stylesheet" href="../../third-party/markdown-editor-master/default.css"> -->
+<link rel="stylesheet" href="../../EWA_STYLE/skins/default/css_src/j_markdown.css">
+<style type="text/css" media="screen">
+#status {
+	position: absolute;
+	bottom: 0;
+	height: 21px;
+	left: 0;
+	width: 50%;
+	line-height: 20px;
+	font-size: 12px;
+	font-family: "Microsoft YaHei", "微软雅黑", tahoma, Verdana, Arial,
+		sans-serif, arial, STHeiti, 宋体;
+	line-height: 20px;
+	overflow: hidden;
+	background: #1f1f1f;
+}
+
+#status select {
+	border: 0;
+	height: 18px;
+	margin-right: 5px;
+}
+
+#status a {
+	color: #f1f1f1;
+	text-decoration: none;
+	margin-left: 10px;
+}
+
+#status a:hover {
+	color: red;
+}
+
+#code {
+	margin: 0;
+	position: absolute;
+	top: 0px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.ace_replace_form {
+	display: block !important;
+}
+
+#in {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 21px;
+	width: 50%;
+	height: auto;
+	overflow: auto;
+	font-size: 12px;
+	box-shadow: -10px 2px 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+#out {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 50%;
+	bottom: 0px;
+	overflow: auto;
+	padding: 10px;
+	padding-left: 20px;
+	color: #444;
+	font-family: "Microsoft YaHei", "微软雅黑", tahoma, Verdana, Arial,
+		sans-serif, arial, STHeiti, 宋体;
+	font-size: 16px;
+	line-height: 1.5em
+}
+</style>
+</head>
+<body>
+	<div id='in'>
+		<pre id='code'></pre>
+	</div>
+	<div id='out' class='ewa-mark-down'></div>
+	<div id='status'>
+		<span> <a>Theme:</a> <select id="theme" size="1" onchange="change_code_theme(this)">
+				<optgroup label="Bright">
+					<option value="ace/theme/chrome">Chrome</option>
+					<option value="ace/theme/clouds">Clouds</option>
+					<option value="ace/theme/crimson_editor">Crimson Editor</option>
+					<option value="ace/theme/dawn">Dawn</option>
+					<option value="ace/theme/dreamweaver">Dreamweaver</option>
+					<option value="ace/theme/eclipse">Eclipse</option>
+					<option value="ace/theme/github">GitHub</option>
+					<option value="ace/theme/iplastic">IPlastic</option>
+					<option value="ace/theme/solarized_light">Solarized Light</option>
+					<option value="ace/theme/textmate">TextMate</option>
+					<option value="ace/theme/tomorrow">Tomorrow</option>
+					<option value="ace/theme/xcode">XCode</option>
+					<option value="ace/theme/kuroir">Kuroir</option>
+					<option value="ace/theme/katzenmilch">KatzenMilch</option>
+					<option value="ace/theme/sqlserver">SQL Server</option>
+				</optgroup>
+				<optgroup label="Dark">
+					<option value="ace/theme/ambiance">Ambiance</option>
+					<option value="ace/theme/chaos">Chaos</option>
+					<option value="ace/theme/clouds_midnight">Clouds Midnight</option>
+					<option value="ace/theme/cobalt" selected>Cobalt</option>
+					<option value="ace/theme/gruvbox">Gruvbox</option>
+					<option value="ace/theme/idle_fingers">idle Fingers</option>
+					<option value="ace/theme/kr_theme">krTheme</option>
+					<option value="ace/theme/merbivore">Merbivore</option>
+					<option value="ace/theme/merbivore_soft">Merbivore Soft</option>
+					<option value="ace/theme/mono_industrial">Mono Industrial</option>
+					<option value="ace/theme/monokai">Monokai</option>
+					<option value="ace/theme/pastel_on_dark">Pastel on dark</option>
+					<option value="ace/theme/solarized_dark">Solarized Dark</option>
+					<option value="ace/theme/terminal">Terminal</option>
+					<option value="ace/theme/tomorrow_night">Tomorrow Night</option>
+					<option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
+					<option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
+					<option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
+					<option value="ace/theme/twilight">Twilight</option>
+					<option value="ace/theme/vibrant_ink">Vibrant Ink</option>
+				</optgroup>
+		</select></span>
+	</div>
+	<script src="../../third-party/jquery/jquery-3.6.0.min.js"></script>
+	<script src="../../third-party/raphael-master/raphael.min.js"></script>
+	<script src="../../third-party/flowchart.js-master/release/flowchart.min.js"></script>
+	<script src="../../third-party/markdown-editor-master/markdown-it.js" type="text/javascript"></script>
+	<script src="../../third-party/markdown-editor-master/highlight.pack.js" type="text/javascript"></script>
+	<script src="../../third-party/markdown-editor-master/markdown-it-footnote.js" type="text/javascript"></script>
+	<script src="../../third-party/ace/v1.4.12/src/ace.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var parent_textarea; //存放markdown的数据
+		var parent_textarea_html; //存放md转成html的数据
+		var map_svg={};
+		function onload1() {
+			init_editor_markdown();
+			var iframes = window.parent.document.getElementsByTagName('iframe');
+			for (var i = 0; i < iframes.length; i++) {
+				var o = iframes[i];
+				if (o.contentWindow == window) {
+					var textareas = o.parentNode.getElementsByTagName('textarea');
+					if (textareas.length > 0) {
+						//存放markdown的数据
+						parent_textarea = textareas[0];
+
+						if (textareas.length > 1) {
+							//存放md转成html的数据
+							parent_textarea_html = textareas[1];
+						}
+						var s = parent_textarea.value.replace(/\<script/ig, "[脚本").replace(/\<\/script/ig, "[脚本");
+
+						editor.setValue(s);
+						editor.selection.clearSelection();
+						setTimeout(update,111);
+					}
+				}
+			}
+		}
+
+		function getText() {
+			return editor.getValue();
+		}
+		function update() {
+			var mdCnt = getText();
+			document.getElementById('out').innerHTML = "";
+			var html = md.render(mdCnt);
+			document.getElementById('out').innerHTML = html;
+
+			if (parent_textarea) {
+				parent_textarea.value = mdCnt;
+			}
+
+			if (parent_textarea_html) {
+				parent_textarea_html.value = html;
+			}
+		}
+		function change_code_theme(obj) {
+			editor.setTheme(obj.value);
+			window.localStorage["EWA_CODE_THENE"] = obj.value;
+		}
+		function init_editor_markdown() {
+			var languageOverrides = {
+				js : 'javascript',
+				html : 'xml'
+			};
+			var flow_opt = {
+				'x' : 0,
+				'y' : 0,
+				'line-width' : 2,
+				'line-length' : 50,
+				'text-margin' : 10,
+				'font-size' : 14,
+				'font-color' : 'black',
+				'line-color' : 'black',
+				'element-color' : 'black',
+				'fill' : 'white',
+				'yes-text' : 'yes',
+				'no-text' : 'no',
+				'arrow-end' : 'block',
+				'scale' : 1,
+				// style symbol types
+				'symbols' : {
+					'start' : {
+						'font-color' : 'red',
+						'element-color' : 'green',
+						'fill' : 'yellow'
+					},
+					'end' : {
+						'class' : 'end-element'
+					}
+				},
+				// even flowstate support ;-)
+				'flowstate' : {
+					// 'past' : { 'fill' : '#CCCCCC', 'font-size' : 12},
+					// 'current' : {'fill' : 'yellow', 'font-color' : 'red', 'font-weight' : 'bold'},
+					// 'future' : { 'fill' : '#FFFF99'},
+					'request' : {
+						'fill' : 'blue'
+					}
+				//,
+				// 'invalid': {'fill' : '#444444'},
+				// 'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'APPROVED', 'no-text' : 'n/a' },
+				// 'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'n/a', 'no-text' : 'REJECTED' }
+				}
+			};
+			md = markdownit({
+				html : true,
+				highlight : function(code, lang) {
+					if (languageOverrides[lang])
+						lang = languageOverrides[lang];
+					if (lang && hljs.getLanguage(lang)) {
+						try {
+							return hljs.highlight(lang, code).value;
+						} catch (e) {
+						}
+					}
+					if (lang && lang == 'flow') {
+						try {
+							
+							if(map_svg[code]){
+								return map_svg[code];
+							}
+							
+							var diagram = flowchart.parse(code, flow_opt);
+							var id = 'flow-' + Math.random();
+							obj.id = id;
+							var h = "<div id='"+id+"'></div>";
+							setTimeout(function() {
+								diagram.drawSVG(document.getElementById(id));
+								
+								if (parent_textarea_html) {
+									parent_textarea_html.value = document.getElementById('out').innerHTML;
+								}
+								map_svg[code]=document.getElementById(id).outerHTML;
+								
+							}, 1);
+							return h;
+						} catch (e) {
+							return e;
+						}
+					}
+					return '';
+				}
+			}).use(markdownitFootnote);
+
+			mode = 'ace/mode/markdown';
+
+			//ace.require("ace/ext/language_tools");
+
+			editor = ace.edit("code");
+			var theme_code = "ace/theme/cobalt";
+			if (window.localStorage && window.localStorage["EWA_CODE_THENE"]) {
+				var v = window.localStorage["EWA_CODE_THENE"];
+				var obj = document.getElementById('theme');
+				for (var i = 0; i < theme.options.length; i++) {
+					var v1 = obj.options[i].value;
+					if (v1 == v) {
+						theme_code = v1;
+						obj.value = v1;
+						break;
+					}
+				}
+			}
+
+			editor.setTheme(theme_code);
+			editor.session.setMode(mode);
+			editor.getSession().setUseWrapMode(true);
+			editor.setShowPrintMargin(false);
+			editor.setOptions({
+			});
+			editor.$blockScrolling = Infinity;
+			editor.getSession().on('change', function(e) {
+				update();
+			});
+
+			editor.commands.addCommand({
+				name : 'myCommandSave',
+				bindKey : {
+					win : 'Ctrl-S',
+					mac : 'Command-S'
+				},
+				exec : function(editor) {
+					try {
+						parent.save();
+					} catch (e) {
+						console.log(e);
+					}
+				},
+				readOnly : true
+			});
+		}
+		onload1();
+	</script>
+</body>
+</html>
