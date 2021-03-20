@@ -3,6 +3,8 @@ package com.gdxsoft.easyweb.resources;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -15,25 +17,10 @@ public class Resources {
 	 */
 	private static Logger LOGGER = LoggerFactory.getLogger(Resources.class);
 
-	/**
-	 * Get the EWA static files, js, css, images ...
-	 * 
-	 * @param path static path
-	 * @return the resource
-	 */
-	public static Resource getResource(String path) {
-		String ext = FilenameUtils.getExtension(path);
+	private static Map<String, Resource> CACHED = new ConcurrentHashMap<String, Resource>();
 
-		// for compatible
-		if (path.equals("/EWA_STYLE/js/EWA_ALL.js")) {
-			path = "/EWA_STYLE/js/ewa.js";
-		} else if (path.equals("/EWA_STYLE/js/src/main/resources/EWA_STYLE/js/source/EWA_ALL.js")) {
-			path = "/EWA_STYLE/js/ewa.js";
-		} else if (path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.min.2.0.js")) {
-			path = "/EWA_STYLE/js/ewa.min.js";
-		} else if (path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.2.0.js")) {
-			path = "/EWA_STYLE/js/ewa.js";
-		}
+	private static synchronized Resource loadResource(String path) {
+		String ext = FilenameUtils.getExtension(path);
 
 		URL url = Resources.class.getResource(path);
 		Resource r = new Resource();
@@ -79,6 +66,45 @@ public class Resources {
 			LOGGER.error(r.toString());
 			return r;
 		}
+	}
+
+	/**
+	 * Get the EWA static files, js, css, images ...
+	 * 
+	 * @param path static path
+	 * @return the resource
+	 */
+	public static Resource getResource(String path) {
+
+		// for compatible
+		if (path.equals("/EWA_STYLE/js/EWA_ALL.js")) {
+			path = "/EWA_STYLE/js/ewa.js";
+		} else if (path.equals("/EWA_STYLE/js/src/main/resources/EWA_STYLE/js/source/EWA_ALL.js")) {
+			path = "/EWA_STYLE/js/ewa.js";
+		} else if (path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.min.2.0.js")) {
+			path = "/EWA_STYLE/js/ewa.min.js";
+		} else if (path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.2.0.js")) {
+			path = "/EWA_STYLE/js/ewa.js";
+		} else if (path.equals("/thrid-party/jquery/jquery-1.12.3.min.js")) {
+			path = "/third-party/jquery/jquery-1.12.4.min.js";
+		} else if (path.indexOf("/thrid-party/") == 0) {
+			path = path.replace("/thrid-party/", "/third-party/");
+		} else if (path.indexOf("/js_jquery/") >= 0 && path.indexOf("EWA_ALL") < 0) {
+			path = path.replace("/js_jquery/", "/source/");
+		}
+
+		path = path.replace("//", "/").replace("//", "/").replace("//", "/").replace("//", "/");
+
+		// from cached
+		if (CACHED.containsKey(path)) {
+			return CACHED.get(path);
+		}
+
+		// load from resources
+		Resource r = loadResource(path);
+		CACHED.put(path, r);
+
+		return r;
 	}
 
 }
