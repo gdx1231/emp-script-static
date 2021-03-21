@@ -146,10 +146,27 @@ function EWAD$Connections() {
         var nl = classXml.GetElements("root/database");
         for (var i = 0; i < nl.length; i = i + 1) {
             var cnn = new EWAD$Connection();
-            cnn.Name = classXml.GetElementAttribute(nl[i], "name").toLowerCase();
-            cnn.Type = classXml.GetElementAttribute(nl[i], "type");
-            cnn.ConnectionString = classXml.GetElementAttribute(nl[i], "connectionString");
-            cnn.SchemaName = classXml.GetElementAttribute(nl[i], "schemaName");
+			let name = classXml.GetElementAttribute(nl[i], "name");
+			if(!name){
+				// old conf
+				name = classXml.GetElementAttribute(nl[i], "Name");
+			}
+			let type = classXml.GetElementAttribute(nl[i], "type");
+			if(!type){
+				type = classXml.GetElementAttribute(nl[i], "Type");
+			}
+			let connectionSring =  classXml.GetElementAttribute(nl[i], "connectionString");
+			if(!connectionSring){
+				connectionSring =  classXml.GetElementAttribute(nl[i], "ConnectionString");
+			}
+			let schemaName = classXml.GetElementAttribute(nl[i], "schemaName");
+			if(!schemaName){
+				schemaName = classXml.GetElementAttribute(nl[i], "SchemaName");
+			}
+            cnn.Name = name===null?"undefined":name.toLowerCase();
+            cnn.Type = type;
+            cnn.ConnectionString =connectionSring;
+            cnn.SchemaName = schemaName;
             this.Connections.AddObject(cnn.Name, cnn);
         }
     };

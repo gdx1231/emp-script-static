@@ -41,6 +41,8 @@ public class Resources {
 			r.setType("text/json");
 		} else if (ext.equalsIgnoreCase("css")) {
 			r.setType("text/css");
+		} else if (ext.equalsIgnoreCase("xml")) {
+			r.setType("text/xml");
 		} else if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("png")
 				|| ext.equalsIgnoreCase("gif")) {
 			r.setType("image/" + ext);
@@ -74,19 +76,21 @@ public class Resources {
 	 * @param path static path
 	 * @return the resource
 	 */
-	public static Resource getResource(String path) {
-
+	public static Resource getResource(String resourcePath) {
+		// from cached
+		if (CACHED.containsKey(resourcePath)) {
+			return CACHED.get(resourcePath);
+		}
+		String path = resourcePath;
 		// for compatible
-		if (path.equals("/EWA_STYLE/js/EWA_ALL.js")) {
+		if (path.indexOf("EWA_ALL.js") > 0 || path.indexOf("EWA_ALL.2.0.js") > 0) {
 			path = "/EWA_STYLE/js/ewa.js";
-		} else if (path.equals("/EWA_STYLE/js/src/main/resources/EWA_STYLE/js/source/EWA_ALL.js")) {
-			path = "/EWA_STYLE/js/ewa.js";
-		} else if (path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.min.2.0.js")) {
+		} else if (path.indexOf("EWA_ALL.min.2.0.js") > 0) {
 			path = "/EWA_STYLE/js/ewa.min.js";
-		} else if (path.equals("/EWA_STYLE/js/js_jquery/EWA_ALL.2.0.js")) {
-			path = "/EWA_STYLE/js/ewa.js";
-		} else if (path.equals("/thrid-party/jquery/jquery-1.12.3.min.js")) {
+		} else if (path.indexOf("/jquery/jquery-1.") > 0) {
 			path = "/third-party/jquery/jquery-1.12.4.min.js";
+		} else if (path.indexOf("/jquery/jquery-3.") > 0) {
+			path = "/third-party/jquery/jquery-3.6.0.min.js";
 		} else if (path.indexOf("/thrid-party/") == 0) {
 			path = path.replace("/thrid-party/", "/third-party/");
 		} else if (path.indexOf("/js_jquery/") >= 0 && path.indexOf("EWA_ALL") < 0) {
@@ -95,14 +99,9 @@ public class Resources {
 
 		path = path.replace("//", "/").replace("//", "/").replace("//", "/").replace("//", "/");
 
-		// from cached
-		if (CACHED.containsKey(path)) {
-			return CACHED.get(path);
-		}
-
 		// load from resources
 		Resource r = loadResource(path);
-		CACHED.put(path, r);
+		CACHED.put(resourcePath, r);
 
 		return r;
 	}
