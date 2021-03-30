@@ -73,7 +73,7 @@ public class Resources {
 	/**
 	 * Get the EWA static files, js, css, images ...
 	 * 
-	 * @param path static path
+	 * @param resourcePath static path
 	 * @return the resource
 	 */
 	public static Resource getResource(String resourcePath) {
