@@ -3192,7 +3192,7 @@ function EWA_UI_PopWindowClass(parentWindow, isDisposeOnClose) {
 		this._Dialog.Create();
 		this._Dialog.Show(true);
 		var html = "<iframe style='width:100%;height:100%;' name='__EMP_COMMON_IFRAME"
-				+ this._Name + "' frameborder=0 src=\"about:blank\"></iframe>";
+				+ this._Name + "' frameborder='0'></iframe>";
 		this.SetHtml(html);
 	};
 	this.SetHtml = function(html) {
