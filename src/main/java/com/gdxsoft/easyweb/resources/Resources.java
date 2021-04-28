@@ -87,6 +87,8 @@ public class Resources {
 			path = "/EWA_STYLE/js/ewa.js";
 		} else if (path.indexOf("EWA_ALL.min.2.0.js") > 0) {
 			path = "/EWA_STYLE/js/ewa.min.js";
+		} else if (path.indexOf("/EWA_STYLE/js/js_jquery/fas.js") > 0) {
+			path = "/EWA_STYLE/js/fas.js";
 		} else if (path.indexOf("/jquery/jquery-1.") > 0) {
 			path = "/third-party/jquery/jquery-1.12.4.min.js";
 		} else if (path.indexOf("/jquery/jquery-3.") > 0) {
