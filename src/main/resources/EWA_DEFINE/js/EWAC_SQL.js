@@ -111,8 +111,7 @@ function EWAC_SqlCreator() {
 				+ "\", para" + f.Class.Name + ", \"" + f.Class.Type + "\", "
 				+ f.Length + ");";
 
-		var fjson = [ "if(json.has(\"" + f.Name + "\"){\n o.set" + f.Class.Name
-				+ "(" ];
+		var fjson = [ "if(json.has(\"" + f.Name + "\"){\n o.set" + f.Class.Name + "(" ];
 
 		if (f.ClassType == 'Integer') {
 			fjson.push("json.optInt(\"" + f.Name + "\")");
@@ -250,9 +249,16 @@ function EWAC_SqlCreator() {
 				+ " para){\n");
 		newRecord.push("\t\tRequestValue rv=this.createRequestValue(para);\n");
 
+console.log(this._AutoIncrementField);
+
 		if (this._AutoIncrementField) {
-			newRecord
-					.push("int autoKey = super.executeUpdateAutoIncrement(SQL_INSERT, rv);");
+			if(this._AutoIncrementField.Class.Type == 'Long'){ //长整型
+				newRecord
+						.push("long autoKey = super.executeUpdateAutoIncrementLong(SQL_INSERT, rv);");
+			} else {
+				newRecord
+						.push("int autoKey = super.executeUpdateAutoIncrement(SQL_INSERT, rv);");
+			}
 			newRecord.push("if (autoKey > 0) {");
 			newRecord.push("para.set" + this._AutoIncrementField.Class.Name
 					+ "(autoKey);//自增");
@@ -283,8 +289,13 @@ function EWAC_SqlCreator() {
 		newRecord.push("  }");
 		newRecord.push("  RequestValue rv = this.createRequestValue(para);");
 		if (this._AutoIncrementField) {
-			newRecord
-					.push("int autoKey = super.executeUpdateAutoIncrement(sql, rv);//自增");
+			if(this._AutoIncrementField.Class.Type == 'Long'){ //长整型
+				newRecord
+						.push("long autoKey = super.executeUpdateAutoIncrementLong(SQL_INSERT, rv);");
+			} else {
+				newRecord
+						.push("int autoKey = super.executeUpdateAutoIncrement(SQL_INSERT, rv);");
+			}
 			newRecord.push("if (autoKey > 0) {");
 			newRecord.push("para.set" + this._AutoIncrementField.Class.Name
 					+ "(autoKey);");
@@ -606,60 +617,24 @@ function CreateClassWord(s1) {
 }
 function CreateType(s1) {
 	s1 = s1.toLowerCase();
-	if (s1.indexOf("num") >= 0 || s1.indexOf("int") >= 0) {
+	if(s1 == 'bigint' ||  s1=='lang') {
+		return 'Long';
+	} else if (s1.indexOf("int") >= 0) {
 		return "Integer";
-	}
-	if (s1.indexOf("decimal") >= 0 || s1.indexOf("num") >= 0
+	} else if (s1.indexOf("decimal") >= 0 || s1.indexOf("num") >= 0
 			|| s1.indexOf("money") >= 0 || s1.indexOf('float') >= 0
 			|| s1.indexOf('double') >= 0) {
 		return "Double";
-	}
-	if (s1.indexOf("date") >= 0 || s1.indexOf("time") >= 0) {
+	} else if (s1.indexOf("date") >= 0 || s1.indexOf("time") >= 0) {
 		return "Date";
-	}
-	if (s1.indexOf("bin") >= 0 || s1.indexOf("blob") >= 0
+	} else if (s1.indexOf("bin") >= 0 || s1.indexOf("blob") >= 0
 			|| s1.indexOf("image") >= 0) {
 		return "byte[]";
+	} else {
+		return "String";
 	}
-	return "String";
 }
 // -------------------
 function copyToClipboard(text) {
-	if (EWA.B.IE) {// 判断是否IE
-		try {
-			window.clipboardData.setData("Text", text);
-		} catch (e) {
-			// alert('剪贴板失败，请自行粘贴');
-		}
-	} else {
-		if (window.netscape) {// 判断是否存在netscape对象，FF
-			try {// 用try来尝试使用对象
-				netscape.security.PrivilegeManager
-						.enablePrivilege("UniversalXPConnect");
-			} catch (e) {// 如果不能使用剪贴板，提示用户出错
-				alert("\u60a8\u7684firefox\u5b89\u5168\u9650\u5236\u9650\u5236\u60a8\u8fdb\u884c\u526a\u8d34\u677f\u64cd\u4f5c\u3002\u8bf7\u6253\u5f00 \"about:config\" \u5c06signed.applets.codebase_principal_support \"\u8bbe\u7f6e\u4e3atrue\" \u4e4b\u540e\u91cd\u8bd5");
-				return false;
-			}
-			var clip, trans, str = {}, clipid;
-			if (!(clip = Components.classes["@mozilla.org/widget/clipboard;1"]
-					.createInstance(Components.interfaces.nsIClipboard))) {
-				return;
-			}
-			if (!(trans = Components.classes["@mozilla.org/widget/transferable;1"]
-					.createInstance(Components.interfaces.nsITransferable))) {
-				return;
-			}
-			trans.addDataFlavor("text/unicode");
-			str = Components.classes["@mozilla.org/supports-string;1"]
-					.createInstance(Components.interfaces.nsISupportsString);
-			str.data = text;
-			trans.setTransferData("text/unicode", str, text.length * 2);
-			clipid = Components.interfaces.nsIClipboard;
-			try {
-				clip.setData(trans, null, clipid.kGlobalClipboard);
-			} catch (e) {
-				return false;
-			}
-		}
-	}
+	 
 }
