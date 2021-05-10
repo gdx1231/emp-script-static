@@ -938,20 +938,25 @@ function EWA_MiscPasteToolClass() {
 	this.processAsPaste = function(c) {
 		var a = new FileReader();
 		var me = this;
+		var prevImgs = {};
+		$(me.target).find('img').each(function() {
+			prevImgs[this] = true;
+		});
 		a.onloadend = function() {
 			var img = null;
-			// img.src = this.result;
-			// EWA_MiscPasteTool.target.appendChild(img);
-			var prevImgs = {};
+			// 检查是否图形已经插入
 			$(me.target).find('img').each(function() {
-				prevImgs[this.src] = true;
+				if (img == null && !prevImgs[this]) {
+					img = this;
+				}
 			});
-
-			me.target.ownerDocument.execCommand("InsertImage", false,
+			if(!img){
+				// 执行插入图片
+				me.target.ownerDocument.execCommand("InsertImage", false,
 					this.result);
-
+			}
 			$(me.target).find('img').each(function() {
-				if (img == null && !prevImgs[this.src]) {
+				if (img == null && !prevImgs[this]) {
 					img = this;
 				}
 			});
