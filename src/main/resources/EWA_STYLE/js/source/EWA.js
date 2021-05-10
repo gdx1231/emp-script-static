@@ -4,29 +4,27 @@
  * https://gdxsoft.com/
  */
 
-window.EWA = {
+window.EWA = window.EWA || {
 	VERSION : 2.6,
 	/** 版本 */
 	LANG : 'zhcn',
 	/** 当前语言代码 */
 	SHOW_ERROR : true // 是否提示执行错误
-	,
-	__p : window.location.pathname,
-	__inc : 0
 };
-
-// 避免 http://gezz.cn/////////ex/grd.jsp 情况出现
-while (EWA.__p.indexOf('//') == 0) {
-	EWA.__p = EWA.__p.replace('//', '/');
-	EWA.__inc++;
-
-	if (EWA.__inc > 100) {
-		break;
+if(!EWA["CP"]){
+	EWA. __p = window.location.pathname;
+	EWA.__inc = 0;
+	while (EWA.__p.indexOf('//') == 0) {
+		EWA.__p = EWA.__p.replace('//', '/');
+		EWA.__inc++;
+	
+		if (EWA.__inc > 100) {
+			break;
+		}
 	}
+	/** EWA的根目录 */
+	EWA["CP"] = "/" + EWA.__p.split('/')[1] + "/";
 }
-/** EWA的根目录 */
-EWA["CP"] = "/" + EWA.__p.split('/')[1] + "/";
-
 var userAgent = window.navigator.userAgent.toLowerCase();
 /**
  * 浏览器类型
