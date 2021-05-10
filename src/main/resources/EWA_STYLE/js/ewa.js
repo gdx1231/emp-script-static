@@ -16616,7 +16616,7 @@ function EWA_ListFrameClass() {
 	/**
 	 * 添加回收站标志
 	 */
-	this.ShowRecycle = function () {
+	this.ShowRecycle = function() {
 		var tb = $X('EWA_LF_' + this._Id);
 		if (tb == null) {
 			// console.log('not found table[#EWA_LF_' + this._Id + "]");
@@ -16634,13 +16634,13 @@ function EWA_ListFrameClass() {
 			recycle_name = window._EWA_INFO_MSG.RECYCLE;
 		}
 		var s = "<div class='ewa_lf_func_dact ewa-lf-func-recycle' onclick='EWA.F.FOS[\"" + this._Id + "\"].ShowRecycle1(this)' ><b class='fa fa-recycle'></b>"
-				+ recycle_name + "</div>";
+			+ recycle_name + "</div>";
 		t.parent().append(s);
 	};
 	/**
 	 * 切换回收站内容
 	 */
-	this.ShowRecycle1 = function (obj) {
+	this.ShowRecycle1 = function(obj) {
 		var u1 = new EWA_UrlClass(this.Url);
 		var u;
 		if ($(obj).attr('recycle')) {
@@ -16653,8 +16653,8 @@ function EWA_ListFrameClass() {
 		this.Url = u;
 		this.Goto(1);
 	};
-	this.BindButton = function (from, to) {
-		$('#EWA_LF_' + this._Id + ' tr[ewa_key] [id="' + from + '"]').each(function () {
+	this.BindButton = function(from, to) {
+		$('#EWA_LF_' + this._Id + ' tr[ewa_key] [id="' + from + '"]').each(function() {
 			$(this).attr('onclick', '$(this).parent().parent().find(\'[id="' + to + '"]\')[0].click()');
 			$(this).addClass('ewa-map-button');
 		});
@@ -16662,8 +16662,8 @@ function EWA_ListFrameClass() {
 	/**
 	 * 合并单元格内容, 同时隐含来源的格子
 	 */
-	this.Merge = function (from, to, meargeStr, func) {
-		$('#EWA_LF_' + this._Id + ' tr[ewa_key]').each(function () {
+	this.Merge = function(from, to, meargeStr, func) {
+		$('#EWA_LF_' + this._Id + ' tr[ewa_key]').each(function() {
 			var fromobj = $(this).find('[id="' + from + '"]');
 			fromobj.parent().hide();
 			var t = $(this).find('[id="' + to + '"]');
@@ -16684,7 +16684,7 @@ function EWA_ListFrameClass() {
 		});
 		$('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + from + '"]').parent().hide();
 	};
-	this.Mearge = function (from, to, meargeStr) {
+	this.Mearge = function(from, to, meargeStr) {
 		console.log('拼写错误，请用 Merge')
 		this.Merge(from, to, meargeStr);
 	};
@@ -16700,7 +16700,7 @@ function EWA_ListFrameClass() {
 	 * @param funcEachRow
 	 *            每行合并完成后执行的方法
 	 */
-	this.MergeExp = function (toParent, mergeExp, isAddMemo, funcEachRow) {
+	this.MergeExp = function(toParent, mergeExp, isAddMemo, funcEachRow) {
 		if (!mergeExp) {
 			console.log("mergeExp 没有设置");
 			return;
@@ -16722,7 +16722,7 @@ function EWA_ListFrameClass() {
 			memos[id] = $('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + id + '"]').html();
 		}
 
-		$('#EWA_LF_' + this._Id + ' tr[ewa_key]').each(function () {
+		$('#EWA_LF_' + this._Id + ' tr[ewa_key]').each(function() {
 			var o1 = document.createElement('div');
 			o1.style.display = 'none';
 			o1.innerHTML = tmp_html;
@@ -16736,7 +16736,7 @@ function EWA_ListFrameClass() {
 			// td
 			var p = $(this).find('[id="' + toParent + '"]').parent();
 			var tmp = mergeExp;
-			for ( var n in paras) {
+			for (var n in paras) {
 				var exp = paras[n];
 				var key = exp.replace('@@', '');
 				var o = $(this).find('[id="' + key + "\"]");
@@ -16762,26 +16762,26 @@ function EWA_ListFrameClass() {
 			}
 		});
 	};
-	this.MeargeExp = function (toParent, meargeExp, isAddMemo, func) {
+	this.MeargeExp = function(toParent, meargeExp, isAddMemo, func) {
 		console.log('拼写错误，请用 MereExp');
 		this.MergeExp(toParent, meargeExp, isAddMemo, func);
 	}
 	/**
 	 * 在页面底部添加合计数
 	 */
-	this.SubBottoms = function (ids) {
+	this.SubBottoms = function(ids) {
 		this.SubBottomsArray = ids.split(',');
 		this._SubBottoms();
 	}
-	this._SubBottoms = function () {
+	this._SubBottoms = function() {
 		var r = this.AddRow([]);
 		$(r).find('td').addClass('ewa-lf-sub-td');
 		var fm_length = 0;
-		for ( var i in this.SubBottomsArray) {
+		for (var i in this.SubBottomsArray) {
 			var id = this.SubBottomsArray[i];
 			var total = 0;
 			var exp = '#EWA_LF_' + this._Id + ' .ewa-col-' + id + '';
-			$(exp).each(function () {
+			$(exp).each(function() {
 				var v = GetInnerText(this).replace(/,/ig, '');
 				if (!isNaN(v)) {
 					total += v * 1;
@@ -16794,7 +16794,7 @@ function EWA_ListFrameClass() {
 		}
 	};
 
-	this.ChangeRowStyle = function (checkColIdx, atttName, styleJson) {
+	this.ChangeRowStyle = function(checkColIdx, atttName, styleJson) {
 		var tb = $X('EWA_LF_' + this._Id);
 		for (var i = 1; i < tb.rows.length; i++) {
 			var r = tb.rows[i];
@@ -16813,13 +16813,13 @@ function EWA_ListFrameClass() {
 		}
 		if (this.ReloadAfter == null) {
 			var c = this;
-			this.ReloadAfter = function () {
+			this.ReloadAfter = function() {
 				c.ChangeRowStyle(checkColIdx, atttName, styleJson);
 			}
 		}
 
 	}
-	this.MDownEvent = function (tr, evt) {
+	this.MDownEvent = function(tr, evt) {
 		// change to your event
 	};
 	/**
@@ -16830,7 +16830,7 @@ function EWA_ListFrameClass() {
 	 * @param {}
 	 *            func 回调的方法名称
 	 */
-	this.LoadJson = function (actionName, func) {
+	this.LoadJson = function(actionName, func) {
 		if (actionName == null) {
 			return;
 		}
@@ -16854,7 +16854,7 @@ function EWA_ListFrameClass() {
 	 * @param {}
 	 *            uMsg 附加用户信息
 	 */
-	this.Workflow = function (unitType, name, obj, keyValue, uOk, uMsg) {
+	this.Workflow = function(unitType, name, obj, keyValue, uOk, uMsg) {
 		EWA.F.CID = this._Id;
 
 		this._Ajax = this.CreateAjax();
@@ -16889,7 +16889,7 @@ function EWA_ListFrameClass() {
 			this._Ajax.AddParameter("EWA_WF_UMSG", uMsg);
 		}
 		var c = this;
-		this._Ajax.PostNew(this.Url, function () {
+		this._Ajax.PostNew(this.Url, function() {
 			c._CallBackJs();
 		});
 	}
@@ -16900,7 +16900,7 @@ function EWA_ListFrameClass() {
 	 *            obj
 	 * @return {}
 	 */
-	this.GetRowKey = function (obj) {
+	this.GetRowKey = function(obj) {
 		var tr = this.GetRow(obj);
 		if (tr != null) {
 			var key = tr.getAttribute("EWA_KEY");
@@ -16909,7 +16909,7 @@ function EWA_ListFrameClass() {
 		return null;
 	}
 
-	this.GetRow = function (obj) {
+	this.GetRow = function(obj) {
 		if (obj == null || obj.tagName == null || obj.tagName == '') {
 			return null;
 		}
@@ -16930,7 +16930,7 @@ function EWA_ListFrameClass() {
 		return tr;
 
 	}
-	this.RecordModify = function (xmlName, itemName, addParas) {
+	this.RecordModify = function(xmlName, itemName, addParas) {
 		var ids = this.SelectChecked();
 		if (ids.length == 0) {
 			EWA.UI.Msg.Alter("请先选择", "修改");
@@ -16946,22 +16946,22 @@ function EWA_ListFrameClass() {
 		ps += id;
 		EWA.UI.Dialog.OpenReloadClose(this._Id, xmlName, itemName, false, ps);
 	};
-	this.RecordNew = function (xmlName, itemName, addParas) {
+	this.RecordNew = function(xmlName, itemName, addParas) {
 		var ps = "EWA_MTYPE=N";
 		if (addParas != null && addParas.trim().length > 0) {
 			ps += "&" + addParas;
 		}
 		EWA.UI.Dialog.OpenReloadClose(this._Id, xmlName, itemName, false, ps);
 	};
-	this.SelectSingle = function () {
+	this.SelectSingle = function() {
 		this.IsTrSelect = true;
 		this._TrSelectMulti = false;
 	};
-	this.SelectMulti = function () {
+	this.SelectMulti = function() {
 		this.IsTrSelect = true;
 		this._TrSelectMulti = true;
 	};
-	this.MOver = function (tr, evt) {
+	this.MOver = function(tr, evt) {
 		if (!this.IsTrSelect)
 			return;
 		if (this._CurTr == tr) {
@@ -16989,7 +16989,7 @@ function EWA_ListFrameClass() {
 		}
 	};
 
-	this.MOut = function (evt) {
+	this.MOut = function(evt) {
 		if (!this.IsTrSelect)
 			return;
 
@@ -17018,10 +17018,10 @@ function EWA_ListFrameClass() {
 	/**
 	 * 检查是否可以进行行点击事件，用户可以注册此事件
 	 */
-	this.MDownEnableCheck = function (tr, evt) {
+	this.MDownEnableCheck = function(tr, evt) {
 		return true
 	};
-	this.MDown = function (tr, evt) {
+	this.MDown = function(tr, evt) {
 		if (!this.IsTrSelect)
 			return;
 		var evt = evt == null ? event : evt;
@@ -17031,11 +17031,11 @@ function EWA_ListFrameClass() {
 		if (evt) {// 如果没有event,则不检测
 			var target = evt.srcElement ? evt.srcElement : evt.target;
 			if (target
-					&& (target.tagName == 'A' || target.tagName == 'INPUT' || target.tagName == 'SELECT' || target.tagName == 'BUTTON'
-							|| target.tagName == 'TEXTAREA' || target.className.indexOf("EWA_LF_EDIT") >= 0 || target.className.indexOf("ewa-lf-edit") >= 0
-							|| target.className.indexOf("ewa-lf-search-text-click") >= 0
-							|| target.parentNode.className.indexOf("ewa-lf-search-text-click") >= 0 || target.parentNode.parentNode.className
-							.indexOf("ewa-lf-search-text-click") >= 0)) {
+				&& (target.tagName == 'A' || target.tagName == 'INPUT' || target.tagName == 'SELECT' || target.tagName == 'BUTTON'
+					|| target.tagName == 'TEXTAREA' || target.className.indexOf("EWA_LF_EDIT") >= 0 || target.className.indexOf("ewa-lf-edit") >= 0
+					|| target.className.indexOf("ewa-lf-search-text-click") >= 0
+					|| target.parentNode.className.indexOf("ewa-lf-search-text-click") >= 0 || target.parentNode.parentNode.className
+						.indexOf("ewa-lf-search-text-click") >= 0)) {
 				return;
 			}
 		}
@@ -17085,8 +17085,8 @@ function EWA_ListFrameClass() {
 			tr.setAttribute('__ewa_lf_mdown', 1);
 			$(tr).addClass('ewa-lf-mdown');
 			if (!this._TrSelectMulti) {
-				var tb = tr.parentNode; 
-				if(tb && tb.rows){ // tr有可能被挪走了
+				var tb = tr.parentNode;
+				if (tb && tb.rows) { // tr有可能被挪走了
 					for (var i = 0; i < tb.rows.length; i++) {
 						var tr1 = tb.rows[i];
 						if (tr1.getAttribute('__ewa_lf_mdown') == '1' && tr1 != tr) {
@@ -17102,7 +17102,7 @@ function EWA_ListFrameClass() {
 					if (objs[i].type.toUpperCase() == 'BUTTON') {
 						var o = objs[i];
 						if (o.getAttribute('disabled') == 'true' || o.getAttribute('disabled') == true || o.parentNode.getAttribute('disabled') == 'true'
-								|| o.parentNode.getAttribute('disabled') == true) {
+							|| o.parentNode.getAttribute('disabled') == true) {
 							this._ReshowButs[o.value].disabled = true;
 							this._ReshowButs[o.value].style.display = 'none';
 						} else {
@@ -17168,7 +17168,7 @@ function EWA_ListFrameClass() {
 	 * @param func
 	 *            function(frameUnid, tr, key, newTr, evt)
 	 */
-	this.AddPreRow = function (func) {
+	this.AddPreRow = function(func) {
 		if (!this._IsAddPreRow) {
 			this.MDownEvent = func;
 		}
@@ -17186,7 +17186,7 @@ function EWA_ListFrameClass() {
 	 *            event事件
 	 * @returns true/false
 	 */
-	this.AddPreRowCheck = function (tr, key, evt) {
+	this.AddPreRowCheck = function(tr, key, evt) {
 		// 检查触发对象，用户需要改写此方法
 		return true;
 	};
@@ -17204,7 +17204,7 @@ function EWA_ListFrameClass() {
 	 * @param evt
 	 *            event事件
 	 */
-	this.AddPreRowCloseBeforeEvent = function (frameUnid, tr, key, newTr, evt) {
+	this.AddPreRowCloseBeforeEvent = function(frameUnid, tr, key, newTr, evt) {
 		// 用户需要改写此方法
 	};
 	/**
@@ -17221,11 +17221,11 @@ function EWA_ListFrameClass() {
 	 * @param evt
 	 *            event事件
 	 */
-	this.AddPreRowCloseEvent = function (frameUnid, tr, key, newTr, evt) {
+	this.AddPreRowCloseEvent = function(frameUnid, tr, key, newTr, evt) {
 		// 用户需要改写此方法
 	};
 
-	this._MSetBg = function (tr, type) {
+	this._MSetBg = function(tr, type) {
 		var className = 'EWA_TD_M';
 		if (type == 'down') {
 			className = 'ewa_grid_down';
@@ -17239,12 +17239,12 @@ function EWA_ListFrameClass() {
 	/**
 	 * 用于检索辅助快速点击
 	 */
-	this._ReShowSearchQuick = function () {
+	this._ReShowSearchQuick = function() {
 		var c = this;
 
 		var items = EWA_ListFrameClass.prototype.RESOURCES.search_text_items;
 		var eq_item, lk_item; // 文字检索的 标签
-		for ( var n in items) {
+		for (var n in items) {
 			var item = items[n];
 			if (item.Id == 'eq') { // 等于
 				eq_item = item;
@@ -17254,14 +17254,14 @@ function EWA_ListFrameClass() {
 			}
 		}
 
-		for ( var n in this._SearchJson) {
+		for (var n in this._SearchJson) {
 			var o = this._SearchJson[n];
 			if (!o.isSearchQuick) {
 				continue;
 			}
 
 			var objs = $('#EWA_LF_' + this.Id + ' .ewa-lf-data-row [id="' + n + '"]');
-			objs.bind('click', function (event) {
+			objs.bind('click', function(event) {
 				event.stopPropagation();
 
 				// 检索方式
@@ -17282,7 +17282,7 @@ function EWA_ListFrameClass() {
 					search_value1 = search_value + " 23:59:59";
 				} else if (search_tag == 'fix') {
 					var findOptionValue = null;
-					ipt.find('option').each(function () {
+					ipt.find('option').each(function() {
 						if (this.text == search_value) {
 							findOptionValue = this.value;
 						}
@@ -17313,7 +17313,7 @@ function EWA_ListFrameClass() {
 					ipt[1].value = search_value1;
 				}
 			});
-			objs.each(function () {
+			objs.each(function() {
 				if ($(this).text()) { // 空白字符不添加
 					$(this).addClass('ewa-lf-search-text-click').attr('search_tag', o.T);
 				}
@@ -17321,10 +17321,10 @@ function EWA_ListFrameClass() {
 
 		}
 	};
-	this.ReShowWithNoButtons = function () {
+	this.ReShowWithNoButtons = function() {
 		var gridTable = $X('EWA_LF_' + this._Id);
 		var rowIndexes = [];
-		for ( var name in this.ItemList.Items) {
+		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
 			var s = this._GetSubValue("Tag", "Tag", node);
 			if (s == null || s.trim().toLowerCase() != 'button') {
@@ -17342,7 +17342,7 @@ function EWA_ListFrameClass() {
 		this.ShowHiddenColumns(rowIndexes, false);
 
 	};
-	this.ReShowButtonsInDailogTitle = function () {
+	this.ReShowButtonsInDailogTitle = function() {
 		EWA.OW.Load();
 		if (!EWA.OW.Dia) {
 			return;
@@ -17351,13 +17351,13 @@ function EWA_ListFrameClass() {
 		var id = "EWA_RESHOW_" + this._Id;
 		var buttonsTd = $($X(id)).find('td.ewa_lf_func:eq(0)');
 		var c = this;
-		buttonsTd.find('.ewa_lf_func_dact').each(function () {
+		buttonsTd.find('.ewa_lf_func_dact').each(function() {
 			var id = EWA_Utils.tempId('gDx_' + c._Id + "_");
 			this.id = id;
 		});
 		titleTd.html(buttonsTd.html());
-		titleTd.find('.ewa_lf_func_dact').each(function () {
-			this.onclick = function () {
+		titleTd.find('.ewa_lf_func_dact').each(function() {
+			this.onclick = function() {
 				var id = this.id;
 				buttonsTd.find('div[id="' + id + '"]').click();
 			};
@@ -17366,7 +17366,7 @@ function EWA_ListFrameClass() {
 
 		$(EWA.OW.Dia._Dialog.GetFrame()).addClass('ewa-lf-btns-in-title');
 	};
-	this.ReShow = function (notReDrawButtons) {
+	this.ReShow = function(notReDrawButtons) {
 		this.IsReShow = true;
 		var obj = document.createElement('table');
 		obj.id = "EWA_RESHOW_" + this._Id;
@@ -17374,7 +17374,7 @@ function EWA_ListFrameClass() {
 		obj.cellSpacing = '0';
 		obj.cellPadding = '0';
 		var isFrame = !(this.Url.toUpperCase().indexOf('EWA_AJAX=INSTALL') > 0 || this.Url.toUpperCase().indexOf('EWA_CALL_METHOD=INNER_CALL') > 0 || this.Url
-				.toUpperCase().indexOf('.JSP') > 0);
+			.toUpperCase().indexOf('.JSP') > 0);
 
 		if (isFrame) {
 			// EWA.UI.Utils.SetStyle(document.body,
@@ -17414,7 +17414,7 @@ function EWA_ListFrameClass() {
 		this.NewDivId = newDivId;
 
 		if (isFrame) {
-			window.setTimeout(function () {
+			window.setTimeout(function() {
 				if ($X('__EWA_DEBUG')) {
 					td10.childNodes[0].appendChild($X('__EWA_DEBUG'));
 				}
@@ -17428,7 +17428,7 @@ function EWA_ListFrameClass() {
 				// tb.parentNode.style.position='absolute';
 				// tb.style.width=o.offsetWidth;
 			}, 100);
-			addEvent(window, "resize", function () {
+			addEvent(window, "resize", function() {
 				var o = $X(newDivId);
 				var size = EWA.UI.Utils.GetDocSize(window);
 				var h1 = o.parentNode.parentNode.previousSibling.offsetHeight;
@@ -17455,7 +17455,7 @@ function EWA_ListFrameClass() {
 		var txtCaption = GetInnerText(td00);
 		txtCaption = txtCaption.trim();
 		this._ReshowButs = {};
-		for ( var name in this.ItemList.Items) {
+		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
 			var s = this._GetSubValue("Tag", "Tag", node);
 
@@ -17488,7 +17488,7 @@ function EWA_ListFrameClass() {
 				td00.childNodes[1].appendChild(o1);
 
 				if (evt == '') {
-					o1.onclick = function () {
+					o1.onclick = function() {
 						var fId = this.getAttribute('f_id');
 						var rows = EWA.F.FOS[fId].SelectCheckedRows();
 						if (rows == null || rows.length == 0) {
@@ -17507,7 +17507,7 @@ function EWA_ListFrameClass() {
 					}
 				} else {
 					o1.setAttribute('ewa_click', evt);
-					o1.onclick = function () {
+					o1.onclick = function() {
 						eval(this.getAttribute('ewa_click'));
 					}
 				}
@@ -17574,12 +17574,12 @@ function EWA_ListFrameClass() {
 		objMain.appendChild(obj);
 
 		// this.ShowHiddenColumns(rowIndexes, false);
-		for ( var name in radios) {
+		for (var name in radios) {
 			var ids = radios[name];
 			for (var i = 0; i < ids.length; i++) {
 				var o = $X(ids[i]);
 				o.setAttribute('_r_ids', ids.join(','));
-				o.onclick = function () {
+				o.onclick = function() {
 					var id = this.getAttribute('_ewa_event_id');
 					$X(id).click();
 					var ids = this.getAttribute('_r_ids').split(',');
@@ -17601,7 +17601,7 @@ function EWA_ListFrameClass() {
 		if (this.Url.toUpperCase().indexOf('EWA_BTNS_IN_TITLE') > 0) {
 			var c = this;
 			var inc = 0;
-			var t = setInterval(function () {
+			var t = setInterval(function() {
 				inc++;
 				if (inc > 1000) { // 10s
 					window.clearInterval(t);
@@ -17616,24 +17616,24 @@ function EWA_ListFrameClass() {
 
 		}
 	};
-	this._ReShowSplit = function (parentObj) {
+	this._ReShowSplit = function(parentObj) {
 		var o3 = EWA.UI.Utils.CreateObject(window, 'div', '', parentObj);
 		o3.className = 'ewa_lf_func_split';
 		o3 = null;
 	}
-	this._ReShowButton = function (text, title, eventId) {
+	this._ReShowButton = function(text, title, eventId) {
 		var st = 'cursor:pointer';
 		var o1 = EWA.UI.Utils.CreateObject(window, 'div', st, document.body);
 		o1.innerHTML = '<nobr>' + text + '</nobr>';
 		if (eventId != null) {
 			o1.setAttribute('_ewa_event_id', eventId);
-			o1.onclick = function () {
+			o1.onclick = function() {
 				var id = this.getAttribute('_ewa_event_id');
 				$X(id).click();
 			};
 		}
 		if (EWA.B.IE) {
-			o1.onselectstart = function () {
+			o1.onselectstart = function() {
 				return false;
 			};
 		}
@@ -17649,7 +17649,7 @@ function EWA_ListFrameClass() {
 	 *            obj
 	 * @return {Boolean}
 	 */
-	this.CheckValid = function (obj) {
+	this.CheckValid = function(obj) {
 		var tagName = obj.tagName.toLowerCase();
 		if (tagName == 'span' || tagName == 'img' || tagName == 'div') {
 			return true;
@@ -17664,7 +17664,7 @@ function EWA_ListFrameClass() {
 	 * @param {}
 	 *            obj
 	 */
-	this.ShowEdit = function (obj) {
+	this.ShowEdit = function(obj) {
 		obj.parentNode.style.width = obj.clientWidth + 'px';
 
 		obj.style.display = 'none';
@@ -17678,16 +17678,16 @@ function EWA_ListFrameClass() {
 		chd.setAttribute('old', chd.value);
 		if (chd.tagName == 'SELECT' && !chd.getAttribute("func")) {
 			chd.setAttribute("func", 1);
-			chd.onchange = function () {
+			chd.onchange = function() {
 				EWA.F.FOS[this.getAttribute('__ewa_fid__')].EditAfter(this);
 			}
 		}
 		if (chd.getAttribute('__ewa_fid__') == null) {
 			chd.setAttribute('__ewa_fid__', this._Id);
-			chd.onblur = function () {
+			chd.onblur = function() {
 				EWA.F.FOS[this.getAttribute('__ewa_fid__')].EditAfter(this);
 			}
-			chd.onkeydown = function (event) {
+			chd.onkeydown = function(event) {
 				var evt = event == null ? window.event : event;
 				var obj = evt.target ? evt.target : evt.srcElement;
 				if (evt.keyCode == 13 && obj.tagName == 'INPUT') {
@@ -17698,11 +17698,11 @@ function EWA_ListFrameClass() {
 				}
 			}
 		}
-		setTimeout(function () {
+		setTimeout(function() {
 			chd.focus();
 		}, 10);
 	};
-	this.EditReset = function (obj) {
+	this.EditReset = function(obj) {
 		obj.parentNode.style.display = 'none';
 		var o1 = obj.parentNode.previousSibling;
 		o1.style.display = '';
@@ -17721,7 +17721,7 @@ function EWA_ListFrameClass() {
 	 * @param {}
 	 *            obj
 	 */
-	this.EditAfter = function (obj) {
+	this.EditAfter = function(obj) {
 		if (!this.CheckValid(obj)) {
 			obj.focus();
 			return;
@@ -17737,17 +17737,17 @@ function EWA_ListFrameClass() {
 
 		var id, val;
 		if (obj.getAttribute("ewa_class") == "droplist") {
-			id = obj.parentNode.getElementsByTagName('input')[1].id;
+			id = $(obj.parentNode.getElementsByTagName('input')[1]).attr('name');
 			val = obj.parentNode.getElementsByTagName('input')[1].value;
 			o1.innerHTML = obj.parentNode.getElementsByTagName('input')[0].value;
 		} else if (obj.tagName.toLowerCase() == "select") {
-			id = obj.id;
+			id = $(obj).attr("name");
 			o1.innerHTML = obj.options[obj.selectedIndex].text;
 			val = obj.value;
 		} else {
 			var sss = obj.value.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/\n/ig, '<br>');
 			o1.innerHTML = sss;
-			id = obj.id;
+			id = $(obj).attr("name");
 			val = obj.value;
 		}
 		// alert('id='+id+',val='+val);
@@ -17765,37 +17765,30 @@ function EWA_ListFrameClass() {
 			tip = "";
 		// 执行后脚本
 		var js = obj.getAttribute("action_js");
-
-		var paras = [];
-		paras[0] = {
-			Name : "EWA_FIELD_ID",
-			Value : id
-		};
-		paras[1] = {
-			Name : "EWA_FIELD_VAL",
-			Value : val
-		};
-		paras[2] = {
-			Name : "EWA_ACTION_RELOAD",
-			Value : "0"
-		};
-		paras[3] = {
-			Name : obj.id,
-			Value : obj.value
-		};
-		var dt = this.ItemList.GetValue(obj.id, "DataItem", "DataType");
-		paras[4] = {
-			Name : "EWA_DATA_TYPE",
-			Value : dt
-		};
-		paras[5] = {
-			Name : "EWA_FIELD_VAL_OLD",
-			Value : obj.getAttribute('old')
-		};
+		var dt = this.ItemList.GetValue(id, "DataItem", "DataType");
+		var paras = [{
+			Name: "EWA_FIELD_ID",
+			Value: id
+		}, {
+			Name: "EWA_FIELD_VAL",
+			Value: val
+		}, {
+			Name: "EWA_ACTION_RELOAD",
+			Value: "0"
+		}, {
+			Name: id,
+			Value: val
+		}, {
+			Name: "EWA_DATA_TYPE",
+			Value: dt
+		}, {
+			Name: "EWA_FIELD_VAL_OLD",
+			Value: obj.getAttribute('old')
+		}];
 		this.EditEvent = {
-			FROM : obj,
-			OLD_VAL : obj.getAttribute('old'),
-			NEW_VAL : obj.value
+			FROM: obj,
+			OLD_VAL: obj.getAttribute('old'),
+			NEW_VAL: obj.value
 		};
 		this.DoAction(obj, actionName, confirm, tip, paras, js);
 	};
@@ -17812,7 +17805,7 @@ function EWA_ListFrameClass() {
 	 * @param {String}
 	 *            memoName memo字段名称
 	 */
-	this.RewriteInfo = function (infoJson, idName, infoName, memoName) {
+	this.RewriteInfo = function(infoJson, idName, infoName, memoName) {
 		var tb = $X('EWA_LF_' + this._Id);
 		if (this._INFO == null) {
 			this._INFO = {};
@@ -17850,7 +17843,7 @@ function EWA_ListFrameClass() {
 	 * @param {Boolean}
 	 *            dispMethod
 	 */
-	this.ShowHiddenColumn = function (colIndex, dispMethod) {
+	this.ShowHiddenColumn = function(colIndex, dispMethod) {
 		var tb = $X('EWA_LF_' + this._Id);
 		var dsp = '';
 		if (dispMethod == null || dispMethod == false || dispMethod == 'none') {
@@ -17869,7 +17862,7 @@ function EWA_ListFrameClass() {
 	 * @param {Boolean}
 	 *            dispMethod 显示模式
 	 */
-	this.ShowHiddenColumns = function (colIndexes, dispMethod) {
+	this.ShowHiddenColumns = function(colIndexes, dispMethod) {
 		var tb = $X('EWA_LF_' + this._Id);
 		var dsp = '';
 		if (dispMethod == null || dispMethod == false || dispMethod == 'none') {
@@ -17891,7 +17884,7 @@ function EWA_ListFrameClass() {
 	/**
 	 * 显示或隐含分组
 	 */
-	this.GroupShowHidden = function (obj) {
+	this.GroupShowHidden = function(obj) {
 		var t = $(obj).attr('t');
 		var t0 = new Date().getTime();
 		if (t) {// 避免连击，333毫秒内返回
@@ -17924,7 +17917,7 @@ function EWA_ListFrameClass() {
 		obj.childNodes[obj.childNodes.length - 1].innerHTML = ' (' + m + ')';
 	};
 
-	this.Sort = function (sortName) {
+	this.Sort = function(sortName) {
 		var last_sort_timer = this._last_sort_timer || 0;
 		var last_sort_name = this._Sort || "";
 		var t = new Date().getTime();
@@ -17937,7 +17930,7 @@ function EWA_ListFrameClass() {
 		this.Goto(1);
 	};
 
-	this.SearchClear = function (obj) {
+	this.SearchClear = function(obj) {
 		var tb = obj.parentNode.parentNode.parentNode.parentNode;
 		for (var i = 0; i < tb.rows.length; i += 1) {
 			var inputs = tb.rows[i].getElementsByTagName('input');
@@ -17951,9 +17944,9 @@ function EWA_ListFrameClass() {
 			}
 		}
 	};
-	this.SearchGetExp = function (tb) {
+	this.SearchGetExp = function(tb) {
 		var s2 = [];
-		$(tb).find('.ewa-lf-search-item').each(function () {
+		$(tb).find('.ewa-lf-search-item').each(function() {
 			// 不用$(this).find('input,select')
 			// 会造成debug状态不停的闪烁，怀疑jq添加属性又删除
 			var inputs = $(this).find('input');
@@ -17989,8 +17982,8 @@ function EWA_ListFrameClass() {
 				return;
 			}
 			if (search_type == 'fix' && input0.tagName == 'INPUT') {
-				var vs = [ '' ];
-				$(this).find('input').each(function () {
+				var vs = [''];
+				$(this).find('input').each(function() {
 					if (this.checked) {
 						vs.push(this.value);
 					}
@@ -18003,7 +17996,7 @@ function EWA_ListFrameClass() {
 		});
 		return s2.join('');
 	};
-	this.DoSearch = function (obj) {
+	this.DoSearch = function(obj) {
 		var tb;
 		var isDialog = false;
 		if (obj.id == 'EWA_SEARCH_ITEM_' + this.Id) {
@@ -18021,7 +18014,7 @@ function EWA_ListFrameClass() {
 		// 数据调用来源于搜索
 		this.Goto(1);
 	};
-	this.Search = function (search) {
+	this.Search = function(search) {
 		if (this._SearchHtml == null) {
 			this._SearchCreate();
 			this._SearchDialog = new EWA.UI.Dialog.OpenWindow('about:blank', 'aa', 400, 100, true, null, null, false);
@@ -18041,14 +18034,14 @@ function EWA_ListFrameClass() {
 	/**
 	 * 在页面上将Search显示出来
 	 */
-	this.ShowSearch = function () {
+	this.ShowSearch = function() {
 		var id = 'EWA_SEARCH_ITEM_' + this.Id;
 		if (!$X(id)) {
 			this._SearchCreateItm();
 		}
 		this._ReShowSearchQuick();
 	};
-	this.ChangeSearchTextType = function (obj) {
+	this.ChangeSearchTextType = function(obj) {
 		if (this._MENU_DATE_RANGE)
 			this._MENU_DATE_RANGE.HiddenMemu();
 		this._MENU_TEXT_TYPE.ShowByObject(obj, null, 0);
@@ -18056,13 +18049,13 @@ function EWA_ListFrameClass() {
 	/**
 	 * 检索日期显示日期范围列表
 	 */
-	this.ChangeSearchDateType = function (obj) {
+	this.ChangeSearchDateType = function(obj) {
 		if (this._MENU_TEXT_TYPE)
 			this._MENU_TEXT_TYPE.HiddenMemu();
 		this._MENU_DATE_RANGE.ShowByObject(obj, null, 0);
 	};
 
-	this.ChangeSearchTextTypeIt = function (tag) {
+	this.ChangeSearchTextTypeIt = function(tag) {
 		var targetObject = this._MENU_TEXT_TYPE.SHOW_BY_OBJECT;
 		var search_item_table = $(targetObject).parentsUntil(".ewa-lf-search-item").last();
 		var text_seach_type_map = $J2MAP(this.RESOURCES.search_text_items, 'Id');
@@ -18074,7 +18067,7 @@ function EWA_ListFrameClass() {
 	/**
 	 * 获取初始化查询数据
 	 */
-	this._GetInitSearchMap = function () {
+	this._GetInitSearchMap = function() {
 		var u1 = new EWA_UrlClass(this.Url);
 		var map = {};
 		// ewa_search=bas_tag_grp[eq]ACC_SRC,bas_tag[rlk]Z1
@@ -18086,7 +18079,7 @@ function EWA_ListFrameClass() {
 		this.Url = u1.RemoveParameter("ewa_search");
 		search_paras = search_paras.unURL();
 		var ss = search_paras.split(',');
-		for ( var n in ss) {
+		for (var n in ss) {
 			var s = ss[n]; // bas_tag[rlk]Z1
 			var exp_start_loc = s.indexOf("[");
 			var exp_end_loc = s.indexOf("]");
@@ -18113,8 +18106,8 @@ function EWA_ListFrameClass() {
 			}
 			if (!map[name.toUpperCase()]) {
 				map[name.toUpperCase()] = {
-					"name" : name,
-					"tag" : tag
+					"name": name,
+					"tag": tag
 				};
 			}
 			var o = map[name.toUpperCase()];
@@ -18130,7 +18123,7 @@ function EWA_ListFrameClass() {
 	/**
 	 * 设置检索日期范围
 	 */
-	this.SearchFilterDate = function (t) {
+	this.SearchFilterDate = function(t) {
 		var targetObject = this._MENU_DATE_RANGE.SHOW_BY_OBJECT;
 
 		var search_item_table = $(targetObject).parentsUntil(".ewa-lf-search-item").last();
@@ -18192,13 +18185,13 @@ function EWA_ListFrameClass() {
 	 * 
 	 * @return String
 	 */
-	this._SearchCreateDateRange = function () {
+	this._SearchCreateDateRange = function() {
 		var id = '_MENU_DATE_RANGE' + this._Id;
 		$('.' + id).remove(); // 清除已经存在的
 		var idx = EWA.LANG.toLowerCase() == "enus" ? "TxtEn" : "Txt";
 		var items = JSON.parse(JSON.stringify(this.RESOURCES.search_date_items));
 		var ewa_js = "EWA.F.FOS[&quot;" + this._Id + "&quot;].SearchFilterDate";
-		for ( var n in items) {
+		for (var n in items) {
 			var itm = items[n];
 			itm.Txt = itm[idx];
 			itm.Cmd = ewa_js + "(&quot;" + itm.Id + "&quot;)";
@@ -18210,14 +18203,14 @@ function EWA_ListFrameClass() {
 		$(this._MENU_DATE_RANGE.Dialog.GetFrame()).addClass('ewa-lf-search-menu ' + id);
 		return name;
 	};
-	this._SearchCreateTextType = function () {
+	this._SearchCreateTextType = function() {
 		var id = '_MENU_TEXT_TYPE' + this._Id;
 		$('.' + id).remove(); // 清除已经存在的
 		var idx = EWA.LANG.toLowerCase() == "enus" ? "TxtEn" : "Txt";
 		// clone resources
 		var items = JSON.parse(JSON.stringify(this.RESOURCES.search_text_items));
 		var ewa_js = "EWA.F.FOS[&quot;" + this._Id + "&quot;].ChangeSearchTextTypeIt";
-		for ( var n in items) {
+		for (var n in items) {
 			var itm = items[n];
 			itm.Txt = itm[idx];
 			itm.Cmd = ewa_js + "(&quot;" + itm.Id + "&quot;)";
@@ -18232,14 +18225,14 @@ function EWA_ListFrameClass() {
 	/**
 	 * 创建搜索框
 	 */
-	this._SearchCreateItm = function () {
+	this._SearchCreateItm = function() {
 		var id = 'EWA_SEARCH_ITEM_' + this.Id;
 		var ss = [];
 
 		var ssFix = [];
 		var ssOth = [];
 		var jsonFix = {};
-		for ( var name in this._SearchJson) {
+		for (var name in this._SearchJson) {
 			this._SearchJson[name].ORI_NAME = name;
 			jsonFix[name.toUpperCase()] = this._SearchJson[name];
 		}
@@ -18254,7 +18247,7 @@ function EWA_ListFrameClass() {
 
 		var is_have_date_search = false; // 是否由日期搜索
 		var is_have_text_search = false; // 是否由日期搜索
-		for ( var name in this.ItemList.Items) {
+		for (var name in this.ItemList.Items) {
 			if (this._SearchJson[name] == null) {
 				continue;
 			}
@@ -18352,7 +18345,7 @@ function EWA_ListFrameClass() {
 		}
 
 		// 检测搜索内容是否发生变化
-		this._TIMER_SEARCH = window.setInterval(function () {
+		this._TIMER_SEARCH = window.setInterval(function() {
 			try { // 避免窗口关闭出现的异常
 				if (!$X(id)) {
 					window.clearInterval(c._TIMER_SEARCH);
@@ -18370,7 +18363,7 @@ function EWA_ListFrameClass() {
 			}
 		}, 700);
 	};
-	this._SearchSingle = function (name, value) {
+	this._SearchSingle = function(name, value) {
 		var ss = [];
 		ss.push('<input t="text" type="text" autocomplete="off" class="EWA_INPUT" maxlength="40" name="');
 		ss.push(name.toInputValue());
@@ -18384,7 +18377,7 @@ function EWA_ListFrameClass() {
 		ss.push(' />');
 		return ss.join('');
 	};
-	this._SearchDate = function (name, val1, val2) {
+	this._SearchDate = function(name, val1, val2) {
 		var ss = [];
 		var tmp = '<td  ><input type="text" autocomplete="off" class="EWA_INPUT" t="date" readonly maxlength="8" onclick="EWA.UI.Calendar.Pop(this)" name="';
 		ss.push('<table border=0 cellpadding=0 cellspacing=0>')
@@ -18412,7 +18405,7 @@ function EWA_ListFrameClass() {
 		return ss.join('');
 	};
 
-	this._SearchNumber = function (name, val1, val2) {
+	this._SearchNumber = function(name, val1, val2) {
 		var ss = [];
 		var tmp = '<input type="text" t="number" size="10" name="';
 		ss.push(tmp);
@@ -18439,7 +18432,7 @@ function EWA_ListFrameClass() {
 		return ss.join('');
 	};
 	// radio/checkbox
-	this._SearchFix = function (name, searchItem, tag, value) {
+	this._SearchFix = function(name, searchItem, tag, value) {
 		var ss = [];
 		var tp = 'radio';
 		if (searchItem.M == "1") {
@@ -18448,12 +18441,12 @@ function EWA_ListFrameClass() {
 			return this._SearchFix1(name, searchItem, tag, value);
 		}
 		var tmp = "<" + tag + "><nobr><input t='fix' [@CHK] id='@ID' value=\"@V\" type='" + tp + "' name='" + name + "' /><label for='@ID'>@T</label></nobr></"
-				+ tag + "> ";
+			+ tag + "> ";
 		// ewa_search值
 		var map = {};
 		if (value) {
 			var vals = value.split(';');
-			for ( var n in vals) {
+			for (var n in vals) {
 				map[vals[n].trim().toUpperCase()] = 1;
 			}
 		}
@@ -18478,7 +18471,7 @@ function EWA_ListFrameClass() {
 		return ss.join('');
 	};
 	// select
-	this._SearchFix1 = function (name, searchItem, tag, value) {
+	this._SearchFix1 = function(name, searchItem, tag, value) {
 		var ss = [];
 		// console.log(value)
 		ss.push("<select t='fix' name='" + name + "'><option></option>")
@@ -18501,11 +18494,11 @@ function EWA_ListFrameClass() {
 		return ss.join('');
 	};
 
-	this._SearchCreate = function () {
+	this._SearchCreate = function() {
 		var ss = [];
 		var s1 = "<div><table border=0 style='margin:0px;' class=EWA_TABLE cellspacing=1>";
 		ss.push(s1);
-		for ( var name in this.ItemList.Items) {
+		for (var name in this.ItemList.Items) {
 			if (this._SearchJson[name] == null) {
 				continue;
 			}
@@ -18529,16 +18522,16 @@ function EWA_ListFrameClass() {
 			ss.push("</td></tr>");
 		}
 		ss.push("<tr><td class=EWA_TD_B colspan=2 align=right>" + "<input onclick='EWA.F.FOS[\"" + this._Id + "\"].SearchClear(this);' type=button value='"
-				+ _EWA_INFO_MSG["EWA.LF.SEARCH.BUT.CLEAR"] + "'> " + "<input type=submit value='" + _EWA_INFO_MSG["EWA.LF.SEARCH.BUT.SEARCH"]
-				+ "' onclick='EWA.F.FOS[\"" + this._Id + "\"].DoSearch(this);'> " + "<input type=button value='" + _EWA_INFO_MSG["EWA.LF.SEARCH.BUT.CLOSE"]
-				+ "' " + "onclick='EWA.F.FOS[\"" + this.Id + "\"]._SearchDialog.Show(false);'></td></tr>");
+			+ _EWA_INFO_MSG["EWA.LF.SEARCH.BUT.CLEAR"] + "'> " + "<input type=submit value='" + _EWA_INFO_MSG["EWA.LF.SEARCH.BUT.SEARCH"]
+			+ "' onclick='EWA.F.FOS[\"" + this._Id + "\"].DoSearch(this);'> " + "<input type=button value='" + _EWA_INFO_MSG["EWA.LF.SEARCH.BUT.CLOSE"]
+			+ "' " + "onclick='EWA.F.FOS[\"" + this.Id + "\"]._SearchDialog.Show(false);'></td></tr>");
 		ss.push("</table></div>");
 		this._SearchHtml = ss.join('');
 	};
 	/**
 	 * 检索关键字标红
 	 */
-	this.SearchMark = function () {
+	this.SearchMark = function() {
 		var s1 = this._SearchExp.split('@!@');
 		var tb = $X('EWA_LF_' + this._Id);
 
@@ -18557,7 +18550,7 @@ function EWA_ListFrameClass() {
 					var id = s2[0];
 					var val = s2[2];
 					var select_fix = $('table#EWA_SEARCH_ITEM_' + this.Id + ' [name="' + id + '"]');
-					select_fix.find('option').each(function () {
+					select_fix.find('option').each(function() {
 						if (this.value == val) {
 							exp = this.text; // 获取text文字
 							return;
@@ -18584,7 +18577,7 @@ function EWA_ListFrameClass() {
 				try {
 					var exp = eval('/(' + exp + ')/ig');
 					// console.log(exp);
-					$(tb).find('.EWA_TD_M [id="' + id + '"]').each(function () {
+					$(tb).find('.EWA_TD_M [id="' + id + '"]').each(function() {
 						if (this.children.length == 0) {
 							this.innerHTML = this.innerHTML.replace(exp, '<font color=red><b>$1</b></font>');
 						}
@@ -18602,18 +18595,18 @@ function EWA_ListFrameClass() {
 	 *            butIdx
 	 * @memberOf {TypeName}
 	 */
-	this.DblClick = function (butIdx) {
+	this.DblClick = function(butIdx) {
 		this._IsDblClick = butIdx;
 		var tb = $X('EWA_LF_' + this._Id);
 		for (var i = 1; i < tb.rows.length; i++) {
-			tb.rows[i].ondblclick = function () {
+			tb.rows[i].ondblclick = function() {
 				var inputs = this.getElementsByTagName('input');
 				if (inputs.length > butIdx && inputs[butIdx].disabled == false)
 					inputs[butIdx].click();
 			}
 		}
 	};
-	this.Init = function (xmlString) {
+	this.Init = function(xmlString) {
 		this.Xml = new EWA.C.Xml();
 		this.Xml.LoadXml(xmlString);
 		this.ItemList.Init(this.Xml);
@@ -18632,14 +18625,14 @@ function EWA_ListFrameClass() {
 		}
 
 	};
-	this.SetPageParameters = function (pageCurrent, pageCount, pageSize, recordCount, sort) {
+	this.SetPageParameters = function(pageCurrent, pageCount, pageSize, recordCount, sort) {
 		this._PageCurrent = pageCurrent;
 		this._PageSize = pageSize;
 		this._PageCount = pageCount;
 		this._RecordCount = recordCount;
 		this._Sort = sort;
 	};
-	this.SetPageParametersName = function (pageCurrentName, pageCountName, pageSizeName, recordCountName, sortName) {
+	this.SetPageParametersName = function(pageCurrentName, pageCountName, pageSizeName, recordCountName, sortName) {
 		this._PageCurrentName = pageCurrentName;
 		this._PageSizeName = pageSizeName;
 		this._PageCountName = pageCountName;
@@ -18650,7 +18643,7 @@ function EWA_ListFrameClass() {
 	/**
 	 * 全选
 	 */
-	this.CheckedAll = function () {
+	this.CheckedAll = function() {
 		var obj = document.getElementById("EWA_LF_" + this._Id);
 		if (obj.rows.length <= 1) {
 			return;
@@ -18677,7 +18670,7 @@ function EWA_ListFrameClass() {
 	 * 
 	 * @return {String}
 	 */
-	this.SelectChecked = function () {
+	this.SelectChecked = function() {
 		var obj = $X("EWA_LF_" + this._Id);
 		if (!obj || obj.rows.length < 1) {
 			return "";
@@ -18705,7 +18698,7 @@ function EWA_ListFrameClass() {
 	 * 
 	 * @return {}
 	 */
-	this.SelectCheckedInputs = function () {
+	this.SelectCheckedInputs = function() {
 		var ids = [];
 		var obj = $X("EWA_LF_" + this._Id);
 		if (obj.rows.length < 1) {
@@ -18729,7 +18722,7 @@ function EWA_ListFrameClass() {
 	 * 
 	 * @return {}
 	 */
-	this.SelectCheckedRows = function () {
+	this.SelectCheckedRows = function() {
 		var trs = [];
 		var obj = $X("EWA_LF_" + this._Id);
 		for (var i = 0; i < obj.rows.length; i++) {
@@ -18758,7 +18751,7 @@ function EWA_ListFrameClass() {
 	 * @param httpReferer
 	 *            跳转发起的页面，例如Frame，通常是EWA_PostBehavior调用
 	 */
-	this.Reload = function (httpReferer) {
+	this.Reload = function(httpReferer) {
 		if (this.StopAjaxAfterReload) {
 			// DoAction 指定了提交后的脚本，阻止页面重新加载
 			this.StopAjaxAfterReload = false;
@@ -18782,7 +18775,7 @@ function EWA_ListFrameClass() {
 	 * @param afterJs
 	 *            执行后调用的脚本
 	 */
-	this.DoAction = function (obj, action, confirm, tip, parasArray, afterJs) {
+	this.DoAction = function(obj, action, confirm, tip, parasArray, afterJs) {
 		EWA.F.CID = this._Id;
 		if (!action) {
 			return;
@@ -18850,19 +18843,19 @@ function EWA_ListFrameClass() {
 			if (!msg) {
 				msg = confirm;
 			}
-			$Confirm(msg, 'Confirm', function () {
-				c._Ajax.PostNew(u, function () {
+			$Confirm(msg, 'Confirm', function() {
+				c._Ajax.PostNew(u, function() {
 					c._CallBackJs();
 				});
 			});
 
 		} else {
-			this._Ajax.PostNew(u, function () {
+			this._Ajax.PostNew(u, function() {
 				c._CallBackJs();
 			});
 		}
 	};
-	this.NewPageSize = function (pageSize) {
+	this.NewPageSize = function(pageSize) {
 		if (this._PageSize == pageSize) {
 			return;
 		}
@@ -18877,7 +18870,7 @@ function EWA_ListFrameClass() {
 	 * @param httpReferer
 	 *            跳转发起的页面，例如Frame，通常是EWA_PostBehavior调用
 	 */
-	this.Goto = function (gotoPage, httpReferer) {
+	this.Goto = function(gotoPage, httpReferer) {
 		EWA.F.CID = this._Id;
 
 		this._PageCurrent = gotoPage;
@@ -18887,11 +18880,11 @@ function EWA_ListFrameClass() {
 		url.SetUrl(this.Url == null ? document.location.href : this.Url);
 		url.RemoveParameter("EWA_AJAX");
 		var c = this;
-		this._Ajax.PostNew(url.GetUrl(), function () {
+		this._Ajax.PostNew(url.GetUrl(), function() {
 			c._CallBack(httpReferer);
 		});
 	};
-	this.CreateAjax = function () {
+	this.CreateAjax = function() {
 		var ajax = new EWA.C.Ajax();
 		ajax.LoadingType = "image";
 
@@ -18920,7 +18913,7 @@ function EWA_ListFrameClass() {
 	 * @param {String}
 	 *            t 类型
 	 */
-	this.DownlodData = function (t, action) {
+	this.DownlodData = function(t, action) {
 		EWA.F.CID = this._Id;
 		this._Ajax = new EWA.C.Ajax();
 		this._Ajax.LoadingType = "image";
@@ -18946,25 +18939,25 @@ function EWA_ListFrameClass() {
 		var url = new EWA_UrlClass();
 		url.SetUrl(this.Url == null ? document.location.href : this.Url);
 		var c = this;
-		this._Ajax.PostNew(url.GetUrl(), function () {
+		this._Ajax.PostNew(url.GetUrl(), function() {
 			c._CallBack()
 		});
 	};
-	this.Get = function (url) {
+	this.Get = function(url) {
 		EWA.F.CID = this._Id;
 		this._Ajax = new EWA.C.Ajax();
 		this._Ajax.LoadingType = "image";
 		var c = this;
-		this._Ajax.Get(url, function () {
+		this._Ajax.Get(url, function() {
 			c._CallBack()
 		});
 	};
-	this.Post = function (url, info) {
+	this.Post = function(url, info) {
 		EWA.F.CID = this._Id;
 		this._Ajax = new EWA.C.Ajax();
 		this._Ajax.LoadingType = "image";
 		var c = this;
-		this._Ajax.Post(url, info, function () {
+		this._Ajax.Post(url, info, function() {
 			c._CallBackJs()
 		});
 	};
@@ -18974,7 +18967,7 @@ function EWA_ListFrameClass() {
 	 * @param httpReferer
 	 *            回调发起的页面，例如Frame
 	 */
-	this._CallBack = function (httpReferer) {
+	this._CallBack = function(httpReferer) {
 		var ajax = this._Ajax;
 		if (ajax._Http.readyState != 4) {
 			ajax = null;
@@ -19039,7 +19032,7 @@ function EWA_ListFrameClass() {
 		this.RewriteInfo();
 	};
 
-	this._CallBackJs = function () {
+	this._CallBackJs = function() {
 		var ajax = this._Ajax;
 		if (ajax._Http.readyState != 4) {
 			ajax = null;
@@ -19067,10 +19060,10 @@ function EWA_ListFrameClass() {
 		}
 	};
 	// 编辑框输入后自定义触发事件
-	this.EditAfterEvent = function () {
+	this.EditAfterEvent = function() {
 		return;
 	};
-	this._GetItem = function (name) {
+	this._GetItem = function(name) {
 		var nodeList = this.ItemList;
 		for (var i = 0; i < nodeList.length; i = i + 1) {
 			var node = nodeList[i];
@@ -19081,7 +19074,7 @@ function EWA_ListFrameClass() {
 			}
 		}
 	};
-	this._GetSubItem = function (subName, itemNode) {
+	this._GetSubItem = function(subName, itemNode) {
 		var nodes = this.Xml.GetElements(subName + "/Set", itemNode);
 		if (nodes == null || nodes.length == 0) {
 			return null;
@@ -19098,7 +19091,7 @@ function EWA_ListFrameClass() {
 			return nodes[0];
 		}
 	};
-	this._GetSubValue = function (subName, subAttName, itemNode) {
+	this._GetSubValue = function(subName, subAttName, itemNode) {
 		var subItem = this._GetSubItem(subName, itemNode);
 		if (subItem == null) {
 			return null;
@@ -19123,7 +19116,7 @@ function EWA_ListFrameClass() {
 	 *            colHtml 列的HTML
 	 * @memberOf {TypeName}
 	 */
-	this.AddColumns = function (datas, colId, colText, colMemo, colHtml, colType, addAttrs, startCellIndex) {
+	this.AddColumns = function(datas, colId, colText, colMemo, colHtml, colType, addAttrs, startCellIndex) {
 		var tb = $X('EWA_LF_' + this._Id);
 		var loc = {};
 		if (startCellIndex == null) {
@@ -19163,7 +19156,7 @@ function EWA_ListFrameClass() {
 			}
 		}
 	};
-	this._GetAddControl = function (type) {
+	this._GetAddControl = function(type) {
 		if (type == null)
 			return null;
 
@@ -19179,7 +19172,7 @@ function EWA_ListFrameClass() {
 		}
 		return null;
 	};
-	this.AddedValues = function (colVals, rowId, colId, colValName, isChecked) {
+	this.AddedValues = function(colVals, rowId, colId, colValName, isChecked) {
 		for (var i = 0; i < colVals.length; i++) {
 			var v0 = colVals[i];
 			var id = v0[rowId] + '_' + v0[colId];
@@ -19199,7 +19192,7 @@ function EWA_ListFrameClass() {
 			}
 		}
 	};
-	this.AddRow = function (arrRowTxt) {
+	this.AddRow = function(arrRowTxt) {
 		var tb = $X('EWA_LF_' + this._Id);
 		var tr = tb.insertRow(-1);
 		for (var i = 0; i < tb.rows[0].cells.length; i++) {
@@ -19215,7 +19208,7 @@ function EWA_ListFrameClass() {
 		return tr;
 	};
 
-	this.Calc = function (arrCols, rowIdxStart, rowIdxEnd, rowSum) {
+	this.Calc = function(arrCols, rowIdxStart, rowIdxEnd, rowSum) {
 		var tb = $X('EWA_LF_' + this._Id);
 		var sums = {};
 		for (var i = 0; i < arrCols.length; i++) {
@@ -19262,7 +19255,7 @@ function EWA_ListFrameClass() {
 	 * @param rowNums
 	 *            从formId开始 合并的字段数量
 	 */
-	this.mergeHeaders = function (fromId, mergeText, rowNums) {
+	this.mergeHeaders = function(fromId, mergeText, rowNums) {
 		var tb = $($X('EWA_LF_' + this._Id));
 		var tr = tb.find('tr[ewa_tag="HEADER"]');
 		if (tr.length == 0) {
@@ -19315,20 +19308,20 @@ function EWA_ListFrameClass() {
 	/**
 	 * 合并头部
 	 */
-	this.MeargeHeader = function (fromId, meargeText, rowNums) {
+	this.MeargeHeader = function(fromId, meargeText, rowNums) {
 		console.log('拼写错误，请用 mergeHeaders');
 		this.mergeHeaders(fromId, meargeText, rowNums);
 	};
 
-	this.getUrlClass = function () {
+	this.getUrlClass = function() {
 		var u = new EWA_UrlClass();
 		u.SetUrl(this.Url);
 		return u;
 	};
 };
 EWA.F.L = {/* ListFrame */
-	CUR : null,
-	C : EWA_ListFrameClass
+	CUR: null,
+	C: EWA_ListFrameClass
 };;
 EWA_ListFrameClass.prototype.RESOURCES = {
 	search_text_items : [ {
