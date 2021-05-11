@@ -25,7 +25,7 @@ public class Resources {
 		URL url = Resources.class.getResource(path);
 		Resource r = new Resource();
 		r.setPath(path);
-		if (url == null) {
+		if (url == null) {  
 			r.setStatus(404);
 			LOGGER.error(r.toString());
 			return r;
