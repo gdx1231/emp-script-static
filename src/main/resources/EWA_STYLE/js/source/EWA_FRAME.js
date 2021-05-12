@@ -8503,6 +8503,8 @@ function EWA_TreeClass(parentObject, className, url) {
 					EWA.CurUI.LoadChildrenAfter(ret);
 				} else if (EWA.CurUI.PostChangeType == "OnTreeNodeStatus") {
 					EWA.CurUI.LoadChildrenStatus(ret);
+				} else if (EWA.CurUI.PostChangeType == "OnTreeNodeDelete") {
+					EWA.CurUI.DeleteAfter();
 				} else {
 					eval(ret);
 				}
