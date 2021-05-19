@@ -16614,6 +16614,48 @@ function EWA_ListFrameClass() {
 	this.IsNotMDownAutoChecked = false; // 自动选择checkbox radio;
 
 	/**
+	* 根据ajax请求，替换当前表中对应的行数据
+	 */
+	this.replaceRowsData = function(searchExp, replaceFuntion) {
+		let u = this.getUrlClass();
+		u.AddParameter("EWA_AJAX", "LF_RELOAD");
+		u.AddParameter("EWA_IS_SPLIT_PAGE", "no");
+		u.AddParameter("EWA_IS_HIDDEN_CAPTION", "yes");
+
+		let url = u.GetUrl();
+		if (searchExp) {
+			url += "&" + searchExp;
+		}
+
+		let tb = $('#EWA_LF_' + this._Id);
+		$J2(url, function(resultHtml) {
+			$(resultHtml).find('tr.ewa-lf-data-row').each(function() {
+				let key = $(this).attr('ewa_key');
+				// 当前行数据
+				let tr = tb.find('tr[ewa_key="' + key + '"]');
+				// console.log(obj);
+				$(this).find('td').each(function() {
+					let name = $(this).children(0).attr("name");
+					if (!name) {
+						return;
+					}
+					// 查找对应的 td
+					let td = tr.find('.ewa-col-' + name);
+					if (td.length == 0) {
+						return;
+					}
+					if (replaceFuntion) {
+						// replaceFuntion (ajaxTD, TD)
+						replaceFuntion(this, td[0]);
+					} else {
+						td.html($(this).html());
+					}
+				});
+			});
+		});
+	};
+
+	/**
 	 * 添加回收站标志
 	 */
 	this.ShowRecycle = function() {
