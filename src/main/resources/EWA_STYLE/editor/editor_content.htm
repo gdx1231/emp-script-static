@@ -1,0 +1,65 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Editor</title>
+<script type="text/javascript" src="../../thrid-party/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="../js/js_jquery/EWA.js"></script>
+<script type="text/javascript" src="../../thrid-party/keymaster-master/keymaster.js"></script>
+<script type="text/javascript" src="../js/js_jquery/src/ui/EWA_10UI_HtmlEditor.js"></script>
+<style>
+* {
+	font-family: "Microsoft YaHei", STHeiti, "微软雅黑", tahoma, Verdana, Arial,
+		sans-serif, arial, 宋体;
+}
+</style>
+</head>
+<body style='cursor: text'>
+</body>
+<script type="text/javascript">
+	function set_edit_bg() {
+		$(document).find('html').css('background', '#2f2f2f');
+		$(document.body).css({
+			width : 900,
+			background : '#fff',
+			'padding' : '20px 20px',
+			'margin' : 'auto',
+			'box-shadow' : '1px 1px 13px #f1f1f1'
+		});
+
+	}
+
+	(function() {
+		key.filter = function() {
+			// 在任何元素上都执行
+			return true;
+		}
+		key('esc', function(event) {
+			try {
+				parent.parent.$('#butClose').click();
+			} catch (e) {
+				console.log(e);
+			}
+			return false; // prevent default && stop propagation
+		});
+		key('⌘+s,ctrl+s', function(event) {
+			console.log("save2");
+			try {
+				parent.parent.$('#butOk').click();
+			} catch (e) {
+				console.log(e);
+			}
+			return false; // prevent default && stop propagation
+		});
+	})();
+
+	$(document).ready(function() {
+		EWA_MiscPasteTool.bind(document.body, parent.parent.EWA.CP + '/EWA_STYLE/cgi-bin/_re_/index.jsp?method=HtmlImages');
+		if (document.all) {
+			document.body.contentEditable = true;
+		} else {
+			document.designMode = 'on';
+		}
+		//set_edit_bg();
+	});
+</script>
+</html>
