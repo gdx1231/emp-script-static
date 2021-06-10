@@ -1803,12 +1803,11 @@ function EWA_ListFrameClass() {
 			c._SearchExp = c._SEARCH_ITEM_EXP;
 		}
 		
-		// 输入法打开输入
 		$(rq).find('input[type=text]').on('compositionstart', function(){
+			// 输入法打开输入
 			c._is_search_composition = true;
-		});
-		// 输入法输入完毕
-		$(rq).find('input[type=text]').on('compositionend', function(){
+		}).on('compositionend', function(){
+			// 输入法输入完毕
 			c._is_search_composition = false;
 		});
 		// 检测搜索内容是否发生变化

@@ -2958,7 +2958,37 @@ function EWA_FrameClass() {
 				return !trans.IsRun;
 			})
 		}
-	}
+	};
+	/**
+	* 绑定当输入法打开时的判断
+	 */
+	this._bindCompostion = function(inputShowText, inputSaveValue){
+		if(EWA.B.IE){
+			return;
+		}
+		let c = this;
+		if(!c["_droplist_"]){
+			c["_droplist_"] = {};
+		};
+		
+		c["_droplist_"][inputSaveValue.id] = {_is_composition : false};
+
+		$(inputShowText).on('compositionstart', function(){
+			// 输入法打开输入
+			c["_droplist_"][inputSaveValue.id]._is_composition = true;
+		}).on('compositionend', function(){ 
+			 // 输入法输入完毕
+			c["_droplist_"][inputSaveValue.id]._is_composition = false;
+			EWA.F.I.DropList(this);
+		}).removeAttr('oninput')
+		.removeAttr('onkeyup')
+		.on('input', function(){
+			if(c["_droplist_"][inputSaveValue.id]._is_composition){
+				return;
+			}
+			EWA.F.I.DropList(this);
+		});
+	};
 	this._GetDropListValue = function() {
 		var tb = this.getObj();
 		if (tb.length == 0) {
@@ -2966,13 +2996,18 @@ function EWA_FrameClass() {
 		}
 		tb = tb[0];
 		var inputs = tb.getElementsByTagName('input');
+		let c = this;
+		c["_droplist_"] = {};
 		for (var i = 0; i < inputs.length; i++) {
-			var o = inputs[i];
+			var o = inputs[i]; // show the text
 			if (o.getAttribute('ewa_class') == 'droplist') {
-				var o1 = o.nextSibling;
+				var o1 = o.nextSibling; // save the value ,type=hidden
 				if (o1.tagName.toUpperCase() == 'INPUT' && o1.type.toUpperCase() == 'HIDDEN') {
 					this._GetDropListValue1(o, o1);
+					// 绑定当输入法打开时的判断
+					this._bindCompostion(o,o1);
 				}
+				
 			}
 		}
 
@@ -6323,12 +6358,11 @@ function EWA_ListFrameClass() {
 			c._SearchExp = c._SEARCH_ITEM_EXP;
 		}
 		
-		// 输入法打开输入
 		$(rq).find('input[type=text]').on('compositionstart', function(){
+			// 输入法打开输入
 			c._is_search_composition = true;
-		});
-		// 输入法输入完毕
-		$(rq).find('input[type=text]').on('compositionend', function(){
+		}).on('compositionend', function(){
+			// 输入法输入完毕
 			c._is_search_composition = false;
 		});
 		// 检测搜索内容是否发生变化
