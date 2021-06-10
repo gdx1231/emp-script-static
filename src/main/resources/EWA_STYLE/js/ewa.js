@@ -18385,9 +18385,21 @@ function EWA_ListFrameClass() {
 		if (JSON.stringify(init_search_type_map) != "{}") {
 			c._SearchExp = c._SEARCH_ITEM_EXP;
 		}
-
+		
+		// 输入法打开输入
+		$(rq).find('input[type=text]').on('compositionstart', function(){
+			c._is_search_composition = true;
+		});
+		// 输入法输入完毕
+		$(rq).find('input[type=text]').on('compositionend', function(){
+			c._is_search_composition = false;
+		});
 		// 检测搜索内容是否发生变化
 		this._TIMER_SEARCH = window.setInterval(function() {
+			if(c._is_search_composition){
+				return;
+			}
+			
 			try { // 避免窗口关闭出现的异常
 				if (!$X(id)) {
 					window.clearInterval(c._TIMER_SEARCH);
