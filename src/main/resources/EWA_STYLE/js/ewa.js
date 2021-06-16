@@ -21820,7 +21820,7 @@ function EWA_Html5UploadClass() {
 		delete o.file;
 	};
 	this.createNewSizes = function(fromImg, fd) {
-		if (!this.UpNewSizes || this.NewSizesIn == 'server') {
+		if (!this.NewSizesIn == 'client') {
 			return;
 		}
 		if (!this.siezs) {
