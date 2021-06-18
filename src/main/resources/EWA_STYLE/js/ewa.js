@@ -21820,7 +21820,11 @@ function EWA_Html5UploadClass() {
 		delete o.file;
 	};
 	this.createNewSizes = function(fromImg, fd) {
+<<<<<<< HEAD
 		if (this.NewSizesIn !== 'client') {
+=======
+		if (!this.NewSizesIn == 'client') {
+>>>>>>> branch 'main' of git@github.com:gdx1231/emp-script-static.git
 			return;
 		}
 		if (!this.siezs) {
