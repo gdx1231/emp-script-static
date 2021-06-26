@@ -21,12 +21,43 @@ public class Resources {
 
 	private static synchronized Resource loadResource(String path) {
 		String ext = FilenameUtils.getExtension(path);
+		Resource r = new Resource();
+
+		if (path.indexOf("..") >= 0) {
+			r.setPath(path);
+			r.setStatus(502);
+			LOGGER.error("Invalid path '..', {}", r.toString());
+			return r;
+		}
+
+		// not allow blank ext or directory
+		if (ext.trim().length() == 0 || ext.trim().endsWith("/")) {
+			r.setPath(path);
+			r.setStatus(403);
+			LOGGER.error("Blank ext or directory. {}", r.toString());
+			return r;
+		}
+		if (ext.equalsIgnoreCase("exe") || ext.equalsIgnoreCase("bat") || ext.equalsIgnoreCase("cmd")
+				|| ext.equalsIgnoreCase("sh") || ext.equalsIgnoreCase("dmg") || ext.equalsIgnoreCase("java")
+				|| ext.equalsIgnoreCase("jsp") || ext.equalsIgnoreCase("class") || ext.equalsIgnoreCase("jar")
+				|| ext.equalsIgnoreCase("properties")) {
+			r.setPath(path);
+			r.setStatus(500);
+			LOGGER.error("Invalid ext. {}", r.toString());
+			return r;
+		}
+
+		if (path.indexOf("ewa_conf") >= 0 || path.indexOf("appliaction.yml") >= 0) {
+			r.setPath(path);
+			r.setStatus(501);
+			LOGGER.error("Invalid file. {}", r.toString());
+			return r;
+		}
 
 		URL url = Resources.class.getResource(path);
-		Resource r = new Resource();
 		r.setPath(path);
-		if (url == null) {  
-			r.setStatus(404);   
+		if (url == null) {
+			r.setStatus(404);
 			LOGGER.error(r.toString());
 			return r;
 		}
