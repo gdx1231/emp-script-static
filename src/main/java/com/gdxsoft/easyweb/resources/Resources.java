@@ -53,8 +53,9 @@ public class Resources {
 			LOGGER.error("Invalid file. {}", r.toString());
 			return r;
 		}
-
-		URL url = Resources.class.getResource(path);
+		
+		String pathWithPrefix = "/EmpScriptV2" + path;
+		URL url = Resources.class.getResource(pathWithPrefix);
 		r.setPath(path);
 		if (url == null) {
 			r.setStatus(404);
