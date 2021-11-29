@@ -154,7 +154,7 @@ function EWAC_WfUnit(id) {
 		var obj = $X(this.Id);
 		var img = obj.getElementsByTagName('img')[0];
 		// img.style.display = 'none';
-		img.src = "../images/workflow/wf_ok.png?a=1";
+		img.src = "/EmpScriptV2/EWA_STYLE/images/workflow/wf_ok.png?a=1";
 		img.style.width = '38px';
 		img.style.height = '38px';
 		img.className = '';
@@ -197,7 +197,7 @@ function EWAC_WfUnit(id) {
 		if (isEnd) {
 			o.innerHTML += '<i><b>执行结束</b></i>';
 			// parentObj.parentNode.innerHTML = o.innerHTML;
-			img.src = "../images/workflow/wf_no.png?A=1";
+			img.src = "/EmpScriptV2/EWA_STYLE/images/workflow/wf_no.png?A=1";
 
 		} else {
 			o.innerHTML += '<i><b>当前节点</b></i>';
@@ -206,14 +206,14 @@ function EWAC_WfUnit(id) {
 			}
 			obj.style.backgroundColor = 'lightblue';
 			obj.style.color = 'white';
-			img.src = "../images/workflow/wf_cur.png?A=1";
+			img.src = "/EmpScriptV2/EWA_STYLE/images/workflow/wf_cur.png?A=1";
 		}
 	}
 	this.LogTo = function() {
 		var obj = $X(this.Id);
 		obj.style.backgroundColor = 'lightyellow'
 		var img = obj.getElementsByTagName('img')[0];
-		img.src = "../images/workflow/wf_next.png?A=2";
+		img.src = "/EmpScriptV2/EWA_STYLE/images/workflow/wf_next.png?A=2";
 		img.style.width = '38px';
 		img.style.height = '38px';
 		img.className = '';
@@ -228,7 +228,7 @@ function EWAC_WfUnit(id) {
 		var tr = tb.insertRow(-1);
 		var td = tr.insertCell(-1);
 		td.innerHTML = '<img style="cursor:pointer" class="ewa_wf_unit_img" '
-				+ 'src="../images/transparent.png" id="Atom_Img_' + id
+				+ 'src="/EmpScriptV2/EWA_STYLE/images/transparent.png" id="Atom_Img_' + id
 				+ '"><div a=1></div>';
 		td.align = 'center';
 
@@ -549,7 +549,7 @@ function EWAC_WfCnn() {
 					arrow = 'arraw_t11.gif';
 					td.style.textAlign = 'left';
 				}
-				td.innerHTML = '<img src="../images/workflow/' + arrow + '" />';
+				td.innerHTML = '<img src="/EmpScriptV2/EWA_STYLE/images/workflow/' + arrow + '" />';
 			}
 		}
 
@@ -1107,9 +1107,9 @@ function SetAtomType(v1) {
 	var o1 = $X('Atom_Table_' + CurSelectedID);
 	o1.type = v1;
 	if (v1 == 0) {
-		o1.rows[0].cells[0].childNodes[0].src = '../images/workflow/nulla.gif';
+		o1.rows[0].cells[0].childNodes[0].src = '/EmpScriptV2/EWA_STYLE/images/workflow/nulla.gif';
 	} else {
-		o1.rows[0].cells[0].childNodes[0].src = '../images/workflow/nullaico.gif';
+		o1.rows[0].cells[0].childNodes[0].src = '/EmpScriptV2/EWA_STYLE/images/workflow/nullaico.gif';
 	}
 }
 
