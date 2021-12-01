@@ -49,7 +49,7 @@ public class Resources {
 			LOGGER.error("Blank ext or directory. {}", r.toString());
 			return r;
 		}
-		if (checkValidExt(ext)) {
+		if (!checkValidExt(ext)) {
 			r.setPath(path);
 			r.setStatus(500);
 			LOGGER.error("Invalid ext. {}", r.toString());
