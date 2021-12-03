@@ -327,6 +327,9 @@
 	height: 300px;
 	width: 100%;
 }
+.ewa_sql_editor>div {
+	height: 100%;
+}
 
 .ewa_merge_tab {
 	height: 25px;
