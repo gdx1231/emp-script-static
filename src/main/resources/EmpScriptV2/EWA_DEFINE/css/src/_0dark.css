@@ -5,10 +5,12 @@
 	scrollbar-color: #aaa rgba(55, 55, 55, 0);
 	scrollbar-width: none;
 }
+
 .dark #TABS {
-    background: #363636;
-    box-shadow: 0px 0px 1px #000;
+	background: #363636;
+	box-shadow: 0px 0px 1px #000;
 }
+
 .dark #header, .dark .ewa_tab {
 	background: #252525;
 	box-shadow: 0 1px 0 0 #353535 inset;
@@ -25,7 +27,7 @@
 	background: #303130;
 }
 
-.dark .EWA_POP_MAIN , .dark .ewa-ui-dialog-box{
+.dark .EWA_POP_MAIN, .dark .ewa-ui-dialog-box {
 	color: #f1f1f1;
 	outline: 5px solid #494949;
 	-webkit-box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.65);
@@ -36,7 +38,8 @@
 	border-color: transparent;
 }
 
-.dark .EWA_POP_TITLE_L, .dark  .EWA_POP_TITLE_R, .dark .ewa-ui-dialog-title {
+.dark .EWA_POP_TITLE_L, .dark  .EWA_POP_TITLE_R, .dark .ewa-ui-dialog-title
+	{
 	background-image: none;
 	background: #494949;
 	text-shadow: none;
@@ -186,8 +189,8 @@
 }
 
 .dark .EWA_TD_L, .dark .EWA_TD_M, .dark .EWA_TD_R, .dark .EWA_TD_B,
-	.dark .EWA_TD, .dark .STEP td, .dark .EWA_LF_GROUP, .dark .ewa_redraw_info,
-	.dark .ewa_redraw_ctl, .dark .ewa_msg_box {
+	.dark .EWA_TD_1, .dark .EWA_TD, .dark .STEP td, .dark .EWA_LF_GROUP,
+	.dark .ewa_redraw_info, .dark .ewa_redraw_ctl, .dark .ewa_msg_box {
 	background: #363636;
 }
 
