@@ -12226,24 +12226,17 @@ EWA.F.POP = {
 		}
 		ajax = null;
 	}
-}
+};
 EWA.F.CheckCallBack = function(s1) {
 	if (s1.indexOf('<!--EWA_ERROR_INFOMATION-->') >= 0) {
 		if (EWA["SHOW_ERROR"] == true) { // 允许提示错误
-			var dia = EWA.UI.Dialog.OpenWindow("", "ERROR", 800, 400);
-			var w = dia.GetIframeWindow();
-			w.document.designMode = "on";
-			w.document.open();
-			w.document.write(s1);
-			w.document.close();
-			w.document.designMode = "off";
-			dia.SetCaption("ERROR Information");
+			$DialogHtml(s1, "ERROR", '90vw', '90vh');
 		}
 		return false;
 	} else {
 		return true;
 	}
-}
+};
 EWA.F.ST = {};
 EWA.F.ST.SaveStatus = function(id, frameTag) {
 	var url = EWA.CP + '/EWA_STYLE/cgi-bin/_st_/';
