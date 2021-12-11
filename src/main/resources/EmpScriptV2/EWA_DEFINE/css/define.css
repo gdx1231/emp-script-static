@@ -117,6 +117,10 @@
 	border: 1px solid #010910 !important;
 	border-radius: 3px !important;
 	background: #ccc !important;
+	
+	outline-color: #c98309;
+    outline-width: 1px;
+    outline-style: solid;
 }
 
 .dark  #tbMain td {
