@@ -1311,7 +1311,45 @@ td.ewa-lf-edit {
 
 .ewa_grid_li_end {
 	float: none;
+}.ewa_lmenu_bar, .ewa_lmenu_bar_mv {
+	position: relative;
+	padding: 5px;
 }
+
+.ewa-lmenu-children .ewa_lmenu_bar::after,
+.ewa-lmenu-children .ewa_lmenu_bar_mv::after {
+	content: "\f0da";
+	font-family: fontawesome;
+	display: block;
+	position: absolute;
+	top: 50%;
+	bottom: 0;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	margin-top: -10px;
+	line-height: 20px;
+}
+
+.ewa-lmenu-children.ewa-lmenu-show .ewa_lmenu_bar::after,
+.ewa-lmenu-children.ewa-lmenu-show .ewa_lmenu_bar_mv::after
+{
+	content: "\f0d7";
+}
+
+.ewa_lmenu_bar1, .ewa_lmenu_bar1_mv {
+	padding: 5px 10px;
+}
+
+.ewa_lmenu_bar_mv, .ewa_lmenu_bar1_mv {
+	background-color: lightskyblue;
+}
+
+.ewa_menu_table .fa {
+	color: #08c;
+	text-align: center;
+}
+
 /* 菜单图标 */
 .ewa_menu_m0 {
 	width: 16px;
@@ -1353,8 +1391,7 @@ td.ewa-lf-edit {
 	background-color: #fff;
 	box-shadow: 3px 3px 6px -2px #ccc;
 	border-bottom: 1px solid #ccc;
-}
-/* 页舌 主样式 */
+}/* 页舌 主样式 */
 .ewa_tab {
 	height: 30px;
 	border-bottom: 3px solid #4675a3;
