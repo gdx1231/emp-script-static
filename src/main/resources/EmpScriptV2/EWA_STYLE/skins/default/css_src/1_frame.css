@@ -1,21 +1,43 @@
+/* 密码输入框和密码查看 */
+.ewa-input-password-with-eye {
+	position: relative;
+	display: inline-block;
+	z-index: 0;
+	width:100%;
+}
+
+.ewa-input-password-with-eye a {
+	font-family:"FontAwesome";
+	position: absolute;
+	right: 9px;
+	line-height: 24px;
+	height: 24px;
+	top: 50%;
+	margin-top: -12px;
+}
+.ewa-input-password-with-eye a::after{
+	content:"\f06e";
+	color: #ccc;
+}
+.ewa-input-password-with-eye a[open]::after{
+	content:"\f070";
+	color: orangered;
+}
 /* 翻译按钮 */
 .ewa-filter-chks {
-	height:90px;
+	height: 90px;
 	overflow: auto;
 }
+
 .ewa-filter-checked {
 	border-bottom: 1px solid #ccc;
 	line-height: 1.8;
-		
 }
-.ewa-filter-char {
-		
-}
+
 .ewa-filter-char-num {
 	font-size: 9px;
 }
-.ewa-but-trans {
-}
+
 .ewa-but-trans-float {
 	position: absolute;
 	display: block;
@@ -265,7 +287,6 @@
 	height: 100px;
 }
 
-
 .ewa-with-icon {
 	position: relative;
 }
@@ -279,6 +300,7 @@
 	top: 50%;
 	margin-top: -12px;
 	height: 24px;
+	z-index: 1;
 }
 
 .ewa-tag-textarea>label.fa {
@@ -327,6 +349,7 @@
 	height: 300px;
 	width: 100%;
 }
+
 .ewa_sql_editor>div {
 	height: 100%;
 }
@@ -373,9 +396,7 @@
 	border-top: 1px solid #ccc;
 }
 
-.EWA_GROUP_GUIDE {
-	
-}
+ 
 
 .ewa_but_blue {
 	background-color: darkblue;
@@ -386,7 +407,7 @@
 	padding-right: 15px;
 	padding-top: 4px;
 	padding-bottom: 4px;
-	-webkit-box-shadow: drakblue 0px 2px 1px -1px inset;
+	box-shadow: drakblue 0px 2px 1px -1px inset;
 	font-weight: normal;
 	border: 1px;
 	border-radius: 5px;
@@ -410,16 +431,12 @@ input[type=submit], input[type=button], button, .IX_BUTTON {
 	padding: 3px 10px;
 }
 
- 
-
 input[type=submit] {
 	background-color: #337ab7;
 	color: #fff;
 	font-weight: normal;
 	border: 1px solid #2e6da4;
 }
-
-
 
 input[type=submit]:hover {
 	color: #fff;
@@ -432,6 +449,7 @@ input[type=button], button {
 	background-color: #fff;
 	border: 1px solid #ccc;
 }
+
 input[type=button]:hover, button:hover {
 	color: #333;
 	background-color: #e6e6e6;
@@ -442,29 +460,33 @@ input[type=button]:hover, button:hover {
 	background: #eee;
 }
 
- 
-select:disabled, textarea:disabled, input:disabled, .ewa-ipt-droplist:disabled, .ewa-ipt-date:disabled, button:disabled
-	{
+select:disabled, textarea:disabled, input:disabled, .ewa-ipt-droplist:disabled,
+	.ewa-ipt-date:disabled, button:disabled {
 	background: #eee;
 	pointer-events: none;
 	color: #111;
 }
+
 input[type=button]:disabled, button:disabled {
 	box-shadow: none;
 	opacity: .65;
 }
+
 input[type=submit]:disabled {
 	background-color: #337ab7;
 	border-color: #2e6da4;
 }
+
 label[ewadisabled] {
-	color:#999;
+	color: #999;
 	pointer-events: none;
 }
+
 .ewa-editor[ewadisabled] .btn {
-	color:#999;
+	color: #999;
 	pointer-events: none;
 }
+
 .ewa_cb_subject .ewa_lf_func_caption, .ewa_cb_caption {
 	padding-top: 2px;
 	cursor: pointer;
@@ -523,14 +545,14 @@ label[ewadisabled] {
 }
 
 .ewa-sms-valid-box .ewa-sms-valid-code-button {
-    width: 101px;
-    border: 1px solid rgb(255, 255, 255);
-    background: lightsalmon;
-    border-radius: 5px;
+	width: 101px;
+	border: 1px solid rgb(255, 255, 255);
+	background: lightsalmon;
+	border-radius: 5px;
 }
-.ewa-sms-valid-box .ewa-sms-valid-code-button:disabled{
+
+.ewa-sms-valid-box .ewa-sms-valid-code-button:disabled {
 	pointer-events: none;
-	
 }
 /** ipt **/
 .ewa-ipt-droplist {
@@ -573,7 +595,6 @@ tr[error] .ewa-tip-error-info {
 	min-width: 90px;
 	max-width: 100%;
 	overflow: hidden;
-	white-spacing: nowrap;
 	background: #fff;
 	border: 1px solid orange;
 	padding-right: 4px;
@@ -613,17 +634,17 @@ tr[error] .ewa-tip-error:after {
 }
 /* 在对话框里限制frame高度为 400px */
 .ewa-in-dialog form {
-    height: 400px;
-    overflow: auto;
-    margin-bottom: 50px;
+	height: 400px;
+	overflow: auto;
+	margin-bottom: 50px;
 }
 /* 将按钮栏固定在底部 */
 .ewa-in-dialog .EWA_TD_B {
-    position: fixed;
-    bottom: 0px;
-    height: 48px;
-    display: block;
-    width: 100%;
-    left: 0;
-    background-color: aliceblue;
+	position: fixed;
+	bottom: 0px;
+	height: 48px;
+	display: block;
+	width: 100%;
+	left: 0;
+	background-color: aliceblue;
 }
