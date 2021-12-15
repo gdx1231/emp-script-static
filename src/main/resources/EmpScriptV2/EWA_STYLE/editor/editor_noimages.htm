@@ -63,8 +63,8 @@ function mDown(evt) {
 		if (tag == 'html') {
 			var html = style_html(window.frames[0].document.body.innerHTML, 4,
 					' ', 80);
-			$('txt').style.display = '';
-			$('f1').style.display = 'none';
+			document.getElementById('txt').style.display = '';
+			document.getElementById('f1').style.display = 'none';
 			o1.setAttribute('tag', 'txt');
 			if (window.frames[1].editor) {
 				window.frames[1].editor.setValue(html);
@@ -75,8 +75,8 @@ function mDown(evt) {
 				window.frames[1].aa();
 			}
 		} else {
-			$('txt').style.display = 'none';
-			$('f1').style.display = '';
+			document.getElementById('txt').style.display = 'none';
+			document.getElementById('f1').style.display = '';
 			o1.setAttribute('tag', 'html');
 			window.frames[0].document.body.innerHTML = window.frames[1]
 					.getText();
@@ -147,7 +147,7 @@ function onload1() {
 }
 function loadImages(data) {
 	var d = eval(data);
-	var t = window.parent.$('UP_IMG_' + fromName);
+	var t = window.parent.document.getElementById('UP_IMG_' + fromName);
 	for ( var i = 0; i < d.length; i++) {
 		createImg(d[i]);
 		if (t.value.length > 0) {
@@ -178,7 +178,7 @@ function createImg(d) {
 	span.style.padding = '2px';
 	span.appendChild(img);
 
-	$('imgs').childNodes[0].appendChild(span);
+	document.getElementById('imgs').childNodes[0].appendChild(span);
 }
 </script>
 	</head>
