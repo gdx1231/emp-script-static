@@ -1,3 +1,41 @@
+.ewa_lmenu_bar, .ewa_lmenu_bar_mv {
+	position: relative;
+	padding: 5px;
+}
+
+.ewa-lmenu-children .ewa_lmenu_bar::after,
+.ewa-lmenu-children .ewa_lmenu_bar_mv::after {
+	content: "\f0da";
+	font-family: fontawesome;
+	display: block;
+	position: absolute;
+	top: 50%;
+	bottom: 0;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	margin-top: -10px;
+	line-height: 20px;
+}
+
+.ewa-lmenu-children.ewa-lmenu-show .ewa_lmenu_bar::after,
+.ewa-lmenu-children.ewa-lmenu-show .ewa_lmenu_bar_mv::after
+{
+	content: "\f0d7";
+}
+
+.ewa_lmenu_bar1, .ewa_lmenu_bar1_mv {
+	padding: 5px 10px;
+}
+
+.ewa_lmenu_bar_mv, .ewa_lmenu_bar1_mv {
+	background-color: lightskyblue;
+}
+
+.ewa-lmenu .fa {
+	color: #08c;
+	text-align: center;
+}
 
 /* 菜单图标 */
 .ewa_menu_m0 {

@@ -2,7 +2,7 @@
 echo create css.css
 
 sh_dir=`dirname $0`
-src=${sh_dir}/../src/main/resources/EWA_STYLE/skins/default
+src=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_STYLE/skins/default
 
 echo DIR：   ${sh_dir}
 echo SRC：   ${src}

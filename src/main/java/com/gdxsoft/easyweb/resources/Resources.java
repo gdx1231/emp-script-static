@@ -19,6 +19,18 @@ public class Resources {
 
 	private static Map<String, Resource> CACHED = new ConcurrentHashMap<String, Resource>();
 
+	public static boolean checkValidExt(String ext) {
+		if (ext.equalsIgnoreCase("exe") || ext.equalsIgnoreCase("bat") || ext.equalsIgnoreCase("cmd")
+				|| ext.equalsIgnoreCase("sh") || ext.equalsIgnoreCase("dmg") || ext.equalsIgnoreCase("java")
+				|| ext.equalsIgnoreCase("jsp") || ext.equalsIgnoreCase("class") || ext.equalsIgnoreCase("jar")
+				|| ext.equalsIgnoreCase("properties")) {
+			 return false;
+		}
+		
+		return true;
+	}
+	
+	
 	private static synchronized Resource loadResource(String path) {
 		String ext = FilenameUtils.getExtension(path);
 		Resource r = new Resource();
@@ -37,10 +49,7 @@ public class Resources {
 			LOGGER.error("Blank ext or directory. {}", r.toString());
 			return r;
 		}
-		if (ext.equalsIgnoreCase("exe") || ext.equalsIgnoreCase("bat") || ext.equalsIgnoreCase("cmd")
-				|| ext.equalsIgnoreCase("sh") || ext.equalsIgnoreCase("dmg") || ext.equalsIgnoreCase("java")
-				|| ext.equalsIgnoreCase("jsp") || ext.equalsIgnoreCase("class") || ext.equalsIgnoreCase("jar")
-				|| ext.equalsIgnoreCase("properties")) {
+		if (!checkValidExt(ext)) {
 			r.setPath(path);
 			r.setStatus(500);
 			LOGGER.error("Invalid ext. {}", r.toString());

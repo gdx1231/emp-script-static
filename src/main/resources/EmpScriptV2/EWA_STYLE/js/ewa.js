@@ -4667,6 +4667,7 @@ function EWA_UI_MenuClass(className) {
 	this.OnClick = function(event, obj) {
 		this.clickedItem = obj;
 		if (this.MenuShowType == 'LEFT') {
+			var menuDiv = obj.parentNode.parentNode;
 			var po = obj.parentNode;
 			var co = obj.parentNode.parentNode.childNodes[1];
 			if (co == null) {
@@ -4681,7 +4682,9 @@ function EWA_UI_MenuClass(className) {
 			} else {
 				if (co.style.display == 'none') {
 					co.style.display = '';
+					$(menuDiv).addClass('ewa-lmenu-show')
 				} else {
+					$(menuDiv).removeClass('ewa-lmenu-show')
 					co.style.display = 'none';
 				}
 				if (window.event) {
@@ -4841,6 +4844,7 @@ function EWA_UI_MenuClass(className) {
 
 	};
 	this._InstallMenusLeft = function(tb, ms, al, menusId) {
+		$(tb).addClass('ewa-lmenu');
 		// 生成第一层菜单
 		for (var i = 0; i < al.length; i++) {
 			var tr = tb.insertRow(-1);
@@ -4851,7 +4855,9 @@ function EWA_UI_MenuClass(className) {
 			td.appendChild(div);
 			al[i].style.height = '100%';
 			div.childNodes[0].appendChild(al[i]);
-			if (i > 0) {
+			if(i == 0){
+				$(div).addClass('ewa-lmenu-show')
+			} else {
 				div.childNodes[1].style.display = 'none';
 			}
 		}
@@ -4862,7 +4868,9 @@ function EWA_UI_MenuClass(className) {
 			var pid = o.getAttribute('EWA_MF_PID');
 			var div = document.createElement('div');
 			div.innerHTML = '<div class="ewa_lmenu_bar1"></div><div style="padding-left:4px;display:none"></div>'
-			$X(pid).parentNode.parentNode.childNodes[1].appendChild(div);
+			var menu0 = $X(pid).parentNode.parentNode;
+			$(menu0).addClass('ewa-lmenu-children');
+			menu0.childNodes[1].appendChild(div);
 			div.childNodes[0].appendChild(o);
 		}
 	};
@@ -12226,24 +12234,17 @@ EWA.F.POP = {
 		}
 		ajax = null;
 	}
-}
+};
 EWA.F.CheckCallBack = function(s1) {
 	if (s1.indexOf('<!--EWA_ERROR_INFOMATION-->') >= 0) {
 		if (EWA["SHOW_ERROR"] == true) { // 允许提示错误
-			var dia = EWA.UI.Dialog.OpenWindow("", "ERROR", 800, 400);
-			var w = dia.GetIframeWindow();
-			w.document.designMode = "on";
-			w.document.open();
-			w.document.write(s1);
-			w.document.close();
-			w.document.designMode = "off";
-			dia.SetCaption("ERROR Information");
+			$DialogHtml(s1, "ERROR", '90vw', '90vh');
 		}
 		return false;
 	} else {
 		return true;
 	}
-}
+};
 EWA.F.ST = {};
 EWA.F.ST.SaveStatus = function(id, frameTag) {
 	var url = EWA.CP + '/EWA_STYLE/cgi-bin/_st_/';

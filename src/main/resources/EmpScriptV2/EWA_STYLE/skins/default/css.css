@@ -158,24 +158,46 @@ a:hover, .ewa-map-button:hover {
 
 .ewa-text-color-black {
 	color: #000;
-}/* 翻译按钮 */
+}/* 密码输入框和密码查看 */
+.ewa-input-password-with-eye {
+	position: relative;
+	display: inline-block;
+	z-index: 0;
+	width:100%;
+}
+
+.ewa-input-password-with-eye a {
+	font-family:"FontAwesome";
+	position: absolute;
+	right: 9px;
+	line-height: 24px;
+	height: 24px;
+	top: 50%;
+	margin-top: -12px;
+}
+.ewa-input-password-with-eye a::after{
+	content:"\f06e";
+	color: #ccc;
+}
+.ewa-input-password-with-eye a[open]::after{
+	content:"\f070";
+	color: orangered;
+}
+/* 翻译按钮 */
 .ewa-filter-chks {
-	height:90px;
+	height: 90px;
 	overflow: auto;
 }
+
 .ewa-filter-checked {
 	border-bottom: 1px solid #ccc;
 	line-height: 1.8;
-		
 }
-.ewa-filter-char {
-		
-}
+
 .ewa-filter-char-num {
 	font-size: 9px;
 }
-.ewa-but-trans {
-}
+
 .ewa-but-trans-float {
 	position: absolute;
 	display: block;
@@ -425,7 +447,6 @@ a:hover, .ewa-map-button:hover {
 	height: 100px;
 }
 
-
 .ewa-with-icon {
 	position: relative;
 }
@@ -439,6 +460,7 @@ a:hover, .ewa-map-button:hover {
 	top: 50%;
 	margin-top: -12px;
 	height: 24px;
+	z-index: 1;
 }
 
 .ewa-tag-textarea>label.fa {
@@ -488,6 +510,10 @@ a:hover, .ewa-map-button:hover {
 	width: 100%;
 }
 
+.ewa_sql_editor>div {
+	height: 100%;
+}
+
 .ewa_merge_tab {
 	height: 25px;
 	border: 1px solid gray;
@@ -530,9 +556,7 @@ a:hover, .ewa-map-button:hover {
 	border-top: 1px solid #ccc;
 }
 
-.EWA_GROUP_GUIDE {
-	
-}
+ 
 
 .ewa_but_blue {
 	background-color: darkblue;
@@ -543,7 +567,7 @@ a:hover, .ewa-map-button:hover {
 	padding-right: 15px;
 	padding-top: 4px;
 	padding-bottom: 4px;
-	-webkit-box-shadow: drakblue 0px 2px 1px -1px inset;
+	box-shadow: drakblue 0px 2px 1px -1px inset;
 	font-weight: normal;
 	border: 1px;
 	border-radius: 5px;
@@ -567,16 +591,12 @@ input[type=submit], input[type=button], button, .IX_BUTTON {
 	padding: 3px 10px;
 }
 
- 
-
 input[type=submit] {
 	background-color: #337ab7;
 	color: #fff;
 	font-weight: normal;
 	border: 1px solid #2e6da4;
 }
-
-
 
 input[type=submit]:hover {
 	color: #fff;
@@ -589,6 +609,7 @@ input[type=button], button {
 	background-color: #fff;
 	border: 1px solid #ccc;
 }
+
 input[type=button]:hover, button:hover {
 	color: #333;
 	background-color: #e6e6e6;
@@ -599,29 +620,33 @@ input[type=button]:hover, button:hover {
 	background: #eee;
 }
 
- 
-select:disabled, textarea:disabled, input:disabled, .ewa-ipt-droplist:disabled, .ewa-ipt-date:disabled, button:disabled
-	{
+select:disabled, textarea:disabled, input:disabled, .ewa-ipt-droplist:disabled,
+	.ewa-ipt-date:disabled, button:disabled {
 	background: #eee;
 	pointer-events: none;
 	color: #111;
 }
+
 input[type=button]:disabled, button:disabled {
 	box-shadow: none;
 	opacity: .65;
 }
+
 input[type=submit]:disabled {
 	background-color: #337ab7;
 	border-color: #2e6da4;
 }
+
 label[ewadisabled] {
-	color:#999;
+	color: #999;
 	pointer-events: none;
 }
+
 .ewa-editor[ewadisabled] .btn {
-	color:#999;
+	color: #999;
 	pointer-events: none;
 }
+
 .ewa_cb_subject .ewa_lf_func_caption, .ewa_cb_caption {
 	padding-top: 2px;
 	cursor: pointer;
@@ -680,14 +705,14 @@ label[ewadisabled] {
 }
 
 .ewa-sms-valid-box .ewa-sms-valid-code-button {
-    width: 101px;
-    border: 1px solid rgb(255, 255, 255);
-    background: lightsalmon;
-    border-radius: 5px;
+	width: 101px;
+	border: 1px solid rgb(255, 255, 255);
+	background: lightsalmon;
+	border-radius: 5px;
 }
-.ewa-sms-valid-box .ewa-sms-valid-code-button:disabled{
+
+.ewa-sms-valid-box .ewa-sms-valid-code-button:disabled {
 	pointer-events: none;
-	
 }
 /** ipt **/
 .ewa-ipt-droplist {
@@ -730,7 +755,6 @@ tr[error] .ewa-tip-error-info {
 	min-width: 90px;
 	max-width: 100%;
 	overflow: hidden;
-	white-spacing: nowrap;
 	background: #fff;
 	border: 1px solid orange;
 	padding-right: 4px;
@@ -770,19 +794,19 @@ tr[error] .ewa-tip-error:after {
 }
 /* 在对话框里限制frame高度为 400px */
 .ewa-in-dialog form {
-    height: 400px;
-    overflow: auto;
-    margin-bottom: 50px;
+	height: 400px;
+	overflow: auto;
+	margin-bottom: 50px;
 }
 /* 将按钮栏固定在底部 */
 .ewa-in-dialog .EWA_TD_B {
-    position: fixed;
-    bottom: 0px;
-    height: 48px;
-    display: block;
-    width: 100%;
-    left: 0;
-    background-color: aliceblue;
+	position: fixed;
+	bottom: 0px;
+	height: 48px;
+	display: block;
+	width: 100%;
+	left: 0;
+	background-color: aliceblue;
 }/* 列表的图标 */
 .ewa-lf-frame .ewa-with-icon>label.fa {
 	position: static;
@@ -1287,7 +1311,45 @@ td.ewa-lf-edit {
 
 .ewa_grid_li_end {
 	float: none;
+}.ewa_lmenu_bar, .ewa_lmenu_bar_mv {
+	position: relative;
+	padding: 5px;
 }
+
+.ewa-lmenu-children .ewa_lmenu_bar::after,
+.ewa-lmenu-children .ewa_lmenu_bar_mv::after {
+	content: "\f0da";
+	font-family: fontawesome;
+	display: block;
+	position: absolute;
+	top: 50%;
+	bottom: 0;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	margin-top: -10px;
+	line-height: 20px;
+}
+
+.ewa-lmenu-children.ewa-lmenu-show .ewa_lmenu_bar::after,
+.ewa-lmenu-children.ewa-lmenu-show .ewa_lmenu_bar_mv::after
+{
+	content: "\f0d7";
+}
+
+.ewa_lmenu_bar1, .ewa_lmenu_bar1_mv {
+	padding: 5px 10px;
+}
+
+.ewa_lmenu_bar_mv, .ewa_lmenu_bar1_mv {
+	background-color: lightskyblue;
+}
+
+.ewa-lmenu .fa {
+	color: #08c;
+	text-align: center;
+}
+
 /* 菜单图标 */
 .ewa_menu_m0 {
 	width: 16px;
@@ -1329,8 +1391,7 @@ td.ewa-lf-edit {
 	background-color: #fff;
 	box-shadow: 3px 3px 6px -2px #ccc;
 	border-bottom: 1px solid #ccc;
-}
-/* 页舌 主样式 */
+}/* 页舌 主样式 */
 .ewa_tab {
 	height: 30px;
 	border-bottom: 3px solid #4675a3;

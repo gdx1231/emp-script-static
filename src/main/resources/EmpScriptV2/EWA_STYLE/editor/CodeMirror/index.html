@@ -29,6 +29,7 @@
 	font-family: "Microsoft YaHei", "微软雅黑", tahoma, Verdana, Arial, sans-serif, arial, STHeiti, 宋体;
 	line-height: 20px;
 	overflow: hidden;
+	background-color: #111;
 }
 
 .light #status a {
@@ -76,7 +77,20 @@ body {
 	<pre id="code"></pre>
 	<div id='status'>
 		<a href="javascript:beautify_code()" title="(Cmd+Shift+F)">格式化代码</a> <a id='check_sql' href="javascript: checkSQL()">检查SQL语法</a>
-		<span style='float: right'> <a>Theme:</a> <select id="theme" size="1" onchange="change_code_theme(this)">
+		<span style='float: right'>
+			<a>字号</a>
+			<select id='fontsize' size=1 onchange="change_font_size(this)">
+				<option value='12px'>12px</option>
+				<option value='13px'>13px</option>
+				<option value='14px'>14px</option>
+				<option value='15px'>15px</option>
+				<option value='16px'>16px</option>
+				<option value='17px'>17px</option>
+				<option value='18px'>18px</option>
+				<option value='19px'>19px</option>
+				<option value='20px'>20px</option>	
+			</select>
+		 <a>Theme:</a> <select id="theme" size="1" onchange="change_code_theme(this)">
 				<optgroup label="Bright">
 					<option value="ace/theme/chrome">Chrome</option>
 					<option value="ace/theme/clouds">Clouds</option>
@@ -221,8 +235,18 @@ body {
 				}
 			}
 		}
-
 		editor.setTheme(theme_code);
+		
+		// 设置字体大小
+		if(window.localStorage && window.localStorage["EWA_CODE_FONTSIZE"]){
+		    var v = window.localStorage["EWA_CODE_FONTSIZE"];
+		    var selectFontsize = document.getElementById('fontsize');
+		    if(v) {
+		        selectFontsize.value = v;
+		        editor.setFontSize(v);
+		    }
+		}
+		
 		editor.session.setMode(mode);
 		editor.getSession().setUseWrapMode(true);
 
@@ -305,6 +329,10 @@ body {
 	function change_code_theme(obj) {
 		editor.setTheme(obj.value);
 		window.localStorage["EWA_CODE_THENE"] = obj.value;
+	}
+	function change_font_size(obj){
+	    editor.setFontSize(obj.value);
+	    window.localStorage["EWA_CODE_FONTSIZE"] = obj.value;
 	}
 	aa();
 	</script>

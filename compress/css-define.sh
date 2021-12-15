@@ -1,6 +1,6 @@
 #!/bin/sh
 sh_dir=`dirname $0`
-src=${sh_dir}/../src/main/resources/EWA_DEFINE/css
+src=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_DEFINE/css
 
 echo DIR：   ${sh_dir}
 echo SRC：   ${src}

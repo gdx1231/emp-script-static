@@ -43,6 +43,7 @@ function EWA_UI_MenuClass(className) {
 	this.OnClick = function(event, obj) {
 		this.clickedItem = obj;
 		if (this.MenuShowType == 'LEFT') {
+			var menuDiv = obj.parentNode.parentNode;
 			var po = obj.parentNode;
 			var co = obj.parentNode.parentNode.childNodes[1];
 			if (co == null) {
@@ -57,7 +58,9 @@ function EWA_UI_MenuClass(className) {
 			} else {
 				if (co.style.display == 'none') {
 					co.style.display = '';
+					$(menuDiv).addClass('ewa-lmenu-show')
 				} else {
+					$(menuDiv).removeClass('ewa-lmenu-show')
 					co.style.display = 'none';
 				}
 				if (window.event) {
@@ -217,6 +220,7 @@ function EWA_UI_MenuClass(className) {
 
 	};
 	this._InstallMenusLeft = function(tb, ms, al, menusId) {
+		$(tb).addClass('ewa-lmenu');
 		// 生成第一层菜单
 		for (var i = 0; i < al.length; i++) {
 			var tr = tb.insertRow(-1);
@@ -227,7 +231,9 @@ function EWA_UI_MenuClass(className) {
 			td.appendChild(div);
 			al[i].style.height = '100%';
 			div.childNodes[0].appendChild(al[i]);
-			if (i > 0) {
+			if(i == 0){
+				$(div).addClass('ewa-lmenu-show')
+			} else {
 				div.childNodes[1].style.display = 'none';
 			}
 		}
@@ -238,7 +244,9 @@ function EWA_UI_MenuClass(className) {
 			var pid = o.getAttribute('EWA_MF_PID');
 			var div = document.createElement('div');
 			div.innerHTML = '<div class="ewa_lmenu_bar1"></div><div style="padding-left:4px;display:none"></div>'
-			$X(pid).parentNode.parentNode.childNodes[1].appendChild(div);
+			var menu0 = $X(pid).parentNode.parentNode;
+			$(menu0).addClass('ewa-lmenu-children');
+			menu0.childNodes[1].appendChild(div);
 			div.childNodes[0].appendChild(o);
 		}
 	};

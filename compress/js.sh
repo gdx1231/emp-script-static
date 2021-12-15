@@ -3,8 +3,8 @@
 echo create EWA.js
 sh_dir=`dirname $0`
 
-src=${sh_dir}/../src/main/resources/EWA_STYLE/js/source/src
-target=${sh_dir}/../src/main/resources/EWA_STYLE/js/source
+src=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_STYLE/js/source/src
+target=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_STYLE/js/source
 
 echo   DIR：${sh_dir}
 echo   SRC：${src}
