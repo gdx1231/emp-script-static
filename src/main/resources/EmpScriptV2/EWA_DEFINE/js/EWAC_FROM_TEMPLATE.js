@@ -160,7 +160,7 @@ var EWAC_F = {
 			o.dt_type = dt_type;
 		}
 		var sql = c.create_sql(name);
-		$('#sql').parent().find("iframe")[0].contentWindow.clearText();
+		$('#sql').parent().find("iframe")[0].contentWindow.editor.setValue("");
 		$('#sql').parent().find("iframe")[0].contentWindow.setText(sql);
 		$('#sql').val(sql);
 		//$(obj).hide();
@@ -398,10 +398,10 @@ var EWAC_F = {
 
 		var sql = ss.join("") + "\n\n" + ss1.join("\n");
 
-		$('#sql').parent().find("iframe")[0].contentWindow.clearText();
+		$('#sql').parent().find("iframe")[0].contentWindow.editor.setValue(""); 
 		$('#sql').parent().find("iframe")[0].contentWindow.setText(sql);
 		$('#sql').val(sql);
-
+		
 		return true;
 	},
 	create_get_des : function(obj) {
