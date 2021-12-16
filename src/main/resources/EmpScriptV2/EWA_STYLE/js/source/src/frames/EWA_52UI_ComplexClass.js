@@ -311,7 +311,11 @@ function EWA_ComplexClass() {
 				EWA.F.Install(n, x, i1, p + paras);
 			} else {
 				EWA.F.Install(n, x, i1, p + paras, function () {
-					eval(js);
+					if(js.indexOf('(')>0){
+						eval(js);
+					} else {
+						window[js](obj, this);
+					}
 				});
 			}
 		} else {
