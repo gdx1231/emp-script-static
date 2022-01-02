@@ -44,7 +44,7 @@ function EWA_DocWordClass() {
             this.lastWR = null;
         } else if (t == 'IMG') {
             var p = this.getDock();
-            var o = this.createPic(obj);
+            o = this.createPic(obj);
             if (p.tagName != 'w:p') { // td
                 var p0 = this.createP(obj.parentNode);
                 var wr = this.createSpan(obj.parentNode);
@@ -52,6 +52,9 @@ function EWA_DocWordClass() {
                 p0.appendChild(o);
                 p.appendChild(p0);
                 this.docks.push(p0);
+                
+                endPop = true; // 完成后弹出附体
+                o = p0; // 交换父体 2022-01-02
             } else {
                 p.appendChild(o);
             }
