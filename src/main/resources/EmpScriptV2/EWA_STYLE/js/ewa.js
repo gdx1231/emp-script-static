@@ -9305,7 +9305,7 @@ EWA.UI.Msg = {
 	 * @return {}
 	 */
 	Show : function(txtMsg, buttons, txtCaption, txtIcon) {
-		if (txtMsg.indexOf("(") > 0 && txtMsg.indexOf(")") > 0) {
+		if (txtMsg.indexOf("(") > 0 && txtMsg.trim().endsWith(")")  ) {
 			try {
 				txtMsg = eval(txtMsg);
 			} catch (e) {
@@ -21479,6 +21479,18 @@ function EWA_Html5UploadClass() {
 	this.POST_REF = "";
 	this.UPLOAD_STATUS = ""; // start,checking,ok ,nofile(没有上传文件)
 	this.WAIT_ID = EWA_Utils.tempId("ht5upload_wait_");
+
+	//限制上传文件类型，类型应在配置中，服务器端判断配置参数
+	this.changeUpExts = function(exts) {
+		let input = $('#' + this.INPUT_FILE_ID);
+		input.attr('accept', exts);
+	};
+
+	// 限制上传大小，此参数应该小于配置参数，服务器端判断配置参数
+	this.changeUpSizeLimit = function(sizeLimit) {
+		this.UpLimit = sizeLimit;
+	};
+
 	this.haveFile = function() {
 		for (var i = 0; i < this.files.length; i++) {
 			if (this.files[i].value != "") {
@@ -21515,13 +21527,71 @@ function EWA_Html5UploadClass() {
 		};
 		$X(id).src = EWA.UI.Ext.FileIco(ext);
 	};
+
+
 	this.showPreview = function(source, event) {
-		// console.log(this._name);
+		if (source.files.length > 10) {
+			if (EWA.LANG == 'enus') {
+				EWA.UI.Msg.ShowError("Upload up to 10 files at a time", "limts");
+			} else {
+				EWA.UI.Msg.ShowError("一次最多上传10个文件", "文件数量限制");
+			}
+			source.value = "";
+			return;
+		}
+		let sizeLimit = 0; //文件大小限制,0表示无限制
+		if (this.UpLimit) {
+			let limit = (this.UpLimit + "").toLocaleLowerCase().replace(/,/ig, "").replace(/ /ig, "");
+			if (limit.endsWith("m")) {
+				let num = limit.substring(0, limit.length - 1);
+				if (isNaN(num)) {
+					alert('Invalid sizeLimit parameter:' + this.sizeLimit);
+					return;
+				}
+				sizeLimit = num * 1024 * 1024;
+			} else if (limit.endsWith("k")) {
+				let num = limit.substring(0, limit.length - 1);
+				if (isNaN(num)) {
+					alert('Invalid sizeLimit parameter:' + this.sizeLimit);
+					return;
+				}
+				sizeLimit = num * 1024;
+			} else {
+				if (isNaN(limit)) {
+					alert('Invalid sizeLimit parameter:' + this.sizeLimit);
+					return;
+				}
+				sizeLimit = limit * 1;
+			}
+		}
+		let errs = [];
+		if (sizeLimit > 0) {//检查每个文件的大小
+			for (var i = 0; i < source.files.length; i++) {
+				var file = source.files[i];
+				if (file.size > sizeLimit) {
+					let fileSize = EWA.UI.Ext.getFileLen(file.size, 2);
+					errs.push(file.name.replace(/</ig, "%lt;").replace(/>/ig, "%gt;") + " [" + fileSize + "]");
+				}
+			}
+		}
+		if (errs.length > 0) {
+			source.value = "";
+			if (EWA.LANG == 'enus') {
+				errs.push("Exceed " + this.UpLimit + " limit");
+				EWA.UI.Msg.ShowError(errs.join("<br>"), "Exceed " + this.UpLimit + " limit");
+			} else {
+				errs.push("超过" + this.UpLimit + "大小限制");
+				EWA.UI.Msg.ShowError(errs.join("<br>"), "超过" + this.UpLimit + "大小限制");
+			}
+			return;
+		}
+
 		var div = source.parentNode;
 		var h = div.outerHTML; // div
 		div.style.display = 'none';
 		source.setAttribute('ok', 1);
 		gFileReaders = {};
+
 		for (var i = 0; i < source.files.length; i++) {
 			var file = source.files[i];
 			this.showPreview1(div, file);
@@ -21673,7 +21743,7 @@ function EWA_Html5UploadClass() {
 				var obj = this;
 				for (var i = 0; i < obj.files.length; i++) {
 					let file = obj.files[i];
-					if (file.isDeleted) { 
+					if (file.isDeleted) {
 						//被删除，跳过
 						console.log(file);
 						continue;

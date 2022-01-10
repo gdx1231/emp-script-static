@@ -158,7 +158,7 @@ EWA.UI.Msg = {
 	 * @return {}
 	 */
 	Show : function(txtMsg, buttons, txtCaption, txtIcon) {
-		if (txtMsg.indexOf("(") > 0 && txtMsg.indexOf(")") > 0) {
+		if (txtMsg.indexOf("(") > 0 && txtMsg.trim().endsWith(")")  ) {
 			try {
 				txtMsg = eval(txtMsg);
 			} catch (e) {
