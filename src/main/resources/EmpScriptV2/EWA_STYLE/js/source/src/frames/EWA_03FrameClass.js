@@ -741,14 +741,19 @@ function EWA_FrameClass() {
 	};
 	// 调整宽度
 	this.RedrawChangWidth = function() {
-		var tb = $('#EWA_FRAME_' + this._Id);
-		var cols = tb.find('.ewa_msg_box')[0].colSpan / 2;
-		var info_width = 90;
-		var ctl_width = (tb.width() - info_width * cols) / cols;
-		$(tb).find('.ewa_redraw_ctl').each(function() {
-			var colspan = this.colSpan || 1;
-			$(this).css('width', ctl_width * colspan);
+		let tb = $('#EWA_FRAME_' + this._Id);
+		let tb_width = tb.width();
+		let cols = tb.find('.ewa_msg_box')[0].colSpan / 2;
+		let info_width = 90;
+		$("#EWA_FRAME_" + this._Id+">tbody>tr[class*='ewa-row-']:not('.ewa-row-msg-box')").each(function(){
+			let info_cols=$(this).find("td.ewa_redraw_info:visible").length;
+			let ctl_width=(tb_width - info_width*info_cols)/cols;
+			$(this).find("td.ewa_redraw_ctl:visible").each(function(){
+				let colspan = this.colSpan || 1;
+				$(this).css('width',ctl_width*colspan);
+			});
 		});
+		
 		var c = this;
 		addEvent(window, 'size', function() {
 			c.RedrawChangWidth();
