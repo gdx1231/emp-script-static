@@ -2229,7 +2229,9 @@ function EWA_FrameClass() {
 		}
 		if (ht5.UPLOAD_STATUS == 'error' || ht5.UPLOAD_STATUS == 'abort') {
 			// 错误或终止
-			alert('上传文件错误或被中止');
+			this._stopPost = true;
+			this._stopPostError = EWA.LANG == 'enus'?'Upload file error or aborted':'上传文件错误或被中止';
+			console.log(this._stopPostError);
 			return false;
 		}
 
@@ -2328,6 +2330,7 @@ function EWA_FrameClass() {
 			}, 700);
 			return;
 		}
+		
 		var ht5takephotos = $(objForm).find('input[ewa_tag=ht5takephoto]');
 		// console.log(ht5takephotos)
 		if (ht5takephotos.length > 0 && !this.uploadProcess) {
@@ -2370,6 +2373,12 @@ function EWA_FrameClass() {
 				ht5.H5_UPLOAD.removeWaitBox();
 			}
 		}
+		
+		if(this._stopPostError){ // 停止提交的错误原因，系统错误，客户端无效处理
+			EWA.UI.Msg.ShowError(this._stopPostError,"");
+			return;
+		}
+		
 		var ajax = this.CreateAjax(objForm);
 		if (ajax == null) {
 			return;

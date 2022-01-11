@@ -462,9 +462,34 @@ function EWA_Html5UploadClass() {
 				inc++;
 			}
 		}
-		if (inc == this.uploadIframes.length) {
-			this.UPLOAD_STATUS = "ok";
+		if (inc < this.uploadIframes.length) {
+			return;
 		}
+		let ss = [];
+		for (var i = 0; i < this.uploadIframes.length; i++) {
+			let txt = this.uploadIframes[i];
+			let json = JSON.parse(txt);
+			if (json.ERR) {
+				ss.push(json.ERR);
+			}
+		}
+		if (ss.length === 0) {
+			this.UPLOAD_STATUS = "ok";
+			return;
+		} 
+		
+		// 上传有错误		
+		var buts = [];
+		var that = this;
+		buts[0] = {
+			Text: _EWA_INFO_MSG['BUT.OK'],
+			Event: function(){
+				that.UPLOAD_STATUS = "error";
+			},
+			Default: true
+		};
+		EWA.UI.Msg.Show(ss.join("<br>"), buts, "", "ERR_ICON");
+		this.removeWaitBox();
 	};
 
 	this.createWaitBox = function() {

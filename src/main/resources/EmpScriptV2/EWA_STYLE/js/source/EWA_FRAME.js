@@ -3314,7 +3314,9 @@ function EWA_FrameClass() {
 		}
 		if (ht5.UPLOAD_STATUS == 'error' || ht5.UPLOAD_STATUS == 'abort') {
 			// 错误或终止
-			alert('上传文件错误或被中止');
+			this._stopPost = true;
+			this._stopPostError = EWA.LANG == 'enus'?'Upload file error or aborted':'上传文件错误或被中止';
+			console.log(this._stopPostError);
 			return false;
 		}
 
@@ -3413,6 +3415,7 @@ function EWA_FrameClass() {
 			}, 700);
 			return;
 		}
+		
 		var ht5takephotos = $(objForm).find('input[ewa_tag=ht5takephoto]');
 		// console.log(ht5takephotos)
 		if (ht5takephotos.length > 0 && !this.uploadProcess) {
@@ -3455,6 +3458,12 @@ function EWA_FrameClass() {
 				ht5.H5_UPLOAD.removeWaitBox();
 			}
 		}
+		
+		if(this._stopPostError){ // 停止提交的错误原因，系统错误，客户端无效处理
+			EWA.UI.Msg.ShowError(this._stopPostError,"");
+			return;
+		}
+		
 		var ajax = this.CreateAjax(objForm);
 		if (ajax == null) {
 			return;
@@ -9865,9 +9874,34 @@ function EWA_Html5UploadClass() {
 				inc++;
 			}
 		}
-		if (inc == this.uploadIframes.length) {
-			this.UPLOAD_STATUS = "ok";
+		if (inc < this.uploadIframes.length) {
+			return;
 		}
+		let ss = [];
+		for (var i = 0; i < this.uploadIframes.length; i++) {
+			let txt = this.uploadIframes[i];
+			let json = JSON.parse(txt);
+			if (json.ERR) {
+				ss.push(json.ERR);
+			}
+		}
+		if (ss.length === 0) {
+			this.UPLOAD_STATUS = "ok";
+			return;
+		} 
+		
+		// 上传有错误		
+		var buts = [];
+		var that = this;
+		buts[0] = {
+			Text: _EWA_INFO_MSG['BUT.OK'],
+			Event: function(){
+				that.UPLOAD_STATUS = "error";
+			},
+			Default: true
+		};
+		EWA.UI.Msg.Show(ss.join("<br>"), buts, "", "ERR_ICON");
+		this.removeWaitBox();
 	};
 
 	this.createWaitBox = function() {
