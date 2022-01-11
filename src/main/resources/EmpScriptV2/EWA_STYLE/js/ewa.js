@@ -21554,30 +21554,33 @@ function EWA_Html5UploadClass() {
 			return;
 		}
 		let sizeLimit = 0; //文件大小限制,0表示无限制
-		if (this.UpLimit) {
-			let limit = (this.UpLimit + "").toLocaleLowerCase().replace(/,/ig, "").replace(/ /ig, "");
-			if (limit.endsWith("m")) {
-				let num = limit.substring(0, limit.length - 1);
-				if (isNaN(num)) {
-					alert('Invalid sizeLimit parameter:' + this.sizeLimit);
-					return;
-				}
-				sizeLimit = num * 1024 * 1024;
-			} else if (limit.endsWith("k")) {
-				let num = limit.substring(0, limit.length - 1);
-				if (isNaN(num)) {
-					alert('Invalid sizeLimit parameter:' + this.sizeLimit);
-					return;
-				}
-				sizeLimit = num * 1024;
-			} else {
-				if (isNaN(limit)) {
-					alert('Invalid sizeLimit parameter:' + this.sizeLimit);
-					return;
-				}
-				sizeLimit = limit * 1;
-			}
+		if(!this.UpLimit){
+			this.UpLimit = "10M"; // 未指定的话，默认10M
 		}
+		
+		let limit = (this.UpLimit + "").toLocaleLowerCase().replace(/,/ig, "").replace(/ /ig, "");
+		if (limit.endsWith("m")) {
+			let num = limit.substring(0, limit.length - 1);
+			if (isNaN(num)) {
+				alert('Invalid sizeLimit parameter:' + this.sizeLimit);
+				return;
+			}
+			sizeLimit = num * 1024 * 1024;
+		} else if (limit.endsWith("k")) {
+			let num = limit.substring(0, limit.length - 1);
+			if (isNaN(num)) {
+				alert('Invalid sizeLimit parameter:' + this.sizeLimit);
+				return;
+			}
+			sizeLimit = num * 1024;
+		} else {
+			if (isNaN(limit)) {
+				alert('Invalid sizeLimit parameter:' + this.sizeLimit);
+				return;
+			}
+			sizeLimit = limit * 1;
+		}
+		 
 		let errs = [];
 		if (sizeLimit > 0) {//检查每个文件的大小
 			for (var i = 0; i < source.files.length; i++) {
