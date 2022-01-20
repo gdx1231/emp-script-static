@@ -462,9 +462,10 @@ input, select {
 }
 /* define_right switch bar */
 #TABS {
-    height: 30px;
-    vertical-align: bottom;
+	height: 30px;
+	vertical-align: bottom;
 }
+
 .unselect {
 	position: relative;
 	-webkit-user-select: none;
@@ -537,7 +538,7 @@ input, select {
 
 #TD2 {
 	padding: 0px;
-	height:100%;
+	height: 100%;
 }
 
 .ewa_menu_m0 {
@@ -552,8 +553,7 @@ input, select {
 	line-height: 29px;
 }
 
-.ewa_menu_table .ewa_menu_m, .ewa_menu_table .ewa_menu_m1,
-	.ewa_menu_table .ewa_menu_m_mv1 {
+.ewa_menu_table .ewa_menu_m, .ewa_menu_table .ewa_menu_m1, .ewa_menu_table .ewa_menu_m_mv1 {
 	height: 29px;
 }
 
@@ -671,6 +671,8 @@ td#props tr, #props table {
 
 #props *, #xmls * {
 	font-family: monospace;
+	white-space: nowrap;
+	table-layout: fixed;
 }
 
 #props #aa {
