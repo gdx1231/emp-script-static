@@ -1,4 +1,9 @@
 /* common css */
+
+tr[ewa_id]>td:first-child {
+    width: 10px;
+}
+ 
 input, select {
 	box-sizing: border-box;
 }
@@ -214,11 +219,14 @@ td#props tr, #props table {
 #props *, #xmls * {
 	font-family: monospace;
 	white-space: nowrap;
-	table-layout: fixed;
+}
+.ewa-tree-node{
+	table-layout:fixed;
 }
 
 #props #aa {
-	margin: 4px;
+	margin: 0px;
+	overflow-x: hidden;
 }
 
 #props input[type=button] {
