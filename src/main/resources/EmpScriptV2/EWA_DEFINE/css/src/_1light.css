@@ -160,14 +160,11 @@
 	color: #313131;
 	text-shadow: none;
 	height: 25px;
-	line-height: 25px;
-	text-align: center;
 	font-weight: normal;
 	padding: 0 11px;
 	-webkit-font-smoothing: antialiased;
 	background-image: -webkit-linear-gradient(top, #fff 0%, #f1f1f1 52%, #f2f2f2 52%, #fff
 		100%);
-	-webkit-font-smoothing: antialiased;
 }
 
 .light select:hover, .light input[type=button]:hover, .light button:hover,
