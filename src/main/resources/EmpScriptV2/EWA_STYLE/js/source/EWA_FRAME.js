@@ -6763,8 +6763,12 @@ function EWA_ListFrameClass() {
 			if (objs.length == 0) {
 				continue;
 			}
-			if (objs[0].checked) {
-				trs.push(tr);
+			
+			if (objs[0].checked  ) {
+				if(objs[0].parentNode.className.indexOf('ewa-switch')== -1){
+					// not ewa-switch ui
+					trs.push(tr);
+				}
 			}
 		}
 		if (trs.length == 0) {
@@ -7351,10 +7355,7 @@ function EWA_ListFrameClass() {
 		return u;
 	};
 };
-EWA.F.L = {/* ListFrame */
-	CUR: null,
-	C: EWA_ListFrameClass
-};;
+
 EWA_ListFrameClass.prototype.RESOURCES = {
 	search_text_items : [ {
 		Id : "lk",
@@ -7415,7 +7416,12 @@ EWA_ListFrameClass.prototype.RESOURCES = {
 		Txt : "今天至年底",
 		TxtEn : "Today-EOY"
 	} ]
-}
+};
+
+EWA.F.L = {/* ListFrame */
+	CUR: null,
+	C: EWA_ListFrameClass
+};// merge to EWA_04FrameListClass.js;
 /**
  * 用于表宽度的拖动 --未完成
  * 
