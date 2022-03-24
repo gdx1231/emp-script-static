@@ -24,13 +24,12 @@ public class Resources {
 				|| ext.equalsIgnoreCase("sh") || ext.equalsIgnoreCase("dmg") || ext.equalsIgnoreCase("java")
 				|| ext.equalsIgnoreCase("jsp") || ext.equalsIgnoreCase("class") || ext.equalsIgnoreCase("jar")
 				|| ext.equalsIgnoreCase("properties")) {
-			 return false;
+			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
+
 	private static synchronized Resource loadResource(String path) {
 		String ext = FilenameUtils.getExtension(path);
 		Resource r = new Resource();
@@ -62,7 +61,7 @@ public class Resources {
 			LOGGER.error("Invalid file. {}", r.toString());
 			return r;
 		}
-		
+
 		String pathWithPrefix = "/EmpScriptV2" + path;
 		URL url = Resources.class.getResource(pathWithPrefix);
 		r.setPath(path);
@@ -128,6 +127,8 @@ public class Resources {
 			path = "/EWA_STYLE/js/ewa.js";
 		} else if (path.indexOf("EWA_ALL.min.2.0.js") > 0) {
 			path = "/EWA_STYLE/js/ewa.min.js";
+		} else if (path.indexOf("/ewa.min.map") > 0) {
+			path = "/EWA_STYLE/js/ewa.min.map";
 		} else if (path.indexOf("/fas.js") >= 0) {
 			path = "/EWA_STYLE/js/fas.js";
 		} else if (path.indexOf("/jquery/jquery-1.") > 0) {
