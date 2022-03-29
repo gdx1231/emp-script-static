@@ -115,7 +115,7 @@ var EWAC_HorTableSql = {
 			// 传递值的hash，进行比较用
 			s += ", @" + field.EWA_F_NAME + ".hash";
 		}
-		s += ");"
+		s += ", @G_SUP_ID, @G_ADM_ID);"
 		return s;
 	},
 	createSqlInsert0 : function (table, field) {
