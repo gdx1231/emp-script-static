@@ -632,9 +632,9 @@ tr[error] .ewa-tip-error:after {
 	z-index: 2;
 	top: 4px;
 }
-/* 在对话框里限制frame高度为 400px */
-.ewa-in-dialog form {
-	height: 400px;
+/* 在对话框里限制frame高度为，通过参数 ewa_in_dialog=1 增加 */
+.ewa-in-dialog {
+	height: calc(100% - 48px);
 	overflow: auto;
 	margin-bottom: 50px;
 }
@@ -647,4 +647,8 @@ tr[error] .ewa-tip-error:after {
 	width: 100%;
 	left: 0;
 	background-color: aliceblue;
+}
+.ewa-in-dialog .EWA_TD_B input{
+	margin-top: 10px;
+	margin-right: 10px;
 }
