@@ -2682,199 +2682,13 @@ function EWA_UrlClass(init_url) {
     };
     this.SetUrl(init_url || window.location.href);
 }
-EWA_Tanslator_Providers = {
-	BAIDU : {
-		http : "/cm/back_admin/common/trans_baidu.jsp",
-		Trans : function(fromObj, toObj, fromCallClass, fromLang, toLang) {
-			var funcName = '___GDX_BING_' + fromCallClass.idx;
-			var fromStr = fromCallClass.get_text(fromObj);
-
-			var tmp_obj_id = 'EWA_Tanslator_Providers_baidu';
-			if (!$X(tmp_obj_id)) {
-				$('body').append('<div id="' + tmp_obj_id + '" style="display:none"></div>');
-			}
-			$('#' + tmp_obj_id).html(fromStr);
-			fromStr = $('#' + tmp_obj_id).text().trim();
-
-			// 发起请求内容
-			var s = document.createElement("script");
-			var u = this.http + "?from=" + fromLang + "&to=" + toLang;
-			var data = {
-				q : fromStr
-			};
-			$JP(u, data, EWA_Tanslator_Providers.BAIDU.__transCallBack, fromObj, toObj, fromCallClass);
-		},
-		__transCallBack : function(rstJson, args) {
-			var from_call_class = args[2];
-			
-			if(!rstJson.trans_result || !rstJson.trans_result.data){
-				// 完成数量+1
-				from_call_class.idx_ok++;
-				// 检查是否全部完成
-				from_call_class.check_complete();
-				
-				return;
-			}
-			var to_obj = args[1];
-			
-
-			var ss = [];
-			for (var i = 0; i < rstJson.trans_result.data.length; i++) {
-				ss.push(rstJson.trans_result.data[i].dst);
-			}
-			rst = ss.join('\n');
-
-			if (to_obj) {
-				if (typeof to_obj == 'string') {
-					// 对象的ID
-					to_obj = $X(to_obj);
-				}
-				if (to_obj) {
-					var tag = to_obj.tagName;
-
-					if (tag == null) {
-						tag = '';
-					}
-					tag = tag.toUpperCase();
-					if (tag == '') {
-						console.log("trans-error:" + to_obj);
-					} else if (tag == 'SELECT' || tag == 'INPUT' || tag == 'TEXTAREA') {
-						to_obj.value = rst;
-						to_obj.setAttribute('ewa_trans_end', 'ok');
-						if (to_obj.onblur != null) {
-							to_obj.onblur();
-						}
-					} else {
-						to_obj.setAttribute('ewa_trans_end', 'ok');
-						to_obj.innerHTML = rst;
-					}
-				} else {
-					to_obj = rst;
-				}
-			}
-			
-			// 完成数量+1
-			from_call_class.idx_ok++;
-			// 检查是否全部完成
-			from_call_class.check_complete();
-		},
-		/**
-		 * cn-en
-		 */
-		TransToEn : function(fromObj, toObj, fromCallClass) {
-			EWA_Tanslator_Providers.BAIDU.Trans(fromObj, toObj, fromCallClass, 'zh', 'en');
-		},
-		/**
-		 * en - cn
-		 */
-		TransToCn : function(fromObj, toObj, fromCallClass) {
-			EWA_Tanslator_Providers.BAIDU.Trans(fromObj, toObj, fromCallClass, 'en', 'zh');
-		}
-	},
-	BING : { // bing
-		key : '50F7C8D4BC00A6E047C046D012F334DEC61FA003',
-		http : '//api.microsofttranslator.com/V2/Ajax.svc/Translate?appid=50F7C8D4BC00A6E047C046D012F334DEC61FA003',
-
-		Trans : function(fromObj, toObj, fromCallClass, fromLang, toLang) {
-			var funcName = '___GDX_BING_' + fromCallClass.idx;
-
-			window[funcName] = {
-				id : funcName,
-				is_run : true,
-				to_obj : toObj,// 用户回调
-				// 调用类
-				from_call_class : fromCallClass,
-				// 来源对象,文字或htmlElement
-				from_obj : fromObj,
-				// 生成 bing 请求的回调trans_call_back;
-				provider_call_back : function(rst) {
-					EWA_Tanslator_Providers.BING.trans_call_back(rst, this);
-				}
-			};
-
-			var fromStr = fromCallClass.get_text(fromObj);
-			// 发起请求内容
-			var s = document.createElement("script");
-			var u = this.http + "&oncomplete=window." + funcName + ".provider_call_back" + "&from=" + fromLang + "&to=" + toLang
-				+ "&text=" + fromStr.toURL();
-			s.src = u;
-			document.getElementsByTagName("head")[0].appendChild(s);
-		},
-		/**
-		 * cn-en
-		 */
-		TransToEn : function(fromObj, toObj, fromCallClass) {
-			EWA_Tanslator_Providers.BING.Trans(fromObj, toObj, fromCallClass, 'zh-CHS', 'en');
-		},
-		/**
-		 * en - cn
-		 */
-		TransToCn : function(fromObj, toObj, fromCallClass) {
-			EWA_Tanslator_Providers.BING.Trans(fromObj, toObj, fromCallClass, 'en', 'zh-CHS');
-		},
-		/**
-		 * bing 请求回调的脚本callBack
-		 */
-		trans_call_back : function(rst, from) {
-			var to_obj = from.to_obj;
-
-			window[from.id] = null;
-
-			from.is_run = false;
-			// 完成数量+1
-			from.from_call_class.idx_ok++;
-			// 检查是否全部完成
-			from.from_call_class.check_complete();
-			from.from_call_class.call_item_callback(from.from_obj, rst);
-			if (to_obj) {
-				if (typeof to_obj == 'string') {
-					// 对象的ID
-					to_obj = $X(to_obj);
-				}
-				if (to_obj) {
-					var tag = to_obj.tagName;
-
-					if (tag == null) {
-						tag = '';
-					}
-					tag = tag.toUpperCase();
-					if (tag == '') {
-						console.log("trans-error:" + to_obj);
-					} else if (tag == 'SELECT' || tag == 'INPUT' || tag == 'TEXTAREA') {
-						to_obj.value = rst;
-						to_obj.setAttribute('ewa_trans_end', 'ok');
-						if (to_obj.onblur != null) {
-							to_obj.onblur();
-						}
-					} else {
-						to_obj.setAttribute('ewa_trans_end', 'ok');
-						to_obj.innerHTML = rst;
-					}
-				} else {
-					to_obj = rst;
-				}
-			}
-			for ( var n in from) {
-				from[n] = null;// clear memory
-			}
-		}
-	},
-
-	YOUDAO : {
-		/*
-		 * 有道翻译API申请成功 API key：1597375709 keyfrom：wwwoneworldcc 创建时间：2012-05-04
-		 * 网站名称：wwwoneworldcc 网站地址：http://www.oneworld.cc
-		 * http://fanyi.youdao.com/openapi.do?keyfrom=wwwoneworldcc&key=1597375709&type=data&doctype=<doctype>&version=1.1&q=要翻译的文本
-		 */
-		key : "1597375709",
-		http : "//fanyi.youdao.com/openapi.do?keyfrom=wwwoneworldcc&key=1597375709&type=data&doctype=<doctype>&version=1.1&q="
-	}
-};
+/**
+* 用于翻译全部的类
+**/ 
 function EWA_TanslatorCalss() {
-	this.PROVIDER = 'BAIDU';
 	this.SKIP_EXISTS = true; // 不翻译已经存在的
 	/**
-	 * 翻译全部
+	 * 翻译全部（中文-英文）
 	 * 
 	 * @prarm objs_ch 要翻译的对象(数组) 不可为空
 	 * @prarm objs_en 翻译后显示的对象(数组) 可为空
@@ -2895,6 +2709,15 @@ function EWA_TanslatorCalss() {
 		this._transCompleteItemCallBack = transCompleteItemCallBack;
 		this.start_trans('en');
 	};
+	/**
+	 * 翻译全部（英文-中文）
+	 * 
+	 * @prarm objs_ch 要翻译的对象(数组) 不可为空
+	 * @prarm objs_en 翻译后显示的对象(数组) 可为空
+	 * @prarm transCompleteItemCallBack 翻译完成一条的调用 function 可为空
+	 * @prarm transCompleteCallback 全部翻译完成的调用 function 可为空
+	 * 
+	 */
 	this.transAllToCn = function(objs_ch, objs_en, transCompleteItemCallBack, transCompleteCallback) {
 		this.idx = 0;
 		this.idx_ok = 0;// 翻译完成数量
@@ -2936,14 +2759,27 @@ function EWA_TanslatorCalss() {
 		// setTimeout(this.post_server, 1231);
 	};
 	this.trans_item = function(fromObj, toObj, transToLang) {
-		var obj1 = toObj;
+		let that = this;
 		if (this.trans == null) {
-			this.trans = EWA_Tanslator_Providers[this.PROVIDER];
+			this.trans = new EWA_TransClass();
+			this.trans.transAfter = function(rst, func){
+				that.idx_ok++;
+				that.call_item_callback(func, rst);
+				that.check_complete();
+			};
 		}
+		
+		/*let cb = function(rst, obj1){
+			that.idx_ok++;
+			that.trans.transBackCallCommon(rst, toObj);
+			that.call_item_callback(obj1,rst);
+			that.check_complete();
+		}*/
+		
 		if (transToLang == 'cn') {
-			this.trans.TransToCn(fromObj, obj1, this);
+			this.trans.TransToCn(this.get_text(fromObj), toObj);
 		} else {
-			this.trans.TransToEn(fromObj, obj1, this);
+			this.trans.TransToEn(this.get_text(fromObj), toObj);
 		}
 	};
 	/**
@@ -2988,6 +2824,259 @@ function EWA_TanslatorCalss() {
 		}
 	};
 };
+
+function EWA_TransClass() {
+	this._Id = ("EWA_UT_TRANS" + Math.random()).replace('.', '_');
+	window[this._Id] = this;
+	// this._Trans = 'youdao';
+
+	this._IDX = 0;
+	this.IsRun = false;
+	this.TransToEn = function(hz, func) {
+		this.transToEn(hz,func);
+	};
+	this.transToEn = function(hz, func) {
+		if (hz == null || hz.trim() == '') {
+			if (func instanceof Function) {// 调用用户的方法
+				func(null);
+			}
+			return;
+		}
+		this.IsRun = true;
+		if (this.transProvider == 'azure') {//微软云翻译
+			this._trans_azure(hz, func, true);
+		} else if (this.transProvider == 'bing') {// 老版的微软翻译
+			this._trans_bing(hz, func, true);
+		} else if (this.transProvider == 'youdao') { // 有道，不建议用，限制200字符
+			this._trans_youdao(hz, func);
+		} else {
+			console.log('没有指定翻译引擎');
+		}
+	};
+	this.TransToCn = function(english, func) {
+		this.transToCn(english, func);	
+	};
+	this.transToCn = function(english, func) {
+		if (english == null || english.trim() == '') {
+			if (func instanceof Function) {// 调用用户的方法
+				func(null);
+			}
+			return;
+		}
+		this.IsRun = true;
+		if (this.transProvider == 'azure') {//微软云翻译
+			this._trans_azure(english, func, false);
+		} else if (this.transProvider == 'bing') {
+			this._trans_bing(english, func, false);
+		} else if (this.transProvider == 'youdao') {
+			this._trans_youdao(english, func);
+		} else {
+			console.log('没有指定翻译引擎');
+		}
+	};
+	this._trans_azure = function(fromStr, func, isTransToEn) {
+		let that = this;
+		let ajaxCfg = {
+			url: this.azureTansCfg.url + (isTransToEn ? "&from=zh-Hans&to=en" : "&from=en&to=zh-Hans"),
+			headers: {
+				'Content-Type': 'application/json;charset=utf8'
+				, 'Ocp-Apim-Subscription-Key': this.azureTansCfg.key
+				, "Ocp-Apim-Subscription-Region": this.azureTansCfg.location
+			},
+			data: JSON.stringify([{ "text": fromStr }]),
+			type: "POST",
+			success: function(results) {
+				// [{"translations":[{"text":"你好","to":"zh-Hans"}]}]
+				if (results.length == 0) {
+					$Tip('No result');
+					return;
+				}
+				let rst = results[0].translations[0].text;
+				that.transBackCallCommon(rst, func);
+				delete window[this._Id];
+			},
+			error: function(req) {
+				that.IsRun = false;
+				$Tip(req.responseText);
+			}
+		}
+		// 发起请求内容
+		$.ajax(ajaxCfg);
+	};
+	/**
+	 * 有道翻译，不区分英文和汉字
+	 */
+	this._trans_youdao = function(fromStr, func) {
+		var funcName = this._get_func_name();
+		var funcName1 = funcName + "AAAAA";
+		var funcStr = this.transback_youdao_tmp.toString().replace("transback_youdao_tmp", '');
+		var js = this._get_user_func_str(funcName, funcName1);
+		funcStr = funcStr.replace("{", "{" + js);
+
+		var s = 'window.' + funcName + '=' + funcStr;
+		// console.log(s);
+		eval(s);
+
+		window[funcName1] = func;
+
+		var s = document.createElement("script");
+		fromStr = fromStr.replace(/\n/ig, '[GDX]').replace(/\r/ig, '');
+		var u = this.youdaoTrans + "&callback=" + funcName + "&q=" + fromStr.toURL();
+
+		s.src = u;
+		document.getElementsByTagName("head")[0].appendChild(s);
+	};
+	this._trans_bing = function(fromStr, func, isTransToEn) {
+		var funcName = this._get_func_name();
+		var funcName1 = funcName + "AAAAA";
+
+		var funcStr = this.transback_bing_tmp.toString().replace("trans_en_back_bing_tmp", '');
+
+		var js = this._get_user_func_str(funcName, funcName1);
+		funcStr = funcStr.replace("{", "{" + js);
+
+		var s = 'window.' + funcName + '=' + funcStr;
+		// console.log(s)
+		// 生成 trans_call_back;
+		eval(s);
+
+		// 用户回调
+		window[funcName1] = func;
+
+		// 发起请求内容
+		var s = document.createElement("script");
+		var u = this.bingTrans + "&oncomplete=" + funcName;
+		if (isTransToEn) {// 中译英
+			u += "&from=zh-CHS&to=en&text=" + fromStr.toURL();
+		} else {
+			u += "&from=en&to=zh-CHS&text=" + fromStr.toURL();
+		}
+		s.src = u;
+		document.getElementsByTagName("head")[0].appendChild(s);
+	};
+	this._get_user_func_str = function(funcName, funcName1) {
+		var js = "var fromClass=window['" + this._Id + "'];\n var func=window['" + funcName1 + "']; \n var _fname='" + funcName
+			+ "'; \n var _fname1='" + funcName1 + "'; \n ";
+		return js;
+	};
+	this._get_func_name = function() {
+		this._IDX++;
+		var funcName = '___GDX_T_' + this._IDX;
+		return funcName;
+	};
+	/**
+	 * bing 回调模板脚本
+	 */
+	this.transback_bing_tmp = function(rst) {
+		// 替换 下面 FF 脚本内容
+		/* FF */
+		try {
+			fromClass.transBackCallCommon(rst, func);
+		} catch (e) {
+			console.log(e);
+		}
+		delete window[_fname1];
+		delete window[_fname];
+	};
+	/**
+	 * youdao 回调模板脚本
+	 */
+	this.transback_youdao_tmp = function(rst) {
+		// 替换 下面 FF 脚本内容
+		/* FF */
+		try {
+			if (rst && rst.errorCode) {
+				console.log(rst);
+				if (func instanceof Function) {// 调用用户的方法
+					func("翻译引擎错误");
+				}
+				return;
+			}
+			if (rst && rst.translation && rst.translation.length > 0) {
+				rst = rst.translation[0];
+			} else {
+				if (func instanceof Function) {// 调用用户的方法
+					func(rst);
+				}
+				console.log(rst);
+				return;
+			}
+
+			fromClass.transBackCallCommon(rst, func);
+		} catch (e) {
+			console.log(e);
+		}
+		delete window[_fname1];
+		delete window[_fname];
+	};
+	this.transBackCallCommon = function(rst, func) {
+		this.IsRun = false;
+		if (func == null) {
+			console.log(rst)
+			if (this.transAfter) {
+				this.transAfter(rst, func, this);
+			}
+			return;
+		} else if (func instanceof Function) {// 调用用户的方法
+			func(rst);
+			if (this.transAfter) {
+				this.transAfter(rst, func, this);
+			}
+			return;
+		} else if (typeof func == 'string') { // 对象的ID
+			func = document.getElementById(func);
+		}
+
+		var tag = func.tagName;
+		if (tag == null) {
+			tag = '';
+		}
+		tag = tag.toUpperCase()
+		if (tag == 'SELECT' || tag == 'INPUT' || tag == 'TEXTAREA') {
+			func.value = rst;
+			func.setAttribute('ewa_trans_end', 'ok');
+			if (func.onblur != null) {
+				func.onblur();
+			}
+			if (tag == "TEXTAREA" && window.autosize && autosize.update) {
+				// 如果使用了autosize来调整textarea高度
+				autosize.update(func);
+			}
+
+		} else if (tag == 'DIV' || tag == 'SPAN') {
+			if (tag == 'DIV' && $(func).attr('EWA_DHTML')) {
+				$(func).find('iframe')[0].contentWindow.frames[0].document.body.innerHTML = rst;
+				$(func).find('input[type=hidden]')[0].value = rst;
+			} else {
+				func.setAttribute('ewa_trans_end', 'ok');
+				func.innerHTML = rst;
+			}
+		} else {
+			console.log(rst);
+		}
+		if (this.transAfter) {
+			this.transAfter(rst, func, this);
+		}
+	};
+}
+window["EWA_UT_TRANS"] = EWA_TransClass;
+EWA_TransClass.prototype.transProvider = 'azure';
+/*	在微软 https://portal.azure.com/进行申请，此key为200万单词每月的免费配额 (guolei@sina.com)	 */
+EWA_TransClass.prototype.azureTansCfg = {
+	url: "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0", //&from=en&to=zh-Hans
+	key: "91f44bf9567b4b02a16a525638ada82f",
+	location: "koreacentral"
+};
+/**	 * bing trans v2*/
+EWA_TransClass.prototype.bingTrans = '//api.microsofttranslator.com/V2/Ajax.svc/Translate?appid=50F7C8D4BC00A6E047C046D012F334DEC61FA003';
+
+/*
+ * 有道翻译API申请成功 API key：1597375709 keyfrom：wwwoneworldcc 创建时间：2012-05-04
+ * 网站名称：wwwoneworldcc 网站地址：http://www.oneworld.cc
+ * http://fanyi.youdao.com/openapi.do?keyfrom=wwwoneworldcc&key=1597375709&type=data&doctype=<doctype>&version=1.1&q=要翻译的文本
+ */
+EWA_TransClass.prototype.youdaoTrans = "//fanyi.youdao.com/openapi.do?keyfrom=wwwoneworldcc&key=1597375709&type=data&doctype=jsonp&version=1.1";
+
 /**
  * 图片操作类 toDataURL
  */
@@ -14952,7 +15041,6 @@ function EWA_FrameClass() {
 	 * @return {}
 	 */
 	this._InitTranslations = function() {
-		var nodeList = this.ItemList;
 		var js = "EWA.F.FOS[&quot;" + this._Id + "&quot;]._Trans(this)";
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
@@ -14988,7 +15076,6 @@ function EWA_FrameClass() {
 				o.append(but);
 			}
 		}
-
 	};
 	this._Trans = function(obj) {
 		if (!obj) {
@@ -15017,15 +15104,15 @@ function EWA_FrameClass() {
 			// trans._Trans = 'youdao'; //默认用bing
 
 			if (trnasType == 'en2zh') {
-				trans.TransToCn(fromStr, toObj[0]); // 英文到中文
+				trans.transToCn(fromStr, toObj[0]); // 英文到中文
 			} else {
-				trans.TransToEn(fromStr, toObj[0]); // 中文到英文
+				trans.transToEn(fromStr, toObj[0]); // 中文到英文
 			}
 			var txt = EWA.LANG == 'enus' ? 'Translating...' : "翻译中...";
 
 			$Tip(txt, function() {
 				return !trans.IsRun;
-			})
+			});
 		}
 	};
 	/**
@@ -25514,301 +25601,7 @@ installCfgMoveButton1 = function(id) {
 			$X('DES_' + id).appendChild(obj1.childNodes[0]);
 		}
 	}
-};var EWA_UT_TansAll = {
-	tall : function(objs_ch, objs_en) {
-		this.idx = 0;
-		this._objs_ch = objs_ch;
-		this._objs_en = objs_en;
-
-		this.start_trans();
-	},
-	start_trans : function() {
-		if (idx <= this._objs_ch.length - 1) {
-			var ch_obj = this._objs_ch[idx];
-			var en_obj = this._objs_en[idx];
-
-			this.trans_item(ipts[this.idx]);
-
-			this.idx++;
-			setTimeout(bb, 123);
-			return;
-		}
-		setTimeout(this.post_server, 1231);
-	},
-	trans_item : function(fromObj, toObj) {
-		var obj1 = toObj;
-		if (this.trans == null) {
-			this.trans = new EWA_UT_TRANS();
-		}
-		var chstr;
-		if (typeof fromObj == 'string') { // 对象的ID
-			chstr = fromObj;
-		} else {
-			var tag = fromObj.tagName;
-			if (tag == null) {
-				tag = '';
-			}
-			tag = tag.toUpperCase()
-			if (tag == 'SELECT' || tag == 'INPUT' || tag == 'TEXTAREA') {
-				chstr = fromObj.value;
-				fromObj.setAttribute('ewa_trans_end', 'no');
-
-			} else if (tag != '') {
-				fromObj.setAttribute('ewa_trans_end', 'no');
-				chstr = func.innerHTML;
-			} else {
-				console.log("trans_err");
-				console.log(fromObj);
-			}
-		}
-
-		this.trans.TransToEn(chstr, obj1);
-	},
-
-	post_server : function() {
-		var ids = [];
-		var vals = [];
-		for (var i = 0; i < ipts.length; i++) {
-			var tr = ipts[i].parentNode.parentNode;
-			var span = tr.cells[4].getElementsByTagName('span')[0];
-			if (span.getAttribute('ewa_trans_end') == 'ok') {
-				ids.push(GetInnerText(tr.cells[0]));
-				vals.push(GetInnerText(span));
-			}
-		}
-		if (ids.length == 0) {
-			return;
-		}
-		var ajax = new EWA_AjaxClass();
-		ajax.AddParameter('ids', ids.join('`'));
-		ajax.AddParameter('vals', vals.join('`'));
-		ajax.AddParameter('EWA_ACTION', 'EXTENDACTION2');
-		ajax.AddParameter('EWA_AJAX', 'JSON');
-		ajax.PostNew(window.location.href, function() {
-			if (ajax.IsRunEnd()) {
-				alert('ok');
-			}
-		});
-	}
-
-};
-function EWA_TransClass() {
-	/**
-	 * bing trans
-	 */
-	this.bingAppId = '50F7C8D4BC00A6E047C046D012F334DEC61FA003';
-	this.bingTrans = '//api.microsofttranslator.com/V2/Ajax.svc/Translate?appid=' + this.bingAppId;
-	/*
-	 * 有道翻译API申请成功 API key：1597375709 keyfrom：wwwoneworldcc 创建时间：2012-05-04
-	 * 网站名称：wwwoneworldcc 网站地址：http://www.oneworld.cc
-	 * http://fanyi.youdao.com/openapi.do?keyfrom=wwwoneworldcc&key=1597375709&type=data&doctype=<doctype>&version=1.1&q=要翻译的文本
-	 */
-	this.youdaoTrans = "//fanyi.youdao.com/openapi.do?keyfrom=wwwoneworldcc&key=1597375709&type=data&doctype=jsonp&version=1.1";
-
-	this._Id = ("EWA_UT_TRANS" + Math.random()).replace('.', '_');
-
-	window[this._Id] = this;
-	// this._Trans = 'youdao';
-	this._Trans = 'bing';
-	this._IDX = 0;
-	this.IsRun = false;
-	this.TransToEn = function(hz, func) {
-		if (hz == null || hz.trim() == '') {
-			if (func instanceof Function) {// 调用用户的方法
-				func(null);
-			}
-			return;
-		}
-		this.IsRun = true;
-		if (this._Trans == 'bing') {
-			this._trans_bing(hz, func, true);
-		} else if (this._Trans == 'youdao') {
-			this._trans_youdao(hz, func);
-		} else {
-			console.log('没有指定翻译引擎');
-		}
-	};
-	this.TransToCn = function(english, func) {
-		if (english == null || english.trim() == '') {
-			if (func instanceof Function) {// 调用用户的方法
-				func(null);
-			}
-			return;
-		}
-		this.IsRun = true;
-		if (this._Trans == 'bing') {
-			this._trans_bing(english, func, false);
-		} else if (this._Trans == 'youdao') {
-			this._trans_youdao(english, func);
-		} else {
-			console.log('没有指定翻译引擎');
-		}
-	};
-	/**
-	 * 有道翻译，不区分英文和汉字
-	 */
-	this._trans_youdao = function(fromStr, func) {
-		var funcName = this._get_func_name();
-		var funcName1 = funcName + "AAAAA";
-		var funcStr = this.transback_youdao_tmp.toString().replace("transback_youdao_tmp", '');
-		var js = this._get_user_func_str(funcName, funcName1);
-		funcStr = funcStr.replace("{", "{" + js);
-
-		var s = 'window.' + funcName + '=' + funcStr;
-		// console.log(s);
-		eval(s);
-
-		window[funcName1] = func;
-
-		var s = document.createElement("script");
-		fromStr = fromStr.replace(/\n/ig, '[GDX]').replace(/\r/ig, '');
-		var u = this.youdaoTrans + "&callback=" + funcName + "&q=" + fromStr.toURL();
-
-		s.src = u;
-		document.getElementsByTagName("head")[0].appendChild(s);
-	};
-	this._trans_bing = function(fromStr, func, isTransToEn) {
-		var funcName = this._get_func_name();
-		var funcName1 = funcName + "AAAAA";
-
-		var funcStr = this.transback_bing_tmp.toString().replace("trans_en_back_bing_tmp", '');
-
-		var js = this._get_user_func_str(funcName, funcName1);
-		funcStr = funcStr.replace("{", "{" + js);
-
-		var s = 'window.' + funcName + '=' + funcStr;
-		// console.log(s)
-		// 生成 trans_call_back;
-		eval(s);
-
-		// 用户回调
-		window[funcName1] = func;
-
-		// 发起请求内容
-		var s = document.createElement("script");
-		var u = this.bingTrans + "&oncomplete=" + funcName;
-		if (isTransToEn) {// 中译英
-			u += "&from=zh-CHS&to=en&text=" + fromStr.toURL();
-		} else {
-			u += "&from=en&to=zh-CHS&text=" + fromStr.toURL();
-		}
-		s.src = u;
-		document.getElementsByTagName("head")[0].appendChild(s);
-	};
-	this._get_user_func_str = function(funcName, funcName1) {
-		var js = "var fromClass=window['" + this._Id + "'];\n var func=window['" + funcName1 + "']; \n var _fname='" + funcName
-			+ "'; \n var _fname1='" + funcName1 + "'; \n ";
-		return js;
-	};
-	this._get_func_name = function() {
-		this._IDX++;
-		var funcName = '___GDX_T_' + this._IDX;
-		return funcName;
-	};
-	/**
-	 * bing 回调模板脚本
-	 */
-	this.transback_bing_tmp = function(rst) {
-		// 替换 下面 FF 脚本内容
-		/* FF */
-		try {
-			fromClass.transBackCallCommon(rst, func);
-		} catch (e) {
-			console.log(e);
-		}
-		delete window[_fname1];
-		delete window[_fname];
-	};
-	/**
-	 * youdao 回调模板脚本
-	 */
-	this.transback_youdao_tmp = function(rst) {
-		// 替换 下面 FF 脚本内容
-		/* FF */
-		try {
-			if (rst && rst.errorCode) {
-				console.log(rst);
-				if (func instanceof Function) {// 调用用户的方法
-					func("翻译引擎错误");
-				}
-				return;
-			}
-			if (rst && rst.translation && rst.translation.length > 0) {
-				rst = rst.translation[0];
-			} else {
-				if (func instanceof Function) {// 调用用户的方法
-					func(rst);
-				}
-				console.log(rst);
-				return;
-			}
-
-			fromClass.transBackCallCommon(rst, func);
-		} catch (e) {
-			console.log(e);
-		}
-		delete window[_fname1];
-		delete window[_fname];
-	};
-	this.transBackCallCommon = function(rst, func) {
-		this.IsRun = false;
-		if (func == null) {
-			console.log(rst)
-			return;
-		} else if (func instanceof Function) {// 调用用户的方法
-			func(rst);
-			return;
-		} else if (typeof func == 'string') { // 对象的ID
-			func = $X(func);
-		}
-
-		var tag = func.tagName;
-		if (tag == null) {
-			tag = '';
-		}
-		tag = tag.toUpperCase()
-		if (tag == 'SELECT' || tag == 'INPUT' || tag == 'TEXTAREA') {
-			func.value = rst;
-			func.setAttribute('ewa_trans_end', 'ok');
-			if (func.onblur != null) {
-				func.onblur();
-			}
-
-		} else if (tag == 'DIV' || tag == 'SPAN') {
-			if (tag == 'DIV' && $(func).attr('EWA_DHTML')) {
-				$(func).find('iframe')[0].contentWindow.frames[0].document.body.innerHTML = rst;
-				$(func).find('input[type=hidden]')[0].value = rst;
-			} else {
-				func.setAttribute('ewa_trans_end', 'ok');
-				func.innerHTML = rst;
-			}
-		} else {
-			console.log(rst);
-		}
-	};
-}
-EWA_UT_TRANS = EWA_TransClass;
-/*
- * function trans_en_baidu(fromObj, toObj) { // trans_en_google(fromObj,toObj);
- * 
- * var val = fromObj.value; if (!check_changed(fromObj)) { return; } if (val == "" ||
- * val.trim() == "") { toObj.value = ""; fromObj.value = ""; if
- * (window.saveTrans) { saveTrans(toObj); } return; } // baidu var u = EWA.CP +
- * "/utils/trans_en.jsp?q=" + val.toURL(); $J(u, trans_en_back1, toObj); }
- * function trans_en_back1(data, cmds) { if (data.IsError) { alert("错误");
- * return; } var txt; if (data.type == 1) { var d; eval('d=' + data.result); var
- * o = d.content[0].mean[0].cont; for ( var n in o) { txt = n; break; } } else {
- * txt = data.data[0].dst; } cmds[0].value = txt.toUpperCase().trim(); if
- * (window.saveTrans) { saveTrans(cmds[0]); } }
- * 
- * function trans_en(fromObj, toObj) { var val = fromObj.value; if
- * (!check_changed(fromObj)) { return; } trans_to_obj = toObj; var s =
- * document.createElement("script"); var u = bingTrans +
- * "&oncomplete=trans_en_back&from=zh-CHS&to=en&text=" + val.toURL(); s.src = u;
- * document.getElementsByTagName("head")[0].appendChild(s); } function
- * trans_en_back(s) { trans_to_obj.value = s.toUpperCase(); if
- * (window.saveTrans) { saveTrans(trans_to_obj); } }
- *//**
+};/* move to EWA_06TransClass *//**
  * Workflow defined
  */
 var EWAC_WfOrg = function () {

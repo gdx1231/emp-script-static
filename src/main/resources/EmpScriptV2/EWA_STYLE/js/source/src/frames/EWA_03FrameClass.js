@@ -1796,7 +1796,6 @@ function EWA_FrameClass() {
 	 * @return {}
 	 */
 	this._InitTranslations = function() {
-		var nodeList = this.ItemList;
 		var js = "EWA.F.FOS[&quot;" + this._Id + "&quot;]._Trans(this)";
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
@@ -1832,7 +1831,6 @@ function EWA_FrameClass() {
 				o.append(but);
 			}
 		}
-
 	};
 	this._Trans = function(obj) {
 		if (!obj) {
@@ -1861,15 +1859,15 @@ function EWA_FrameClass() {
 			// trans._Trans = 'youdao'; //默认用bing
 
 			if (trnasType == 'en2zh') {
-				trans.TransToCn(fromStr, toObj[0]); // 英文到中文
+				trans.transToCn(fromStr, toObj[0]); // 英文到中文
 			} else {
-				trans.TransToEn(fromStr, toObj[0]); // 中文到英文
+				trans.transToEn(fromStr, toObj[0]); // 中文到英文
 			}
 			var txt = EWA.LANG == 'enus' ? 'Translating...' : "翻译中...";
 
 			$Tip(txt, function() {
 				return !trans.IsRun;
-			})
+			});
 		}
 	};
 	/**
