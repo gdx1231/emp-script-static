@@ -6,10 +6,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 public class Resources {
 	/**
@@ -97,9 +99,11 @@ public class Resources {
 			if (binary) {
 				byte[] buf = IOUtils.toByteArray(url);
 				r.setBuffer(buf);
+				r.setMd5(DigestUtils.md5Hex(buf));
 			} else {
 				String text = IOUtils.toString(url, StandardCharsets.UTF_8);
 				r.setContent(text);
+				r.setMd5(DigestUtils.md5Hex(text));
 			}
 			LOGGER.debug(r.toString());
 			return r;
@@ -150,4 +154,5 @@ public class Resources {
 		return r;
 	}
 
+	 
 }

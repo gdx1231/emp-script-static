@@ -30,6 +30,10 @@ public class Servlet extends HttpServlet {
 
 		response.setContentType(r.getType());
 		response.addHeader("cache-control", "max-age=86400");
+		
+		response.addHeader("etag", "W/\"" + r.getMd5() + "\"");
+		
+		response.addHeader("x-md5", r.getMd5());
 		response.addHeader("x-emp-script-static", r.getPath());
 		if (r.isBinary()) {
 			response.getOutputStream().write(r.getBuffer());
@@ -48,7 +52,8 @@ public class Servlet extends HttpServlet {
 	}
 
 	/**
-	 * Returns information about the servlet, such as author, version, and copyright.
+	 * Returns information about the servlet, such as author, version, and
+	 * copyright.
 	 * 
 	 * @return String information about this servlet
 	 */

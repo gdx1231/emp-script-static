@@ -8,7 +8,7 @@ public class Resource {
 	private byte[] buffer;
 	private int status = 200;
 	private boolean binary;
-
+	private String md5;
 	public String getPath() {
 		return path;
 	}
@@ -66,5 +66,19 @@ public class Resource {
 		sb.append(this.type);
 
 		return sb.toString();
+	}
+
+	/**
+	 * @return the md5
+	 */
+	public String getMd5() {
+		return md5;
+	}
+
+	/**
+	 * @param md5 the md5 to set
+	 */
+	public void setMd5(String md5) {
+		this.md5 = md5;
 	}
 }
