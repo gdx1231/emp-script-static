@@ -224,9 +224,7 @@ function EWAC_SqlCreator() {
 		rv = []; //不用了
 
 		var s1 = [];
-		s1.push("import java.util.ArrayList;");
-		s1.push("import java.util.List;");
-		s1.push("import java.util.HashMap;");
+		s1.push("import java.util.*;");
 		s1.push("import com.gdxsoft.easyweb.script.RequestValue;");
 		s1.push("import com.gdxsoft.easyweb.datasource.IClassDao;");
 		s1.push("import com.gdxsoft.easyweb.datasource.ClassDaoBase;");
@@ -308,10 +306,10 @@ function EWAC_SqlCreator() {
 		if (this._AutoIncrementField) {
 			if (this._AutoIncrementField.Class.Type == 'Long') { //长整型
 				newRecord
-					.push("long autoKey = super.executeUpdateAutoIncrementLong(SQL_INSERT, rv);");
+					.push("long autoKey = super.executeUpdateAutoIncrementLong(sql, rv);");
 			} else {
 				newRecord
-					.push("int autoKey = super.executeUpdateAutoIncrement(SQL_INSERT, rv);");
+					.push("int autoKey = super.executeUpdateAutoIncrement(sql, rv);");
 			}
 			newRecord.push("if (autoKey > 0) {");
 			newRecord.push("para.set" + this._AutoIncrementField.Class.Name
