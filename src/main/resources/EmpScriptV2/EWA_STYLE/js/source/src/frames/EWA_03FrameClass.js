@@ -22,6 +22,42 @@ function EWA_FrameClass() {
 		}
 	};
 	/**
+	* 开关元素变化后调用的Action
+	* @param source input[type=checkbox]元素
+	* @param actionName 提交到后台的 action
+	 */
+	this.switchButtonAction = function(source, actionName) {
+		if(!actionName){
+			return;
+		}
+		let u1 = this.getUrlClass();
+		let data = {};
+		data.ewa_switch_name = source.name;
+		data.ewa_action = actionName;
+		data.ewa_ajax = 'json';
+		data.ewa_switch = source.checked ? 'on' : 'off';
+		let parent = source.parentNode;
+		let names = parent.getAttributeNames();
+		 // 附加父元素的属性，可在配置中定义元素属性
+		for (let n in names) {
+			let name = names[n];
+			let val = parent.getAttribute(name);
+			if(name.indexOf('on')==0 || name == 'name' || name == 'id' || name == 'class'){
+				continue;
+			}
+			data[name] = val;
+		}
+		let that = this;
+
+		let u = u1.GetUrl();
+		$JP(u, data, function(rst) {
+			// 可以外部定义回调函数 extSwitchCallBack
+			if (that.extSwitchCallBack) {
+				that.extSwitchCallBack(source, rst);
+			}
+		});
+	};
+	/**
 	 * 设置为禁止修改状态
 	 */
 	this.setDisable = function() {

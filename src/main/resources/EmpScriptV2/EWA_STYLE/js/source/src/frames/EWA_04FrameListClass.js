@@ -31,6 +31,43 @@ function EWA_ListFrameClass() {
 	this.IsNotMDownAutoChecked = false; // 自动选择checkbox radio;
 
 	/**
+	* 开关元素变化后调用的Action
+	* @param source input[type=checkbox]元素
+	* @param actionName 提交到后台的 action
+	 */
+	this.switchButtonAction = function(source, actionName) {
+		if(!actionName){
+			return;
+		}
+		let u1 = this.getUrlClass();
+		let data = {};
+		data.ewa_switch_name = source.name;
+		data.ewa_action = actionName;
+		data.ewa_ajax = 'json';
+		data.ewa_switch = source.checked ? 'on' : 'off';
+		data.ewa_action_key = $(source).parentsUntil('tbody').last().attr('ewa_key');
+		let parent = source.parentNode;
+		let names = parent.getAttributeNames();
+		 // 附加父元素的属性，可在配置中定义元素属性
+		for (let n in names) {
+			let name = names[n];
+			let val = parent.getAttribute(name);
+			if(name.indexOf('on')==0 || name == 'name' || name == 'id' || name == 'class'){
+				continue;
+			}
+			data[name] = val;
+		}
+		let that = this;
+
+		let u = u1.GetUrl();
+		$JP(u, data, function(rst) {
+			// 可以外部定义回调函数 extSwitchCallBack
+			if (that.extSwitchCallBack) {
+				that.extSwitchCallBack(source, rst);
+			}
+		});
+	};
+	/**
 	* 根据ajax请求，替换当前表中对应的行数据
 	 */
 	this.replaceRowsData = function(searchExp, replaceFuntion) {
@@ -1802,20 +1839,20 @@ function EWA_ListFrameClass() {
 		if (JSON.stringify(init_search_type_map) != "{}") {
 			c._SearchExp = c._SEARCH_ITEM_EXP;
 		}
-		
-		$(rq).find('input[type=text]').on('compositionstart', function(){
+
+		$(rq).find('input[type=text]').on('compositionstart', function() {
 			// 输入法打开输入
 			c._is_search_composition = true;
-		}).on('compositionend', function(){
+		}).on('compositionend', function() {
 			// 输入法输入完毕
 			c._is_search_composition = false;
 		});
 		// 检测搜索内容是否发生变化
 		this._TIMER_SEARCH = window.setInterval(function() {
-			if(c._is_search_composition){
+			if (c._is_search_composition) {
 				return;
 			}
-			
+
 			try { // 避免窗口关闭出现的异常
 				if (!$X(id)) {
 					window.clearInterval(c._TIMER_SEARCH);
@@ -2201,9 +2238,9 @@ function EWA_ListFrameClass() {
 			if (objs.length == 0) {
 				continue;
 			}
-			
-			if (objs[0].checked  ) {
-				if(objs[0].parentNode.className.indexOf('ewa-switch')== -1){
+
+			if (objs[0].checked) {
+				if (objs[0].parentNode.className.indexOf('ewa-switch') == -1) {
 					// not ewa-switch ui
 					trs.push(tr);
 				}
@@ -2795,65 +2832,65 @@ function EWA_ListFrameClass() {
 };
 
 EWA_ListFrameClass.prototype.RESOURCES = {
-	search_text_items : [ {
-		Id : "lk",
-		Txt : "包含",
-		TxtEn : "Like"
+	search_text_items: [{
+		Id: "lk",
+		Txt: "包含",
+		TxtEn: "Like"
 	}, {
-		Id : "llk",
-		Txt : "左包含",
-		TxtEn : "Left like"
+		Id: "llk",
+		Txt: "左包含",
+		TxtEn: "Left like"
 	}, {
-		Id : "rlk",
-		Txt : "右包含",
-		TxtEn : "Right like"
+		Id: "rlk",
+		Txt: "右包含",
+		TxtEn: "Right like"
 	}, {
-		Id : "eq",
-		Txt : "等于",
-		TxtEn : "Equals"
-	} ],
-	search_date_items : [ {
-		Id : "Clear",
-		Txt : "清空",
-		TxtEn : "Clear",
-		Img : "fa fa-eraser"
+		Id: "eq",
+		Txt: "等于",
+		TxtEn: "Equals"
+	}],
+	search_date_items: [{
+		Id: "Clear",
+		Txt: "清空",
+		TxtEn: "Clear",
+		Img: "fa fa-eraser"
 	}, {
-		Id : "Today",
-		Txt : "今天",
-		TxtEn : "Today"
+		Id: "Today",
+		Txt: "今天",
+		TxtEn: "Today"
 	}, {
-		Id : "Week",
-		Txt : "本周",
-		TxtEn : "Week"
+		Id: "Week",
+		Txt: "本周",
+		TxtEn: "Week"
 	}, {
-		Id : "Today-Weekend",
-		Txt : "今天至周日",
-		TxtEn : "Today-Weekend"
+		Id: "Today-Weekend",
+		Txt: "今天至周日",
+		TxtEn: "Today-Weekend"
 	}, {
-		Id : "Month",
-		Txt : "本月",
-		TxtEn : "This Month"
+		Id: "Month",
+		Txt: "本月",
+		TxtEn: "This Month"
 	}, {
-		Id : "Today-EOM",
-		Txt : "今天至月底",
-		TxtEn : "Today-EOM"
+		Id: "Today-EOM",
+		Txt: "今天至月底",
+		TxtEn: "Today-EOM"
 	}, {
-		Id : "Quarter",
-		Txt : "本季度",
-		TxtEn : "This Quarter"
+		Id: "Quarter",
+		Txt: "本季度",
+		TxtEn: "This Quarter"
 	}, {
-		Id : "Today-EOQ",
-		Txt : "今天至季末",
-		TxtEn : "Today-EOQ"
+		Id: "Today-EOQ",
+		Txt: "今天至季末",
+		TxtEn: "Today-EOQ"
 	}, {
-		Id : "Year",
-		Txt : "本年度",
-		TxtEn : "This Year"
+		Id: "Year",
+		Txt: "本年度",
+		TxtEn: "This Year"
 	}, {
-		Id : "Today-EOY",
-		Txt : "今天至年底",
-		TxtEn : "Today-EOY"
-	} ]
+		Id: "Today-EOY",
+		Txt: "今天至年底",
+		TxtEn: "Today-EOY"
+	}]
 };
 
 EWA.F.L = {/* ListFrame */
