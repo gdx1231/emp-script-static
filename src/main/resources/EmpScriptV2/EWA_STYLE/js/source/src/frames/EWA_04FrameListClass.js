@@ -31,6 +31,32 @@ function EWA_ListFrameClass() {
 	this.IsNotMDownAutoChecked = false; // 自动选择checkbox radio;
 
 	/**
+	* 合并文字搜索到第一个input中
+	 */
+	this.composeSearchTexts = function(){
+		var titles = [];
+		var names = [];
+		var objs = $('#EWA_RESHOW_' + this._Id + ' .ewa-lf-search-type-text');
+		if (objs.length == 0) {
+			return null;
+		}
+		objs.each(function(index) {
+			var txt = $(this).find('.ewa-lf-search-item-title').text();
+			txt = txt.replace(":", "").replace("：", "").replace("包含", "").replace("Like", "").trim();
+
+			var name = $(this).find('input[type=text]').attr('name');
+			titles.push(txt);
+			names.push(name);
+			if (index > 0) {
+				$(this).hide();
+			}
+		});
+		$(objs[0]).addClass('ewa-app-lf-search-compose');
+		$(objs[0]).find('input[type=text]').attr('name', names.join(','))
+			.attr('placeholder', titles.join(", "));
+		return objs; 	
+	}
+	/**
 	* 开关元素变化后调用的Action
 	* @param source input[type=checkbox]元素
 	* @param actionName 提交到后台的 action
@@ -1530,12 +1556,15 @@ function EWA_ListFrameClass() {
 	/**
 	 * 在页面上将Search显示出来
 	 */
-	this.ShowSearch = function() {
+	this.ShowSearch = function(composeTexts) {
 		var id = 'EWA_SEARCH_ITEM_' + this.Id;
 		if (!$X(id)) {
 			this._SearchCreateItm();
+			if(composeTexts){
+				this.composeSearchTexts();
+			}
+			this._ReShowSearchQuick();
 		}
-		this._ReShowSearchQuick();
 	};
 	this.ChangeSearchTextType = function(obj) {
 		if (this._MENU_DATE_RANGE)
@@ -2075,22 +2104,23 @@ function EWA_ListFrameClass() {
 					}
 				}
 				exp = ss.join('');
+				exp = eval('/(' + exp + ')/ig');
 				// console.log(exp);
-				var id = s2[0];
-				if (this._SearchJson[id]) {
-					id = this._SearchJson[id].ORI_NAME; // 原来的名称（没有被大写之前的名称，在
-					// SearchCreateItm生成）
-				}
-				try {
-					var exp = eval('/(' + exp + ')/ig');
-					// console.log(exp);
-					$(tb).find('.EWA_TD_M [id="' + id + '"]').each(function() {
-						if (this.children.length == 0) {
-							this.innerHTML = this.innerHTML.replace(exp, '<font color=red><b>$1</b></font>');
-						}
-					});
-				} catch (e) {
-					console.log(e);
+				let ids = s2[0].split(','); // 有可能为组合的id,composeTextSearch
+				for(let index in ids){
+					let id = ids[index];
+					if (this._SearchJson[id]) {
+						id = this._SearchJson[id].ORI_NAME; // 原来的名称（没有被大写之前的名称，在SearchCreateItm生成）
+					}
+					try {
+						$(tb).find('.ewa-lf-data-row .ewa-col-' + id+'>*').each(function() {
+							if (this.children.length == 0) {
+								this.innerHTML = this.innerHTML.replace(exp, '<font color=red><b>$1</b></font>');
+							}
+						});
+					} catch (e) {
+						console.log(e);
+					}
 				}
 			}
 		}
