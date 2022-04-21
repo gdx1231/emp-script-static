@@ -66,15 +66,15 @@ function EWA_ListFrameClass() {
 			return;
 		}
 		let u1 = this.getUrlClass();
-		let data = {};
-		data.ewa_switch_name = source.name;
-		data.ewa_action = actionName;
-		data.ewa_ajax = 'json';
-		data.ewa_switch = source.checked ? 'on' : 'off';
-		data.ewa_action_key = $(source).parentsUntil('tbody').last().attr('ewa_key');
+		u1.AddParameter("ewa_switch_name", source.name);
+		u1.AddParameter("ewa_action", actionName);
+		u1.AddParameter("ewa_ajax", "json");
+		u1.AddParameter("ewa_switch", source.checked ? 'on' : 'off');
+		u1.AddParameter("ewa_action_key", $(source).parentsUntil('tbody').last().attr('ewa_key'));
 		let parent = source.parentNode;
 		let names = parent.getAttributeNames();
 		 // 附加父元素的属性，可在配置中定义元素属性
+		let data = {};
 		for (let n in names) {
 			let name = names[n];
 			let val = parent.getAttribute(name);
