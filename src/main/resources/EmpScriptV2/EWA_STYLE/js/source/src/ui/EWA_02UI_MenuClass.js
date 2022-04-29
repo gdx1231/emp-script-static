@@ -26,7 +26,11 @@ function EWA_UI_MenuClass(className) {
 	// 被点击的菜单项 2018-11-10
 	this.clickedItem = null;
 
+
 	this.Click = function(e, obj) {
+		if(this.clickBeforeEvent){
+			this.clickBeforeEvent (e, obj);
+		}
 		if (this.MenuShowType == 'LEFT') {
 			// if (this._LastObj != null) {
 			// }
@@ -39,6 +43,9 @@ function EWA_UI_MenuClass(className) {
 			this._HiddenDialogs();
 		}
 		EWA.C.Utils.RunCmd(obj);// 执行cmd
+		if(this.clickAfterEvent){
+			this.clickAfterEvent (e, obj);
+		}
 	};
 	this.OnClick = function(event, obj) {
 		this.clickedItem = obj;

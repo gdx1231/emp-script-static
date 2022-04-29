@@ -164,6 +164,10 @@
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=eq]:before {
 	content: "E";
 }
+/* not equals */
+.ewa-lf-search-type-text .ewa-lf-search-type[tag=uneq]:before {
+	content: "U";
+}
 /* left like */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=llk]:before {
 	content: "L";
@@ -171,6 +175,18 @@
 /* right like */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=rlk]:before {
 	content: "R";
+}
+/* not like */
+.ewa-lf-search-type-text .ewa-lf-search-type[tag=nlk]:before {
+	content: "N";
+}
+/* 空白 */
+.ewa-lf-search-type-text .ewa-lf-search-type[tag=blk]:before {
+	content: "B";
+}
+/* 非空白 */
+.ewa-lf-search-type-text .ewa-lf-search-type[tag=nblk]:before {
+	content: "H";
 }
 
 .ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl {

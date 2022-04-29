@@ -4739,7 +4739,11 @@ function EWA_UI_MenuClass(className) {
 	// 被点击的菜单项 2018-11-10
 	this.clickedItem = null;
 
+
 	this.Click = function(e, obj) {
+		if(this.clickBeforeEvent){
+			this.clickBeforeEvent (e, obj);
+		}
 		if (this.MenuShowType == 'LEFT') {
 			// if (this._LastObj != null) {
 			// }
@@ -4752,6 +4756,9 @@ function EWA_UI_MenuClass(className) {
 			this._HiddenDialogs();
 		}
 		EWA.C.Utils.RunCmd(obj);// 执行cmd
+		if(this.clickAfterEvent){
+			this.clickAfterEvent (e, obj);
+		}
 	};
 	this.OnClick = function(event, obj) {
 		this.clickedItem = obj;
@@ -17547,14 +17554,14 @@ function EWA_ListFrameClass() {
 				var search_value = $(this).text();
 				var search_value1 = search_value;
 
-				var ipt = $('table#EWA_SEARCH_ITEM_' + c.Id + ' .ewa-lf-search-item-ctl [name="' + this.id.toUpperCase() + '"]');
+				var ipt = $('#EWA_SEARCH_ITEM_' + c.Id + ' .ewa-lf-search-item-ctl [name="' + this.id.toUpperCase() + '"]');
 
 				if (search_tag == 'number' || search_tag == 'date') { // 日期和数字为2个输入框
 					ipt = ipt.parentsUntil('.ewa-lf-search-item').last().find('input');
 				}
 				var q_obj = ipt.parentsUntil('.ewa-lf-search-item').last().find('a');
 
-				console.log(event);
+				//console.log(event);
 				if (search_tag == 'date') {
 					search_value = search_value.split(' ')[0];
 					search_value1 = search_value + " 23:59:59";
@@ -17571,7 +17578,7 @@ function EWA_ListFrameClass() {
 						search_value = findOptionValue;
 					}
 				}
-				console.log(search_value, search_value1);
+				//console.log(search_value, search_value1);
 				if (ipt.val() == search_value) {
 					// 已经赋值，清除赋值
 					if (search_tag == 'text' && lk_item && q_obj.length > 0) {
@@ -18326,6 +18333,10 @@ function EWA_ListFrameClass() {
 		if (this._MENU_DATE_RANGE)
 			this._MENU_DATE_RANGE.HiddenMemu();
 		this._MENU_TEXT_TYPE.ShowByObject(obj, null, 0);
+		let frame = $(this._MENU_TEXT_TYPE.Dialog.GetFrame());
+		frame.find('.search-text-tag').remove();
+		frame.find('div[ewa_mg="' + $(obj).attr('tag') +'"] td:eq(0)').html('<b class="fa fa-check search-text-tag"></b>');
+
 	};
 	/**
 	 * 检索日期显示日期范围列表
@@ -18342,7 +18353,16 @@ function EWA_ListFrameClass() {
 		var text_seach_type_map = $J2MAP(this.RESOURCES.search_text_items, 'Id');
 		var item = text_seach_type_map[tag];
 		var txt = EWA.LANG == 'enus' ? item.TxtEn : item.Txt;
+		
 		search_item_table.find('a').attr('tag', tag).html(txt);
+		let input = search_item_table.find('input');
+		if(tag == 'blk' || tag == 'nblk'){ // 空白和非空白
+			input.val( txt).prop('disabled',true);
+		} else {
+			if(input.prop('disabled')){
+				search_item_table.find('input').val("").prop('disabled',false);
+			}
+		}
 	};
 
 	/**
@@ -18495,12 +18515,18 @@ function EWA_ListFrameClass() {
 			var itm = items[n];
 			itm.Txt = itm[idx];
 			itm.Cmd = ewa_js + "(&quot;" + itm.Id + "&quot;)";
+			itm.Group = itm.Id;
 		}
 		var name = "EWA.F.FOS[&quot;" + this._Id + "&quot;]._MENU_TEXT_TYPE";
 
 		this._MENU_TEXT_TYPE = new EWA_UI_MenuClass(name);
 		this._MENU_TEXT_TYPE.Create(items);
 		$(this._MENU_TEXT_TYPE.Dialog.GetFrame()).addClass('ewa-lf-search-menu ' + id);
+		
+		this._MENU_TEXT_TYPE.clickBeforeEvent = function(e,obj){
+			$(this.Dialog.GetFrame()).find('.search-text-tag').remove();
+			$(obj).find('td:eq(0)').html('<b class="fa fa-check search-text-tag"></b>');
+		};
 		return name;
 	}
 	/**
@@ -18551,10 +18577,10 @@ function EWA_ListFrameClass() {
 				text_val = s_item.para1;
 				text_val2 = s_item.para2;
 			}
-
+			var tag_text ="";
 			if (search == "text") {
 				var this_tag_text_type = text_seach_type_map[ini_tag] || text_seach_type_map[default_text_seach_type];
-				var tag_text = EWA.LANG == 'enus' ? this_tag_text_type.TxtEn : this_tag_text_type.Txt;
+				tag_text = EWA.LANG == 'enus' ? this_tag_text_type.TxtEn : this_tag_text_type.Txt;
 				tmp.push("<a class='ewa-lf-search-type' tag='" + ini_tag + "' href='javascript:void(0)' onclick='" + ewa_js + "'>");
 				tmp.push(tag_text);
 				tmp.push("</a>");
@@ -18566,8 +18592,13 @@ function EWA_ListFrameClass() {
 
 			tmp.push(": </b></nobr></td><td class='ewa-lf-search-item-ctl'>");
 			if (search == "text") {
-				tmp.push(this._SearchSingle(name, text_val));
-
+				if(ini_tag == 'blk' || ini_tag == 'nblk'){ // 空白和非空白
+					let eleHtml = this._SearchSingle(name, tag_text);
+					eleHtml = eleHtml.replace('<input', '<input disabled '); // 禁止修改
+					tmp.push(eleHtml);
+				} else {
+					tmp.push(this._SearchSingle(name, text_val));
+				}
 			} else if (search == "date") {
 				tmp.push(this._SearchDate(name, text_val, text_val2));
 			} else if (search == "number") {
@@ -19634,6 +19665,22 @@ EWA_ListFrameClass.prototype.RESOURCES = {
 		Id: "eq",
 		Txt: "等于",
 		TxtEn: "Equals"
+	}, {
+		Id: "uneq",
+		Txt: "不等于",
+		TxtEn: "Not equals"
+	}, {
+		Id: "nlk",
+		Txt: "不包含",
+		TxtEn: "Not contains"
+	}, {
+		Id: "blk",
+		Txt: "空白",
+		TxtEn: "Blank"
+	}, {
+		Id: "nblk",
+		Txt: "非空白",
+		TxtEn: "Not blank"
 	}],
 	search_date_items: [{
 		Id: "Clear",
