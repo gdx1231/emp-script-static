@@ -18196,8 +18196,22 @@ function EWA_ListFrameClass() {
 			if (t.getAttribute('ewa_tag') == 'group') {
 				break;
 			}
-			t.style.display = show;
-			m++;
+			if(t.getAttribute('add_pre_row')){ // _IsAddPreRow
+				if(show =='none'){
+					if(t.style.display !='none'){
+						t.setAttribute('ewa_group_show_old', t.style.display);
+					}
+					t.style.display = 'none';
+				} else {
+					if(t.hasAttribute('ewa_group_show_old')){
+						t.style.display =t.getAttribute('ewa_group_show_old');
+						t.removeAttribute("ewa_group_show_old");
+					}
+				}
+			} else {
+				t.style.display = show;
+				m++;
+			}
 		}
 		obj.childNodes[obj.childNodes.length - 1].innerHTML = ' (' + m + ')';
 	};
