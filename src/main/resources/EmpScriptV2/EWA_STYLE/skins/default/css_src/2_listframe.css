@@ -412,12 +412,18 @@
 }
 /* ListFrame 分组 */
 .EWA_LF_GROUP {
-	background-color: #ddd;
-	padding-left: 5px;
+	background-color: #f5f5f5;
+	padding: 0px;
 	font-weight: bold;
-	height: 18px;
+	height: 24px;
+	line-height: 24px;
 }
-
+.ewa-lf-grp-icon {
+	width:10px;
+	text-align:center;
+	display: inline-block;
+	margin-left: 5px;
+}
 /* ListFrame 编辑 */
 td.ewa-lf-edit {
 	position: relative;
