@@ -246,9 +246,8 @@ body {
 				var o = iframes[i];
 				if (o.contentWindow == window) {
 					if (markType == 'md') {
-						o.style.width = '50%';
-						var s = '<div id="markdown_html" class="ewa-mark-down" '
-								+ ' style="white-space: normal;overflow:auto;background:#f2f2f2;width:50%;height:100%;float:right;padding: 10px;box-sizing: border-box;"></div>';
+						o.style.cssText = 'left:0;width:50%;top:0;bottom:0;position:absolute;';
+						var s = '<div id="markdown_html" class="ewa-mark-down" style="white-space:normal;overflow:auto;left:50%;right:0;top:0;bottom:0;position:absolute;padding:10px;box-sizing:border-box;"></div>';
 						window.parent.$(o.parentNode).append(s);
 						init_editor_markdown();
 						updateMarkDown();

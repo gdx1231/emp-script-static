@@ -971,7 +971,7 @@ function EWA_DefineClass(frameTag) {
 		if (v.StepUi == "view") {
 			s1 += "<i style='color:blue;font-family:Verdana'>" + ss.Value + "</i>";
 		} else {
-			s1 += "<input value=\"" + val + "\" onblur='" + cmd + "' type=text size=80>";
+			s1 += "<input value=\"" + val + "\" onblur='" + cmd + "' type=text size1q=80>";
 		}
 		return s1;
 	};
