@@ -1,35 +1,35 @@
 /* light css */
 .light {
 	color: #222222;
-	background: #fff;
+	background-color: #fff;
 	scrollbar-color: #aaa rgba(55, 55, 55, 0);
 	scrollbar-width: none;
 }
 /* define_right switch bar */
 .light #TABS {
-	background: #f1f1f1;
+	background-color: #f1f1f1;
 	box-shadow: 0px 0px 1px #111;
 }
 
 .light #header, .light .ewa_tab {
-	background: #f1f1f1;
+	background-color: #f1f1f1;
 	box-shadow: 0 1px 0 0 transparent inset;
 	border-bottom: 1px solid #dedede;
 	border-top: 0px solid transparent;
 }
 
 .light #xmls {
-	background: #fbfbfb;
+	background-color: #fbfbfb;
 	border-right: 1px solid #dedede;
 	box-shadow: 0 1px 0 transparent inset;
 }
 
 .light .ewa_menu_m_mv1 {
-	background: #fff;
+	background-color: #fff;
 }
 
 .light .EWA_POP_MAIN .ewa_menu_m_mv1 {
-	background: #63acff;
+	background-color: #63acff;
 	color: #fff;
 }
 

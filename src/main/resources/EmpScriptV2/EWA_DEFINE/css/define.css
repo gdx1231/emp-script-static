@@ -1,18 +1,35 @@
 /* dark css */
 .dark {
 	color: #e1e1e1;
-	background: #303130;
+	background-color: #303130;
 	scrollbar-color: #aaa rgba(55, 55, 55, 0);
 	scrollbar-width: none;
 }
 
+/* workflow start */
+.dark .ewa_wf_box {
+    background-color: white;
+    color: #000;
+    box-shadow: 1px 1px 11px #999;
+    border: 0;
+}
+.dark table[gdx=LINE] img {
+	display: block;
+    filter: invert(100%);
+}
+.dark table[gdx=LINE] td {
+    border-color: #fff !important;
+}
+/* workflow end*/
+
+
 .dark #TABS {
-	background: #363636;
+	background-color: #363636;
 	box-shadow: 0px 0px 1px #000;
 }
 
 .dark #header, .dark .ewa_tab {
-	background: #252525;
+	background-color: #252525;
 	box-shadow: 0 1px 0 0 #353535 inset;
 	border-bottom: 1px solid #000000;
 	border-top: 1px solid #000000;
@@ -24,7 +41,7 @@
 }
 
 .dark .ewa_menu_m_mv1 {
-	background: #303130;
+	background-color: #303130;
 }
 
 .dark .EWA_POP_MAIN, .dark .ewa-ui-dialog-box {
@@ -240,35 +257,35 @@
 }/* light css */
 .light {
 	color: #222222;
-	background: #fff;
+	background-color: #fff;
 	scrollbar-color: #aaa rgba(55, 55, 55, 0);
 	scrollbar-width: none;
 }
 /* define_right switch bar */
 .light #TABS {
-	background: #f1f1f1;
+	background-color: #f1f1f1;
 	box-shadow: 0px 0px 1px #111;
 }
 
 .light #header, .light .ewa_tab {
-	background: #f1f1f1;
+	background-color: #f1f1f1;
 	box-shadow: 0 1px 0 0 transparent inset;
 	border-bottom: 1px solid #dedede;
 	border-top: 0px solid transparent;
 }
 
 .light #xmls {
-	background: #fbfbfb;
+	background-color: #fbfbfb;
 	border-right: 1px solid #dedede;
 	box-shadow: 0 1px 0 transparent inset;
 }
 
 .light .ewa_menu_m_mv1 {
-	background: #fff;
+	background-color: #fff;
 }
 
 .light .EWA_POP_MAIN .ewa_menu_m_mv1 {
-	background: #63acff;
+	background-color: #63acff;
 	color: #fff;
 }
 

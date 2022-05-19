@@ -3,14 +3,14 @@ function EWAC_WfCreate() {
 	this.Cfg = eval('new EWAD$Class()');
 	this.Cfg.Init();
 	this._ElementsTemplate = {
-		I : "<input map='input' type='text' id='[id]' name='[id]' class='EWA_INPUT' />", // input
-		D : "<input map='datetime' type='text' id='[id]' name='[id]' size='8' maxlength='8' class='EWA_INPUT' />", // date
-		T : "<textarea map='textarea' class='EWA_TEXTAREA' id='[id]' name='[id]'></textarea>", // text
-		O : "<select map='select' class='EWA_SELECT' id='[id]' name='[id]'></select>", // select
-		A : "<span map='span' class='IX_SPAN' id='[id]' name='[id]' style='background-color:#ddd'>[AUTO]</span>", // select
-		H : "<div map='dHtml' class='ewa_wf_h'  id='[id]' name='[id]'></div>", // html
-		F : "<input map='file' type='file' class='EWA_INPUT'  id='[id]' name='[id]'/>", // file
-		S : "<div map='user' class='ewa_wf_s' style='background-color:#ddd;width:100%;height:100%'"
+		I: "<input map='input' type='text' id='[id]' name='[id]' class='EWA_INPUT' />", // input
+		D: "<input map='datetime' type='text' id='[id]' name='[id]' size='8' maxlength='8' class='EWA_INPUT' />", // date
+		T: "<textarea map='textarea' class='EWA_TEXTAREA' id='[id]' name='[id]'></textarea>", // text
+		O: "<select map='select' class='EWA_SELECT' id='[id]' name='[id]'></select>", // select
+		A: "<span map='span' class='IX_SPAN' id='[id]' name='[id]' style='background-color:#ddd'>[AUTO]</span>", // select
+		H: "<div map='dHtml' class='ewa_wf_h'  id='[id]' name='[id]'></div>", // html
+		F: "<input map='file' type='file' class='EWA_INPUT'  id='[id]' name='[id]'/>", // file
+		S: "<div map='user' class='ewa_wf_s' style='background-color:#ddd;width:100%;height:100%'"
 			+ " id='[id]' name='[id]'>[SIGN]</div>" // sign 签名
 	};
 	this._Tmp = '<XItem Name="[N]"><Tag><Set Tag="[M]" IsLFEdit="0" />'
@@ -73,7 +73,7 @@ function EWAC_WfCreate() {
 	};
 	this.analysis = function(sourceHtml) {
 		this._Elements = [];
-		for ( var n in this._ElementsTemplate) {
+		for (var n in this._ElementsTemplate) {
 			var txt = '<kk />' + this._ElementsTemplate[n];
 			var exp = eval('/\\[' + n + '\\]/g')
 			sourceHtml = sourceHtml.replace(exp, txt);
@@ -157,6 +157,9 @@ EWAC.AddItemToTree = function() {
 };
 
 EWAC.InitKey = function() {
+	if (window.stopKeyMaster) {
+		return;
+	}
 	if (!window.key || !(key instanceof Function)) {
 		setTimeout(EWAC.InitKey, 100);
 		return;
@@ -213,7 +216,7 @@ EWAC.InitKey = function() {
 		key('⌘+s,ctrl+s', function(event) {
 			console.log("save- define");
 			try {
-				if(parent.save){parent.save()};
+				if (parent.save) { parent.save() };
 				top.saveXml();
 			} catch (e) {
 				console.log(e);
@@ -245,7 +248,7 @@ EWAC.InitKey = function() {
 	}
 };
 EWAC.Theme = {
-	get_theme : function() {
+	get_theme: function() {
 		if (window.EWA_UrlClass) {
 			var u1 = new EWA_UrlClass();
 			var t = u1.GetParameter("theme");
@@ -266,7 +269,7 @@ EWAC.Theme = {
 		}
 		return 'dark';
 	},
-	change_theme : function(theme) {
+	change_theme: function(theme) {
 		document.body.className = theme;
 		window.localStorage['ewa_define_theme'] = theme;
 
@@ -276,13 +279,13 @@ EWAC.Theme = {
 			EWAC.Theme.mark_menu(theme);
 		}, 103);
 	},
-	change_theme_frames : function(w, theme) {
+	change_theme_frames: function(w, theme) {
 		for (var i = 0; i < w.frames.length; i++) {
 			w.frames[i].document.body.className = theme;
 			this.change_theme_frames(w.frames[i], theme);
 		}
 	},
-	mark_menu : function(theme) {
+	mark_menu: function(theme) {
 		try {
 			$('.ewa_menu_m[ewa_cmd*="change_theme"]').each(function() {
 				var cmd = $(this).attr('ewa_cmd');
@@ -298,27 +301,27 @@ EWAC.Theme = {
 	}
 };
 (function() {
-	var js = document.scripts;
-	js = js[js.length - 1].src;
-	if (!js) {
-		return;
+	if (!window.stopKeyMaster) {
+		var js = document.scripts;
+		js = js[js.length - 1].src;
+		if (!js) {
+			return;
+		}
+		var js2 = js.split('://');
+		var js3 = js2[1];
+		while (js3.indexOf('//') >= 0) {
+			js3 = js3.replace('//', '/');
+		}
+		js = js2[0] + '://' + js3;
+		var loc = js.lastIndexOf('/');
+		var path = js.substring(0, loc + 1);
+		var u = path + "../../third-party/keymaster-master/keymaster.js";
+		var script = document.createElement("script");
+		script.id = "keymaster.js"
+		script.src = u;
+		document.getElementsByTagName('head')[0].appendChild(script);
+		setTimeout(EWAC.InitKey, 100);
 	}
-	var js2 = js.split('://');
-	var js3 = js2[1];
-	while (js3.indexOf('//') >= 0) {
-		js3 = js3.replace('//', '/');
-	}
-	js = js2[0] + '://' + js3;
-	var loc = js.lastIndexOf('/');
-	var path = js.substring(0, loc + 1);
-	var u = path + "../../third-party/keymaster-master/keymaster.js";
-	var script = document.createElement("script");
-	script.id = "keymaster.js"
-	script.src = u;
-	document.getElementsByTagName('head')[0].appendChild(script);
-
-	setTimeout(EWAC.InitKey, 100);
-
 	var t = EWAC.Theme.get_theme();
 	EWAC.Theme.change_theme(t);
 })();

@@ -11743,25 +11743,39 @@ EWA_Behavior.RELOAD_PARENTA = function(frameUnid) {
  * 刷新父体列表的内容
  */
 EWA_Behavior.RELOAD_PARENT = function(frameUnid) {
-	if (window._EWA_DialogWnd == null) {
+	let win = EWA_Behavior.getParentWindow();
+	if (!win) {
 		return;
 	}
-	var win = _EWA_DialogWnd._OpenerWindow;
-	if (win.EWA.F.FOS == null) {
-		_EWA_DialogWnd.CloseWindow();
-		win.location.href = win.location.href;
-		return;
-	}
+	let frame = EWA_Behavior.getParentFrame(frameUnid);
 	try {
-		if (win.EWA.F.FOS[frameUnid] && win.EWA.F.FOS[frameUnid]) {
+		if (frame) {
 			// 参数url用于列表判断重新加载来源的调用 2019-03-01
-			var url = window.location.href;
-			win.EWA.F.FOS[frameUnid].Reload(url);
+			let formUrl = window.location.href;
+			frame.Reload(formUrl);
 		} else {
+			console.warn('not found parent frame:'+frameUnid);
+			_EWA_DialogWnd.CloseWindow();
 			win.location = win.location.href;
 		}
 	} catch (e) {
+		console.log(e);
 		win.location = win.location.href;
+	}
+};
+EWA_Behavior.getParentWindow = function() {
+	if (window._EWA_DialogWnd == null) {
+		return null;
+	}
+	let win = _EWA_DialogWnd._OpenerWindow;
+	return win;
+};
+EWA_Behavior.getParentFrame = function(frameUnid) {
+	let win = EWA_Behavior.getParentWindow();
+	if (win && win.EWA && win.EWA.F && win.EWA.F.FOS && win.EWA.F.FOS[frameUnid]) {
+		return win.EWA.F.FOS[frameUnid];
+	} else {
+		return null;
 	}
 };
 /**
@@ -11773,7 +11787,7 @@ EWA_Behavior.CLOSE_SELF = function() {
 		return;
 	}
 	_EWA_DialogWnd.CloseWindow();
-}
+};
 /**
  * 清除自身form的内容
  */
@@ -11805,11 +11819,18 @@ function EWA_PostBehavior(postBehavior, frameUnid) {
 			var w = _EWA_DialogWnd._OpenerWindow;
 			var o = w.__Dialog[frameUnid];
 
-			if (o && o.AfterMsg != null && o.AfterMsg.length > 0) {
+			if (o && o.AfterMsg) {
 				w.EWA.UI.Msg.Alert(o.AfterMsg, _EWA_INFO_MSG['EWA.SYS.CHOOSE_ITEM_TITLE']);
 			}
 		} catch (e) {
 			console.log(e);
+		}
+	}
+	let parentFrame = EWA_Behavior.getParentFrame(frameUnid);
+	if (parentFrame) {
+		parentFrame.outParams = []; //输出参数集合
+		for (let i = 2; i < arguments.length; i++) {
+			parentFrame.outParams.push(arguments[i]);
 		}
 	}
 	var behaviors = postBehavior.split(",");
@@ -16814,9 +16835,12 @@ function EWA_ListFrameClass() {
 				$(this).hide();
 			}
 		});
-		$(objs[0]).addClass('ewa-app-lf-search-compose');
-		$(objs[0]).find('input[type=text]').attr('name', names.join(','))
+		let searchTable = $(objs[0]);
+		searchTable.addClass('ewa-app-lf-search-compose');
+		searchTable.find('input[type=text]').attr('name', names.join(','))
 			.attr('placeholder', titles.join(", "));
+		let a = searchTable.find('a').clone(); // like,rlike ...
+		searchTable.find('.ewa-lf-search-item-title b').text(EWA.LANG=='enus'?'Search':'综合搜索').append(a);	
 		return objs; 	
 	}
 	/**
@@ -18332,6 +18356,7 @@ function EWA_ListFrameClass() {
 	};
 	/**
 	 * 在页面上将Search显示出来
+	 * @param composeTexts 是否合并文字搜索框
 	 */
 	this.ShowSearch = function(composeTexts) {
 		var id = 'EWA_SEARCH_ITEM_' + this.Id;
@@ -18604,7 +18629,7 @@ function EWA_ListFrameClass() {
 				is_have_date_search = true;
 			}
 
-			tmp.push(": </b></nobr></td><td class='ewa-lf-search-item-ctl'>");
+			tmp.push("</b></nobr></td><td class='ewa-lf-search-item-ctl'>");
 			if (search == "text") {
 				if(ini_tag == 'blk' || ini_tag == 'nblk'){ // 空白和非空白
 					let eleHtml = this._SearchSingle(name, tag_text);

@@ -51,9 +51,12 @@ function EWA_ListFrameClass() {
 				$(this).hide();
 			}
 		});
-		$(objs[0]).addClass('ewa-app-lf-search-compose');
-		$(objs[0]).find('input[type=text]').attr('name', names.join(','))
+		let searchTable = $(objs[0]);
+		searchTable.addClass('ewa-app-lf-search-compose');
+		searchTable.find('input[type=text]').attr('name', names.join(','))
 			.attr('placeholder', titles.join(", "));
+		let a = searchTable.find('a').clone(); // like,rlike ...
+		searchTable.find('.ewa-lf-search-item-title b').text(EWA.LANG=='enus'?'Search':'综合搜索').append(a);	
 		return objs; 	
 	}
 	/**
@@ -1569,6 +1572,7 @@ function EWA_ListFrameClass() {
 	};
 	/**
 	 * 在页面上将Search显示出来
+	 * @param composeTexts 是否合并文字搜索框
 	 */
 	this.ShowSearch = function(composeTexts) {
 		var id = 'EWA_SEARCH_ITEM_' + this.Id;
@@ -1841,7 +1845,7 @@ function EWA_ListFrameClass() {
 				is_have_date_search = true;
 			}
 
-			tmp.push(": </b></nobr></td><td class='ewa-lf-search-item-ctl'>");
+			tmp.push("</b></nobr></td><td class='ewa-lf-search-item-ctl'>");
 			if (search == "text") {
 				if(ini_tag == 'blk' || ini_tag == 'nblk'){ // 空白和非空白
 					let eleHtml = this._SearchSingle(name, tag_text);

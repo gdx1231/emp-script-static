@@ -75,7 +75,9 @@
 .ewa-lf-search-item-title .fa {
 	margin-left: 4px;
 }
-
+.ewa-lf-search-item-title b::after {
+	content:":";
+}
 .ewa-lf-search-item-ctl {
 	padding-left: 5px;
 }
@@ -90,7 +92,9 @@
 	height: 21px;
 	box-sizing: border-box;
 }
-
+.ewa-app-lf-search-compose input {
+	width: 155px;
+}
 .ewa-lf-search-item-ctl input[type=radio], .ewa-lf-search-item-ctl input[type=checkbox]
 	{
 	width: auto;
@@ -117,9 +121,13 @@
 /* 列表中点击文字快速选择 */
 .ewa-lf-search-text-click {
 	cursor: pointer;
+	white-space:nowrap;	
+}
+.ewa-lf-search-text-click:hover {
+	color: red;
 }
 
-.ewa-lf-search-text-click:before {
+.ewa-lf-search-text-click::before {
 	font-family: FontAwesome;
 	content: '\f0b0';
 	margin-right: 2px;
