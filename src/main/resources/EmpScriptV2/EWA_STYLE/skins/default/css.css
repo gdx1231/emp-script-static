@@ -158,7 +158,31 @@ a:hover, .ewa-map-button:hover {
 
 .ewa-text-color-black {
 	color: #000;
-}/* 密码输入框和密码查看 */
+}.ewa-sign-box {
+	border: 1px solid #eee;
+}
+.ewa-sign-btns {
+	border-top:1px solid #eee;
+	line-height: 40px;
+	text-align:center;
+	display: flex;
+}
+.ewa-sign-btns a {
+	flex:1;
+}
+.ewa-sign-btn-clear::before {
+	content:"清除内容";
+} 
+.ewa-sign-btn-revoke::before {
+	content:"撤销上一步"
+}
+.enus .ewa-sign-btn-clear::before {
+	content:"Clear tablet";
+} 
+.enus .ewa-sign-btn-revoke::before {
+	content:"Revoke last"
+}
+/* 密码输入框和密码查看 */
 .ewa-input-password-with-eye {
 	position: relative;
 	display: inline-block;

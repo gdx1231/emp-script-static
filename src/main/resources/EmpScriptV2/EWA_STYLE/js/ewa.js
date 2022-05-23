@@ -13139,13 +13139,12 @@ function EWA_FrameCommonItems() {
                     s1 = o1.value;
                 }
                 s1 = s1.replace('//', '/');
-            } else if (tagName == "INPUT"
-                    && o1.getAttribute('ewa_tag') == 'ht5upload') {
-                // html5 upload
+            } else if (tagName == "INPUT" && o1.getAttribute('val_ref')) {
+				// o1.getAttribute('ewa_tag') == 'ht5upload'
+                // html5 upload or signature ...
                 var ref_val = o1.getAttribute('val_ref');
                 try {
-                    var rst = eval('(function(){var a=' + ref_val
-                            + ";return a;})()");
+                    var rst = eval('(function(){var a=' + ref_val + ";return a;})()");
                     s1 = rst;
                 } catch (e) {
                     console.log(ref_val);
@@ -13300,7 +13299,7 @@ function EWA_FrameClass() {
 	* @param actionName 提交到后台的 action
 	 */
 	this.switchButtonAction = function(source, actionName) {
-		if(!actionName){
+		if (!actionName) {
 			return;
 		}
 		let u1 = this.getUrlClass();
@@ -13311,11 +13310,11 @@ function EWA_FrameClass() {
 		data.ewa_switch = source.checked ? 'on' : 'off';
 		let parent = source.parentNode;
 		let names = parent.getAttributeNames();
-		 // 附加父元素的属性，可在配置中定义元素属性
+		// 附加父元素的属性，可在配置中定义元素属性
 		for (let n in names) {
 			let name = names[n];
 			let val = parent.getAttribute(name);
-			if(name.indexOf('on')==0 || name == 'name' || name == 'id' || name == 'class'){
+			if (name.indexOf('on') == 0 || name == 'name' || name == 'id' || name == 'class') {
 				continue;
 			}
 			data[name] = val;
@@ -14054,15 +14053,15 @@ function EWA_FrameClass() {
 		let tb_width = tb.width();
 		let cols = tb.find('.ewa_msg_box')[0].colSpan / 2;
 		let info_width = 90;
-		$("#EWA_FRAME_" + this._Id+">tbody>tr[class*='ewa-row-']:not('.ewa-row-msg-box')").each(function(){
-			let info_cols=$(this).find("td.ewa_redraw_info:visible").length;
-			let ctl_width=(tb_width - info_width*info_cols)/cols;
-			$(this).find("td.ewa_redraw_ctl:visible").each(function(){
+		$("#EWA_FRAME_" + this._Id + ">tbody>tr[class*='ewa-row-']:not('.ewa-row-msg-box')").each(function() {
+			let info_cols = $(this).find("td.ewa_redraw_info:visible").length;
+			let ctl_width = (tb_width - info_width * info_cols) / cols;
+			$(this).find("td.ewa_redraw_ctl:visible").each(function() {
 				let colspan = this.colSpan || 1;
-				$(this).css('width',ctl_width*colspan);
+				$(this).css('width', ctl_width * colspan);
 			});
 		});
-		
+
 		var c = this;
 		addEvent(window, 'size', function() {
 			c.RedrawChangWidth();
@@ -15182,32 +15181,32 @@ function EWA_FrameClass() {
 	/**
 	* 绑定当输入法打开时的判断
 	 */
-	this._bindCompostion = function(inputShowText, inputSaveValue){
-		if(EWA.B.IE){
+	this._bindCompostion = function(inputShowText, inputSaveValue) {
+		if (EWA.B.IE) {
 			return;
 		}
 		let c = this;
-		if(!c["_droplist_"]){
+		if (!c["_droplist_"]) {
 			c["_droplist_"] = {};
 		};
-		
-		c["_droplist_"][inputSaveValue.id] = {_is_composition : false};
 
-		$(inputShowText).on('compositionstart', function(){
+		c["_droplist_"][inputSaveValue.id] = { _is_composition: false };
+
+		$(inputShowText).on('compositionstart', function() {
 			// 输入法打开输入
 			c["_droplist_"][inputSaveValue.id]._is_composition = true;
-		}).on('compositionend', function(){ 
-			 // 输入法输入完毕
+		}).on('compositionend', function() {
+			// 输入法输入完毕
 			c["_droplist_"][inputSaveValue.id]._is_composition = false;
 			EWA.F.I.DropList(this);
 		}).removeAttr('oninput')
-		.removeAttr('onkeyup')
-		.on('input', function(){
-			if(c["_droplist_"][inputSaveValue.id]._is_composition){
-				return;
-			}
-			EWA.F.I.DropList(this);
-		});
+			.removeAttr('onkeyup')
+			.on('input', function() {
+				if (c["_droplist_"][inputSaveValue.id]._is_composition) {
+					return;
+				}
+				EWA.F.I.DropList(this);
+			});
 	};
 	this._GetDropListValue = function() {
 		var tb = this.getObj();
@@ -15225,9 +15224,9 @@ function EWA_FrameClass() {
 				if (o1.tagName.toUpperCase() == 'INPUT' && o1.type.toUpperCase() == 'HIDDEN') {
 					this._GetDropListValue1(o, o1);
 					// 绑定当输入法打开时的判断
-					this._bindCompostion(o,o1);
+					this._bindCompostion(o, o1);
 				}
-				
+
 			}
 		}
 
@@ -15418,7 +15417,30 @@ function EWA_FrameClass() {
 				continue;
 			}
 
-			var val = this._GetObjectValue(o1);
+			var ewa_tag = o1.getAttribute('ewa_tag');
+			let val = null;
+			
+			// 检查签名数据是否变化，如果有就获取变化的数据，否则为空白字符串
+			if ("signature" == ewa_tag) {
+				let changed = 'N';
+				let tablet = this.tablets[name];
+				// 检查所有线条
+				for (let k = 0; k < tablet.lines.length; k++) {
+					if (tablet.lines[k]) {
+						changed = 'Y';
+						break;
+					}
+				}
+				if(changed == 'Y'){
+					val = this._GetObjectValue(o1);
+				} else {
+					val = "";
+				}
+				// 签名数据是否变化
+				ajax.AddParameter(id + "_CHANGED", changed);
+			} else {
+			  	val = this._GetObjectValue(o1);
+			 }
 			if (val != null) {
 				ajax.AddParameter(id, val);
 			}
@@ -15427,7 +15449,7 @@ function EWA_FrameClass() {
 				var upImgsUuid = $X('UP_IMG_' + id).value;
 				ajax.AddParameter(id + '_imgs_split', upImgsUuid);
 			}
-			var ewa_tag = o1.getAttribute('ewa_tag');
+			
 			if ('swffile' == ewa_tag || 'IMG_UPLOAD' == ewa_tag) {
 				var s = o1.getAttribute("UP_PARAS");
 				if (s != null && s.length > 0) {
@@ -15439,8 +15461,7 @@ function EWA_FrameClass() {
 				} else {
 					ajax.AddParameter('UP_URL', o1.value);
 				}
-			}
-			if ('markdown' == ewa_tag) {
+			} else if ('markdown' == ewa_tag) {
 				var texts = o1.parentNode.getElementsByTagName('textarea');
 				if (texts.length > 1) {
 					ajax.AddParameter(texts[1].id, texts[1].value);
@@ -15537,7 +15558,7 @@ function EWA_FrameClass() {
 		if (ht5.UPLOAD_STATUS == 'error' || ht5.UPLOAD_STATUS == 'abort') {
 			// 错误或终止
 			this._stopPost = true;
-			this._stopPostError = EWA.LANG == 'enus'?'Upload file error or aborted':'上传文件错误或被中止';
+			this._stopPostError = EWA.LANG == 'enus' ? 'Upload file error or aborted' : '上传文件错误或被中止';
 			console.log(this._stopPostError);
 			return false;
 		}
@@ -15637,7 +15658,7 @@ function EWA_FrameClass() {
 			}, 700);
 			return;
 		}
-		
+
 		var ht5takephotos = $(objForm).find('input[ewa_tag=ht5takephoto]');
 		// console.log(ht5takephotos)
 		if (ht5takephotos.length > 0 && !this.uploadProcess) {
@@ -15680,12 +15701,12 @@ function EWA_FrameClass() {
 				ht5.H5_UPLOAD.removeWaitBox();
 			}
 		}
-		
-		if(this._stopPostError){ // 停止提交的错误原因，系统错误，客户端无效处理
-			EWA.UI.Msg.ShowError(this._stopPostError,"");
+
+		if (this._stopPostError) { // 停止提交的错误原因，系统错误，客户端无效处理
+			EWA.UI.Msg.ShowError(this._stopPostError, "");
 			return;
 		}
-		
+
 		var ajax = this.CreateAjax(objForm);
 		if (ajax == null) {
 			return;

@@ -435,13 +435,12 @@ function EWA_FrameCommonItems() {
                     s1 = o1.value;
                 }
                 s1 = s1.replace('//', '/');
-            } else if (tagName == "INPUT"
-                    && o1.getAttribute('ewa_tag') == 'ht5upload') {
-                // html5 upload
+            } else if (tagName == "INPUT" && o1.getAttribute('val_ref')) {
+				// o1.getAttribute('ewa_tag') == 'ht5upload'
+                // html5 upload or signature ...
                 var ref_val = o1.getAttribute('val_ref');
                 try {
-                    var rst = eval('(function(){var a=' + ref_val
-                            + ";return a;})()");
+                    var rst = eval('(function(){var a=' + ref_val + ";return a;})()");
                     s1 = rst;
                 } catch (e) {
                     console.log(ref_val);
