@@ -234,6 +234,9 @@ function EWAC_UISkinClass(userClass) {
 				continue;
 			}
 			var tag = tbs.Tables.GetItem("Tag").GetSingleValue();
+			if (tag.toUpperCase() == "HIDDEN" || tag.toUpperCase() == "DATATYPE") {
+				continue;
+			}
 			var xItem = this._GetXItem(tag);
 			var item = this._FrameSkin.Item;
 			var des1 = this._GetDes(tbs);
@@ -271,6 +274,9 @@ function EWAC_UISkinClass(userClass) {
 				continue;
 			}
 			var tag = tbs.Tables.GetItem("Tag").GetSingleValue();
+			if (tag.toUpperCase() == "HIDDEN" || tag.toUpperCase() == "DATATYPE") {
+				continue;
+			}
 			var item = this._FrameSkin.Item;
 			var xItem = noEvent ? "{" + tbs.Name + "#ITEM}" : this._GetXItem(tag).Template.Html;
 			var des = noEvent ? "{" + tbs.Name + "#DES}" : this._GetDes(tbs);
@@ -294,7 +300,7 @@ function EWAC_UISkinClass(userClass) {
 				s1 += "<TR SHOW_MSG=\"1\"" + (noEvent ? "" : " id='" + tbs.Name + "' " + v1) + ">\r\n\t" + item + "\r\n</TR>";
 			}
 		}
-		buttonRow = buttonRow.replace("{__EWA_ITEM__}", "");
+		buttonRow = buttonRow.replace("{__EWA_ITEM__}", "").replace("{__EWA_COL_SPAN__}", "3");
 		s1 += "<TR>" + buttonRow + "</TR>";
 		return s1;
 	};
