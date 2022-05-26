@@ -1,6 +1,5 @@
 // --------------------class of listFrame----------------
 function EWA_ListFrameClass() {
-
 	this.Xml = null;
 	this._Ajax = null;
 	this.ItemList = new EWA_FrameCommonItems();
@@ -16,7 +15,7 @@ function EWA_ListFrameClass() {
 	this._SortName = null;
 	this._SearchExp = ""; // 检索表达式
 	this._SearchHtml = null;
-	this._SearchFields = new Array();
+	this._SearchFields = [];
 	this._Id = null;
 	this._IsCheckedAll = true;
 	this._SearchDialog = null;
@@ -29,11 +28,12 @@ function EWA_ListFrameClass() {
 	this.ReloadAfter = null; // Ajax刷新后的事件，用户定义
 	this.CheckedAllAfter = null; // 全选后的时间，用户定义
 	this.IsNotMDownAutoChecked = false; // 自动选择checkbox radio;
-
+	// 2022-05-26
+	this.REPLACE_HISTORY_STATE = false; // 列表查询更换网页的url
 	/**
 	* 合并文字搜索到第一个input中
 	 */
-	this.composeSearchTexts = function(){
+	this.composeSearchTexts = function() {
 		var titles = [];
 		var names = [];
 		var objs = $('#EWA_RESHOW_' + this._Id + ' .ewa-lf-search-type-text');
@@ -56,8 +56,8 @@ function EWA_ListFrameClass() {
 		searchTable.find('input[type=text]').attr('name', names.join(','))
 			.attr('placeholder', titles.join(", "));
 		let a = searchTable.find('a').clone(); // like,rlike ...
-		searchTable.find('.ewa-lf-search-item-title b').text(EWA.LANG=='enus'?'Search':'综合搜索').append(a);	
-		return objs; 	
+		searchTable.find('.ewa-lf-search-item-title b').text(EWA.LANG == 'enus' ? 'Search' : '综合搜索').append(a);
+		return objs;
 	}
 	/**
 	* 开关元素变化后调用的Action
@@ -65,7 +65,7 @@ function EWA_ListFrameClass() {
 	* @param actionName 提交到后台的 action
 	 */
 	this.switchButtonAction = function(source, actionName) {
-		if(!actionName){
+		if (!actionName) {
 			return;
 		}
 		let u1 = this.getUrlClass();
@@ -76,12 +76,12 @@ function EWA_ListFrameClass() {
 		u1.AddParameter("ewa_action_key", $(source).parentsUntil('tbody').last().attr('ewa_key'));
 		let parent = source.parentNode;
 		let names = parent.getAttributeNames();
-		 // 附加父元素的属性，可在配置中定义元素属性
+		// 附加父元素的属性，可在配置中定义元素属性
 		let data = {};
 		for (let n in names) {
 			let name = names[n];
 			let val = parent.getAttribute(name);
-			if(name.indexOf('on')==0 || name == 'name' || name == 'id' || name == 'class'){
+			if (name.indexOf('on') == 0 || name == 'name' || name == 'id' || name == 'class') {
 				continue;
 			}
 			data[name] = val;
@@ -1436,15 +1436,15 @@ function EWA_ListFrameClass() {
 			if (t.getAttribute('ewa_tag') == 'group') {
 				break;
 			}
-			if(t.getAttribute('add_pre_row')){ // _IsAddPreRow
-				if(show =='none'){
-					if(t.style.display !='none'){
+			if (t.getAttribute('add_pre_row')) { // _IsAddPreRow
+				if (show == 'none') {
+					if (t.style.display != 'none') {
 						t.setAttribute('ewa_group_show_old', t.style.display);
 					}
 					t.style.display = 'none';
 				} else {
-					if(t.hasAttribute('ewa_group_show_old')){
-						t.style.display =t.getAttribute('ewa_group_show_old');
+					if (t.hasAttribute('ewa_group_show_old')) {
+						t.style.display = t.getAttribute('ewa_group_show_old');
 						t.removeAttribute("ewa_group_show_old");
 					}
 				}
@@ -1482,6 +1482,65 @@ function EWA_ListFrameClass() {
 				}
 			}
 		}
+	};
+	// ewa_search=bas_tag[eq]acc,bas_tag_grp[lk]src
+	// EWA_SEARCH=MEMO_STATE[or]MEMO_ING;MEMO_FINISH
+	this.SearchGetExpInit = function() {
+		let tb = $('#_G_' + this._Id);
+		var s2 = [];
+		$(tb).find('.ewa-lf-search-item').each(function() {
+			var inputs = $(this).find('input');
+			if (inputs.length == 0) {
+				inputs = $(this).find('select');
+				if (inputs.length == 0) {
+					return;
+				}
+			}
+			var input0 = inputs[0];
+			var search_type = $(input0).attr('t');
+			if (inputs.length == 1) {
+				var v = input0.value;
+				if (input0.value.trim() == '') {
+					return;
+				}
+				if (search_type == 'text') {
+					var tag1 = $(input0.parentNode.parentNode).find('a').attr('tag');
+					if (tag1) {
+						search_type = tag1;
+					}
+				}
+				let names = input0.name.split(',');
+				for(let i =0 ; i< names.length;i++){
+					s2.push(names[i] + "[" + search_type + "]" + v);
+				}
+				return;
+			}
+			if ((search_type == 'date' || search_type == 'number') && inputs.length == 2) {
+				var v = input0.value;
+				var v1 = inputs[1].value;
+				if (v1 == '' && v == '') {
+					return;
+				}
+				s2.push(input0.name + "[gte]" + v);
+				if (v1) {
+					s2.push(input0.name + "[lte]" + v1);
+				}
+				return;
+			}
+			if (search_type == 'fix' && input0.tagName == 'INPUT') {
+				var vs = [''];
+				$(this).find('input').each(function() {
+					if (this.checked) {
+						vs.push(this.value);
+					}
+				});
+				if (vs.length == 1) {// 没有数据
+					return;
+				}
+				s2.push(input0.name + "[or]" + vs.join(';'));
+			}
+		});
+		return s2.join(',');
 	};
 	this.SearchGetExp = function(tb) {
 		var s2 = [];
@@ -1578,7 +1637,7 @@ function EWA_ListFrameClass() {
 		var id = 'EWA_SEARCH_ITEM_' + this.Id;
 		if (!$X(id)) {
 			this._SearchCreateItm();
-			if(composeTexts){
+			if (composeTexts) {
 				this.composeSearchTexts();
 			}
 			this._ReShowSearchQuick();
@@ -1590,7 +1649,7 @@ function EWA_ListFrameClass() {
 		this._MENU_TEXT_TYPE.ShowByObject(obj, null, 0);
 		let frame = $(this._MENU_TEXT_TYPE.Dialog.GetFrame());
 		frame.find('.search-text-tag').remove();
-		frame.find('div[ewa_mg="' + $(obj).attr('tag') +'"] td:eq(0)').html('<b class="fa fa-check search-text-tag"></b>');
+		frame.find('div[ewa_mg="' + $(obj).attr('tag') + '"] td:eq(0)').html('<b class="fa fa-check search-text-tag"></b>');
 
 	};
 	/**
@@ -1608,14 +1667,14 @@ function EWA_ListFrameClass() {
 		var text_seach_type_map = $J2MAP(this.RESOURCES.search_text_items, 'Id');
 		var item = text_seach_type_map[tag];
 		var txt = EWA.LANG == 'enus' ? item.TxtEn : item.Txt;
-		
+
 		search_item_table.find('a').attr('tag', tag).html(txt);
 		let input = search_item_table.find('input');
-		if(tag == 'blk' || tag == 'nblk'){ // 空白和非空白
-			input.val( txt).prop('disabled',true);
+		if (tag == 'blk' || tag == 'nblk') { // 空白和非空白
+			input.val(txt).prop('disabled', true);
 		} else {
-			if(input.prop('disabled')){
-				search_item_table.find('input').val("").prop('disabled',false);
+			if (input.prop('disabled')) {
+				search_item_table.find('input').val("").prop('disabled', false);
 			}
 		}
 	};
@@ -1777,8 +1836,8 @@ function EWA_ListFrameClass() {
 		this._MENU_TEXT_TYPE = new EWA_UI_MenuClass(name);
 		this._MENU_TEXT_TYPE.Create(items);
 		$(this._MENU_TEXT_TYPE.Dialog.GetFrame()).addClass('ewa-lf-search-menu ' + id);
-		
-		this._MENU_TEXT_TYPE.clickBeforeEvent = function(e,obj){
+
+		this._MENU_TEXT_TYPE.clickBeforeEvent = function(e, obj) {
 			$(this.Dialog.GetFrame()).find('.search-text-tag').remove();
 			$(obj).find('td:eq(0)').html('<b class="fa fa-check search-text-tag"></b>');
 		};
@@ -1832,7 +1891,7 @@ function EWA_ListFrameClass() {
 				text_val = s_item.para1;
 				text_val2 = s_item.para2;
 			}
-			var tag_text ="";
+			var tag_text = "";
 			if (search == "text") {
 				var this_tag_text_type = text_seach_type_map[ini_tag] || text_seach_type_map[default_text_seach_type];
 				tag_text = EWA.LANG == 'enus' ? this_tag_text_type.TxtEn : this_tag_text_type.Txt;
@@ -1847,7 +1906,7 @@ function EWA_ListFrameClass() {
 
 			tmp.push("</b></nobr></td><td class='ewa-lf-search-item-ctl'>");
 			if (search == "text") {
-				if(ini_tag == 'blk' || ini_tag == 'nblk'){ // 空白和非空白
+				if (ini_tag == 'blk' || ini_tag == 'nblk') { // 空白和非空白
 					let eleHtml = this._SearchSingle(name, tag_text);
 					eleHtml = eleHtml.replace('<input', '<input disabled '); // 禁止修改
 					tmp.push(eleHtml);
@@ -2149,13 +2208,13 @@ function EWA_ListFrameClass() {
 				exp = eval('/(' + exp + ')/ig');
 				// console.log(exp);
 				let ids = s2[0].split(','); // 有可能为组合的id,composeTextSearch
-				for(let index in ids){
+				for (let index in ids) {
 					let id = ids[index];
 					if (this._SearchJson[id]) {
 						id = this._SearchJson[id].ORI_NAME; // 原来的名称（没有被大写之前的名称，在SearchCreateItm生成）
 					}
 					try {
-						$(tb).find('.ewa-lf-data-row .ewa-col-' + id+'>*').each(function() {
+						$(tb).find('.ewa-lf-data-row .ewa-col-' + id + '>*').each(function() {
 							if (this.children.length == 0) {
 								this.innerHTML = this.innerHTML.replace(exp, '<font color=red><b>$1</b></font>');
 							}
@@ -2466,6 +2525,39 @@ function EWA_ListFrameClass() {
 		this._Ajax.PostNew(url.GetUrl(), function() {
 			c._CallBack(httpReferer);
 		});
+		
+		if(this.REPLACE_HISTORY_STATE){
+			this.replaceHistoryState();
+		}
+	};
+	// 创建用于替换浏览器的history的url
+	this.createReplaceHistoryStateUrl = function() {
+		var url = new EWA_UrlClass();
+		url.SetUrl(this.Url == null ? document.location.href : this.Url);
+
+		url.AddParameter(this._PageCurrentName, this._PageCurrent);
+
+		if (this._PageSize) {
+			url.AddParameter(this._PageSizeName, this._PageSize);
+		}
+		if (this._Sort != null) {
+			url.AddParameter(this._SortName, this._Sort);
+		}
+		let search = this.SearchGetExpInit();
+		if (search) {
+			url.AddParameter("EWA_SEARCH", search);
+		}
+		if (this.GotoParas != null && this.GotoParas.length > 0) {
+			for (var i = 0; i < this.GotoParas.length; i += 1) {
+				url.AddParameter(this.GotoParas[i].Name, this.GotoParas[i].Value);
+			}
+		}
+		url.RemoveParameter("EWA_AJAX");
+		return url;
+	};
+	this.replaceHistoryState = function() {
+		let url = this.createReplaceHistoryStateUrl();
+		window.history.replaceState('', null, url.GetUrl());
 	};
 	this.CreateAjax = function() {
 		var ajax = new EWA.C.Ajax();
