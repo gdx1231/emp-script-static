@@ -613,7 +613,7 @@ function EWA_ListFrameClass() {
 							if (!this._TrSelectMulti) { 
 								let iptName=$(objs[i]).attr("id")||$(objs[i]).attr("name");
 								if($(target).find(objs[i]).length==0){
-									$(tr).siblings().find("input[name='"+iptName+"']:checked").not(objs[i]).prop("checked",false);
+									$(tr).siblings(".ewa-lf-data-row").find("input[name='"+iptName+"']:checked").prop("checked",false);
 								}								
 								chk.checked=true;
 							}				
