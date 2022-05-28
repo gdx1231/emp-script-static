@@ -187,27 +187,36 @@ function EWA_ListFrameClass() {
 	/**
 	 * 合并单元格内容, 同时隐含来源的格子
 	 */
-	this.Merge = function(from, to, meargeStr, func) {
+	this.Merge = function(from, to, mergeStr, func, isMergeHeader) {
 		$('#EWA_LF_' + this._Id + ' tr[ewa_key]').each(function() {
 			var fromobj = $(this).find('[id="' + from + '"]');
 			fromobj.parent().hide();
 			var t = $(this).find('[id="' + to + '"]');
 
 			var p = t.parentsUntil('tr').last();
-			if (!meargeStr) {
-				meargeStr = "<br>"
+			if (!mergeStr) {
+				mergeStr = "<br>"
 			}
-			if (meargeStr.indexOf('<') >= 0) {
-				p.append(meargeStr);
+			if (mergeStr.indexOf('<') >= 0) {
+				p.append(mergeStr);
 			} else {
-				p.append("<span class='ewa-mearge-str'>" + meargeStr + "</span>");
+				p.append("<span class='ewa-mearge-str'>" + mergeStr + "</span>");
 			}
 			p.append(fromobj);
 			if (func) {
 				func(p, this); // td, tr
 			}
-		});
+		});		
+		/*
+			2020-05-28
+			合并列表头
+		*/
+		if(isMergeHeader){
+		    $('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + to + '"]')
+		        .append("<span style='margin:0 2px'>/</span>"+$('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + from + '"]').html());
+		}
 		$('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + from + '"]').parent().hide();
+		$('#EWA_LF_' + this._Id + ' td#ADD_ROW_' + from).hide();
 	};
 	this.Mearge = function(from, to, meargeStr) {
 		console.log('拼写错误，请用 Merge')
@@ -225,17 +234,18 @@ function EWA_ListFrameClass() {
 	 * @param funcEachRow
 	 *            每行合并完成后执行的方法
 	 */
-	this.MergeExp = function(toParent, mergeExp, isAddMemo, funcEachRow) {
+	this.MergeExp = function(toParent, mergeExp, isAddMemo, funcEachRow, isMergeHeader) {
 		if (!mergeExp) {
 			console.log("mergeExp 没有设置");
 			return;
 		}
-		// meargeExp="@id1 x @id2 = @id3 (@id4)"
+		// mergeExp="@id1 x @id2 = @id3 (@id4)"
 		var r1 = /\@\@[a-zA-Z0-9\-\._:]*\b/ig;
 		var m1 = mergeExp.match(r1);
 		var paras = [];
 		var tmp_html = mergeExp;
 		var memos = {};
+		var headers=[];
 		for (var i = 0; i < m1.length; i++) {
 			var key = m1[i];
 			paras.push(key);
@@ -243,9 +253,19 @@ function EWA_ListFrameClass() {
 			tmp_html = tmp_html.replace(key, "<span class='ewa-lf-mearge ewa-lf-mearge-" + id + "' mid=\"" + id + "\"></span>");
 			if (id != toParent) {
 				$('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + id + '"]').parent().hide();
+				$('#EWA_LF_' + this._Id + ' td#ADD_ROW_' + id).hide();
 			}
 			memos[id] = $('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + id + '"]').html();
+			headers.push($('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + id + '"]').html());
 		}
+		/*
+			2020-05-28
+			合并列表头
+		*/
+		if(isMergeHeader){
+		    console.log(headers.join("\/"));
+	        $('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + toParent + '"]').html(headers.join("<span style='margin:0 2px'>/</span>"));
+	    }
 
 		$('#EWA_LF_' + this._Id + ' tr[ewa_key]').each(function() {
 			var o1 = document.createElement('div');
@@ -582,9 +602,21 @@ function EWA_ListFrameClass() {
 					}
 					if (objs[i].type.toUpperCase() == 'CHECKBOX') {
 						// switch 开关不执行
-						if (objs[i].parentNode.className.indexOf('ewa-switch') < 0) {
+						if (objs[i].parentNode.className.indexOf('ewa-switch') < 0) {					
 							chk = objs[i];
-							chk.click();
+							chk.click();							
+							/*
+								2020-05-28
+								单选始终选中
+								当target包含当前input时才选中，否则取消其他选中项
+							*/
+							if (!this._TrSelectMulti) { 
+								let iptName=$(objs[i]).attr("id")||$(objs[i]).attr("name");
+								if($(target).find(objs[i]).length==0){
+									$(tr).siblings().find("input[name='"+iptName+"']:checked").not(objs[i]).prop("checked",false);
+								}								
+								chk.checked=true;
+							}				
 							break;
 						}
 					}
