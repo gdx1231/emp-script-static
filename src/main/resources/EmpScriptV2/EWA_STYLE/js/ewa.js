@@ -17351,30 +17351,55 @@ function EWA_ListFrameClass() {
 	this.MDownEnableCheck = function(tr, evt) {
 		return true
 	};
+	this.checkMDownEnable = function(tr,evt){
+		if (!evt) {// 如果没有event,则不检测
+			return true;
+		}
+		var target = evt.srcElement ? evt.srcElement : evt.target;
+		if(!target){
+			return true;
+		}
+		if ( target.tagName == 'A' 
+				|| target.parentNode.tagName == 'A'
+				|| target.tagName == 'INPUT' 
+				|| target.tagName == 'SELECT' 
+				|| target.tagName == 'BUTTON'
+				|| target.tagName == 'TEXTAREA' 
+				|| target.className.indexOf("EWA_LF_EDIT") >= 0 
+				|| target.className.indexOf("ewa-lf-edit") >= 0
+				|| target.className.indexOf("ewa-lf-search-text-click") >= 0
+				|| target.parentNode.className.indexOf("ewa-lf-search-text-click") >= 0 
+				|| target.parentNode.parentNode.className.indexOf("ewa-lf-search-text-click") >= 0
+				|| target.className.indexOf('ewa-mdown-stop') >=0
+				) {
+			return false;
+		}
+		if(target.tagName == 'TD' && target.parentNode == tr){
+			if($(target).children('a:visible').length > 0){
+				return false;
+			}
+		}
+		return true;
+	};
 	this.MDown = function(tr, evt) {
 		if (!this.IsTrSelect)
 			return;
-		var evt = evt == null ? event : evt;
-		if (!this.MDownEnableCheck(tr)) {
-			return;
-		}
-		if (evt) {// 如果没有event,则不检测
-			var target = evt.srcElement ? evt.srcElement : evt.target;
-			if (target
-				&& (target.tagName == 'A' || target.tagName == 'INPUT' || target.tagName == 'SELECT' || target.tagName == 'BUTTON'
-					|| target.tagName == 'TEXTAREA' || target.className.indexOf("EWA_LF_EDIT") >= 0 || target.className.indexOf("ewa-lf-edit") >= 0
-					|| target.className.indexOf("ewa-lf-search-text-click") >= 0
-					|| target.parentNode.className.indexOf("ewa-lf-search-text-click") >= 0 || target.parentNode.parentNode.className
-						.indexOf("ewa-lf-search-text-click") >= 0)) {
-				return;
-			}
-		}
 		var t = new Date().getTime();
 		var ot = $(tr).attr('mdown_time_last');
 		if (ot != null && t - ot < 500) {// 两次事件间隔小余0.5s
 			return;
 		}
 		$(tr).attr('mdown_time_last', t);
+		
+		var evt = evt == null ? window.event : evt;
+		if (!this.MDownEnableCheck(tr)) {
+			return;
+		}
+		if(!this.checkMDownEnable(tr,evt)){
+			return;
+		}
+		var target = evt.srcElement ? evt.srcElement : evt.target;
+		
 		var chk = null;
 		if (!this.IsNotMDownAutoChecked) {// 允许自动选择
 			var objs = tr.getElementsByTagName('input');
