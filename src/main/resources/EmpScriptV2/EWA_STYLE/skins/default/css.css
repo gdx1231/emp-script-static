@@ -835,7 +835,13 @@ tr[error] .ewa-tip-error:after {
 .ewa-in-dialog .EWA_TD_B input{
 	margin-top: 10px;
 	margin-right: 10px;
-}/* 列表的图标 */
+}.ewa-lf-merge-header-split {
+	margin:0 2px;
+}
+.ewa-lf-merge-header-split::before {
+	content: "/";
+}
+/* 列表的图标 */
 .ewa-lf-frame .ewa-with-icon>label.fa {
 	position: static;
 	display: inline;

@@ -4802,16 +4802,24 @@ function EWA_ListFrameClass() {
 		});
 	};
 	/**
-	 * 合并单元格内容, 同时隐含来源的格子
+	 *  合并单元格
+	 * @param from 来源对象的id
+	 *		
+	 * @param to 合并到的对象的id
+	 * @param meargeStr  合并添加的字符
+	 * @param funcEachRow
+	 *            每行合并完成后执行的方法
+	 * @param isMergeHeader 是否合并头部标题
 	 */
-	this.Merge = function(from, to, meargeStr, func) {
-		$('#EWA_LF_' + this._Id + ' tr[ewa_key]').each(function() {
+	this.Merge = function(from, to, meargeStr, funcEachRow, isMergeHeader) {
+		let tb = $('#EWA_LF_' + this._Id);
+		tb.find('tr[ewa_key]').each(function() {
 			var fromobj = $(this).find('[id="' + from + '"]');
 			fromobj.parent().hide();
 			var t = $(this).find('[id="' + to + '"]');
 
 			var p = t.parentsUntil('tr').last();
-			if (!meargeStr) {
+			if (meargeStr == null) {
 				meargeStr = "<br>"
 			}
 			if (meargeStr.indexOf('<') >= 0) {
@@ -4820,11 +4828,19 @@ function EWA_ListFrameClass() {
 				p.append("<span class='ewa-mearge-str'>" + meargeStr + "</span>");
 			}
 			p.append(fromobj);
-			if (func) {
-				func(p, this); // td, tr
+			if (funcEachRow) {
+				funcEachRow(p, this); // td, tr
 			}
 		});
-		$('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + from + '"]').parent().hide();
+		// 			2020-05-28 			合并列表头 			
+		if (isMergeHeader) {
+			let headerHtml = "<span class='ewa-lf-merge-header-split'></span>"
+				+ tb.find('tr[ewa_tag="HEADER"] [id="' + from + '"]').html();
+			tb.find('tr[ewa_tag="HEADER"] [id="' + to + '"]')
+				.append(headerHtml);
+		}
+		tb.find('tr[ewa_tag="HEADER"] [id="' + from + '"]').parent().hide();
+		tb.find('td#ADD_ROW_' + from).hide();
 	};
 	this.Mearge = function(from, to, meargeStr) {
 		console.log('拼写错误，请用 Merge')
@@ -4841,30 +4857,46 @@ function EWA_ListFrameClass() {
 	 *            是否添加备注
 	 * @param funcEachRow
 	 *            每行合并完成后执行的方法
+	 * @param isMergeHeader 合并头部标题
 	 */
-	this.MergeExp = function(toParent, mergeExp, isAddMemo, funcEachRow) {
+	 this.MergeExp = function(toParent, mergeExp, isAddMemo, funcEachRow, isMergeHeader) {
 		if (!mergeExp) {
 			console.log("mergeExp 没有设置");
 			return;
 		}
-		// meargeExp="@id1 x @id2 = @id3 (@id4)"
+		let tb = $('#EWA_LF_' + this._Id);
+
+		// mergeExp="@id1 x @id2 = @id3 (@id4)"
 		var r1 = /\@\@[a-zA-Z0-9\-\._:]*\b/ig;
 		var m1 = mergeExp.match(r1);
 		var paras = [];
 		var tmp_html = mergeExp;
 		var memos = {};
+		
+		//	2020-05-28 	合并列表头
+		let headers = [];
 		for (var i = 0; i < m1.length; i++) {
 			var key = m1[i];
 			paras.push(key);
 			var id = key.replace('@@', '');
 			tmp_html = tmp_html.replace(key, "<span class='ewa-lf-mearge ewa-lf-mearge-" + id + "' mid=\"" + id + "\"></span>");
 			if (id != toParent) {
-				$('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + id + '"]').parent().hide();
+				tb.find('tr[ewa_tag="HEADER"] [id="' + id + '"]').parent().hide();
+				// 计算行
+				tb.find('td#ADD_ROW_' + id).hide();
 			}
-			memos[id] = $('#EWA_LF_' + this._Id + ' tr[ewa_tag="HEADER"] [id="' + id + '"]').html();
+			let header = tb.find('tr[ewa_tag="HEADER"] [id="' + id + '"]').html();
+			memos[id] = header;
+			//	2020-05-28 	合并列表头
+			headers.push(header);
+		}	
+		 
+		if (isMergeHeader) {
+			let headersHtml = headers.join("<span class='ewa-lf-merge-header-split'></span>");
+			tb.find('tr[ewa_tag="HEADER"] [id="' + toParent + '"]').html(headersHtml);
 		}
 
-		$('#EWA_LF_' + this._Id + ' tr[ewa_key]').each(function() {
+		tb.find('tr[ewa_key]').each(function() {
 			var o1 = document.createElement('div');
 			o1.style.display = 'none';
 			o1.innerHTML = tmp_html;
@@ -4877,7 +4909,7 @@ function EWA_ListFrameClass() {
 			}
 			// td
 			var p = $(this).find('[id="' + toParent + '"]').parent();
-			var tmp = mergeExp;
+			// var tmp = mergeExp;
 			for (var n in paras) {
 				var exp = paras[n];
 				var key = exp.replace('@@', '');

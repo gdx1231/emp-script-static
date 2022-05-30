@@ -1,3 +1,9 @@
+.ewa-lf-merge-header-split {
+	margin:0 2px;
+}
+.ewa-lf-merge-header-split::before {
+	content: "/";
+}
 /* 列表的图标 */
 .ewa-lf-frame .ewa-with-icon>label.fa {
 	position: static;
