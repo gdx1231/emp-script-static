@@ -5203,6 +5203,9 @@ function EWA_ListFrameClass() {
 		if(!target){
 			return true;
 		}
+		if(target.tagName == 'TD' && target.parentNode == tr){
+			return true;
+		}
 		if ( target.tagName == 'A' 
 				|| target.parentNode.tagName == 'A'
 				|| target.tagName == 'INPUT' 
@@ -5218,12 +5221,43 @@ function EWA_ListFrameClass() {
 				) {
 			return false;
 		}
-		if(target.tagName == 'TD' && target.parentNode == tr){
-			if($(target).children('a:visible').length > 0){
-				return false;
+		// 如果全td的话，会造成混淆
+		//if(target.tagName == 'TD' && target.parentNode == tr){
+		//	if($(target).children('a:visible').length > 0){
+		//		return false;
+		//	}
+		//}
+		return true;
+	};
+	// 选择当前行的checkbox或radio
+	this.mDownAutoCheck = function(tr, objs, target){
+		var chk = null;
+		for (var i = 0; i < objs.length; i++) {
+			if (objs[i].parentNode.className.indexOf('ewa-switch') >= 0) {
+				// switch 开关不执行
+				break;
+			}
+			if (objs[i].type.toUpperCase() == 'RADIO') {
+				chk = objs[i];
+				chk.click();
+				return chk;
+			}
+			if (objs[i].type.toUpperCase() == 'CHECKBOX') {
+				chk = objs[i];
+				chk.click();
+				// 2020-05-28 单选始终选中
+				// 当target包含当前input时才选中，否则取消其他选中项
+				if (!this._TrSelectMulti) { 
+					let iptName=$(objs[i]).attr("id")||$(objs[i]).attr("name");
+					if($(target).find(objs[i]).length==0){
+						$(tr).siblings(".ewa-lf-data-row").find("input[name='"+iptName+"']:checked").prop("checked",false);
+					}								
+					chk.checked=true;
+				}		
+				return chk;
 			}
 		}
-		return true;
+		return null;
 	};
 	this.MDown = function(tr, evt) {
 		if (!this.IsTrSelect)
@@ -5237,6 +5271,7 @@ function EWA_ListFrameClass() {
 		
 		var evt = evt == null ? window.event : evt;
 		if (!this.MDownEnableCheck(tr)) {
+			// 用户自定义
 			return;
 		}
 		if(!this.checkMDownEnable(tr,evt)){
@@ -5245,25 +5280,9 @@ function EWA_ListFrameClass() {
 		var target = evt.srcElement ? evt.srcElement : evt.target;
 		
 		var chk = null;
+		var objs = tr.getElementsByTagName('input');
 		if (!this.IsNotMDownAutoChecked) {// 允许自动选择
-			var objs = tr.getElementsByTagName('input');
-			if (target.tagName != 'INPUT' && objs.length > 0) {
-				for (var i = 0; i < objs.length; i++) {
-					if (objs[i].type.toUpperCase() == 'RADIO') {
-						chk = objs[i];
-						chk.click();
-						break;
-					}
-					if (objs[i].type.toUpperCase() == 'CHECKBOX') {
-						// switch 开关不执行
-						if (objs[i].parentNode.className.indexOf('ewa-switch') < 0) {
-							chk = objs[i];
-							chk.click();
-							break;
-						}
-					}
-				}
-			}
+			chk = this.mDownAutoCheck(tr, objs, target);
 		}
 		if (tr.getAttribute('__ewa_lf_mdown') == '1') {
 			if (this._TrSelectMulti) { // 多选取消选择
