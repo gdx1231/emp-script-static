@@ -17864,61 +17864,60 @@ function EWA_ListFrameClass() {
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
 			var s = this._GetSubValue("Tag", "Tag", node);
-
+			
 			if (s == null || !(s.trim().toLowerCase() == 'button' || s.trim().toLowerCase() == 'butflow')) {
 				continue;
 			}
-			for (var i = 0; i < gridTable.rows[0].cells.length; i++) {
-				var cell = gridTable.rows[0].cells[i];
-				if (cell.childNodes[0].id.toUpperCase() != name) {
-					continue;
-				}
-				rowIndexes.push(i);
-				isDefinedButton = true;
+			
+			var itemName = this._GetSubValue("Name", "Name", node);
+			 
+			isDefinedButton = true;
 
-				var text = this._GetSubValue("DescriptionSet", "Info", node);
-				var title = this._GetSubValue("DescriptionSet", "Memo", node);
+			var text = this._GetSubValue("DescriptionSet", "Info", node);
+			var title = this._GetSubValue("DescriptionSet", "Memo", node);
 
-				var ewa_click = this._GetSubValue("EventSet", 'EventName', node);
-				var evt = '';
-				if (ewa_click != null && ewa_click.toLowerCase().trim() == 'ewa_click') {
-					evt = this._GetSubValue("EventSet", 'EventValue', node);
+			var ewa_click = this._GetSubValue("EventSet", 'EventName', node);
+			var evt = '';
+			if (ewa_click != null && ewa_click.toLowerCase().trim() == 'ewa_click') {
+				evt = this._GetSubValue("EventSet", 'EventValue', node);
+			}
 
-				}
+			txtCaption = txtCaption.replace(text, '');
 
-				txtCaption = txtCaption.replace(text, '');
+			var o1 = this._ReShowButton(text, title, null);
+			this._ReshowButs[text] = o1;
+			o1.setAttribute('f_id', this._Id);
+			o1.setAttribute('t_id', itemName);
+			td00.childNodes[1].appendChild(o1);
 
-				var o1 = this._ReShowButton(text, title, null);
-				this._ReshowButs[text] = o1;
-				o1.setAttribute('f_id', this._Id);
-				td00.childNodes[1].appendChild(o1);
-
-				if (evt == '') {
-					o1.onclick = function() {
-						var fId = this.getAttribute('f_id');
-						var rows = EWA.F.FOS[fId].SelectCheckedRows();
-						if (rows == null || rows.length == 0) {
-							EWA.UI.Msg.Alert(_EWA_INFO_MSG["EWA.SYS.CHOOSE_ITEM"], _EWA_INFO_MSG['EWA.SYS.CHOOSE_ITEM_TITLE']);
+			if (evt == '') {
+				o1.setAttribute("onclick","EWA.F.FOS['"+ this._Id +"'].reShowButtonClick(this)");
+				/*o1.onclick = function() {
+					var fId = this.getAttribute('f_id');
+					var tId = this.getAttribute('t_id');
+					var rows = EWA.F.FOS[fId].SelectCheckedRows();
+					if (rows == null || rows.length == 0) {
+						EWA.UI.Msg.Alert(_EWA_INFO_MSG["EWA.SYS.CHOOSE_ITEM"], _EWA_INFO_MSG['EWA.SYS.CHOOSE_ITEM_TITLE']);
+						return;
+					}
+					var r = rows[0];
+					var buts = r.getElementsByTagName('input');
+					for (var i = 0; i < buts.length; i++) {
+						var but = buts[i];
+						if (but.name === tId) {
+							but.click();
 							return;
 						}
-						var r = rows[0];
-						var buts = r.getElementsByTagName('input');
-						for (var i = 0; i < buts.length; i++) {
-							var but = buts[i];
-							if (but.type == 'button' && but.value == this.childNodes[0].innerHTML) {
-								but.click();
-								return;
-							}
-						}
 					}
-				} else {
-					o1.setAttribute('ewa_click', evt);
-					o1.onclick = function() {
-						eval(this.getAttribute('ewa_click'));
-					}
-				}
-				break;
+				};*/
+			} else {
+				o1.setAttribute('onclick', evt);
+				/*o1.setAttribute('ewa_click', evt);
+				o1.onclick = function() {
+					eval(this.getAttribute('ewa_click'));
+				};*/
 			}
+			 
 
 		}
 
@@ -18001,7 +18000,7 @@ function EWA_ListFrameClass() {
 				}
 			}
 		}
-		captionDiv.innerHTML = '<b>[<i class="fa fa-star-o"></i>&nbsp;' + this.Description + "]</b>";
+		captionDiv.innerHTML = '<b><i class="fa fa-star-o">&nbsp;</i>' + this.Description + "</b>";
 
 		// 将按钮挪到对话框的标题
 		if (this.Url.toUpperCase().indexOf('EWA_BTNS_IN_TITLE') > 0) {
@@ -18020,6 +18019,24 @@ function EWA_ListFrameClass() {
 				c.ReShowButtonsInDailogTitle();
 			}, 10);
 
+		}
+	};
+	this.reShowButtonClick = function(button){
+		//var fId = button.getAttribute('f_id');
+		var tId = button.getAttribute('t_id');
+		var rows = this.SelectCheckedRows();
+		if (rows == null || rows.length == 0) {
+			EWA.UI.Msg.Alert(_EWA_INFO_MSG["EWA.SYS.CHOOSE_ITEM"], _EWA_INFO_MSG['EWA.SYS.CHOOSE_ITEM_TITLE']);
+			return;
+		}
+		var r = rows[0];
+		var buts = r.getElementsByTagName('input');
+		for (var i = 0; i < buts.length; i++) {
+			var but = buts[i];
+			if (but.name === tId) {
+				but.click();
+				return;
+			}
 		}
 	};
 	this._ReShowSplit = function(parentObj) {
