@@ -1,15 +1,18 @@
 .ewa-lf-merge-header-split {
-	margin:0 2px;
+	margin: 0 2px;
 }
+
 .ewa-lf-merge-header-split::before {
 	content: "/";
 }
+
 /* 列表的图标 */
 .ewa-lf-frame .ewa-with-icon>label.fa {
 	position: static;
 	display: inline;
 	margin-right: 4px;
 }
+
 /* search-date-range */
 .ewa-lf-search-menu>div {
 	display: none;
@@ -35,7 +38,7 @@
 	display: block;
 	line-height: 2;
 	margin-left: 15px;
-	white-spacing: nowrap;
+	white-space: nowrap;
 }
 
 .ewa-lf-search-types>div:hover {
@@ -81,28 +84,31 @@
 .ewa-lf-search-item-title .fa {
 	margin-left: 4px;
 }
+
 .ewa-lf-search-item-title b::after {
-	content:":";
+	content: ":";
 }
+
 .ewa-lf-search-item-ctl {
 	padding-left: 5px;
 }
 
 .ewa-lf-search-item-ctl input {
 	width: 60px;
-	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px
-		rgba(255, 255, 255, 0.1);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px rgba(255, 255, 255, 0.1);
 	border: 1px solid #dadada;
 	border-radius: 3px;
 	background: #fff;
 	height: 21px;
 	box-sizing: border-box;
 }
+
 .ewa-app-lf-search-compose input {
 	width: 155px;
 }
-.ewa-lf-search-item-ctl input[type=radio], .ewa-lf-search-item-ctl input[type=checkbox]
-	{
+
+.ewa-lf-search-item-ctl input[type=radio],
+.ewa-lf-search-item-ctl input[type=checkbox] {
 	width: auto;
 	height: auto;
 }
@@ -112,8 +118,7 @@
 	-webkit-appearance: menulist-button;
 	-webkit-font-smoothing: antialiased;
 	-webkit-rtl-ordering: logical;
-	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px
-		rgba(255, 255, 255, 0.1);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px rgba(255, 255, 255, 0.1);
 	border: 1px solid #dadada !important;
 	border-radius: 3px;
 	background: #fff;
@@ -124,22 +129,25 @@
 	width: 78px;
 	text-align: center;
 }
+
 /* 列表中点击文字快速选择 */
 .ewa-lf-search-text-click {
 	cursor: pointer;
-	white-space:nowrap;	
+	white-space: nowrap;
 }
+
 .ewa-lf-search-text-click:hover {
 	color: red;
 }
 
+/*
 .ewa-lf-search-text-click::before {
 	font-family: FontAwesome;
 	content: '\f0b0';
 	margin-right: 2px;
 	color: #ccc;
 }
-
+*/
 .ewa-lf-search-type-text .ewa-lf-search-type {
 	position: absolute;
 	left: 0;
@@ -174,30 +182,37 @@
 	top: 0px;
 	font-size: 9px;
 }
+
 /* equals */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=eq]:before {
 	content: "E";
 }
+
 /* not equals */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=uneq]:before {
 	content: "U";
 }
+
 /* left like */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=llk]:before {
 	content: "L";
 }
+
 /* right like */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=rlk]:before {
 	content: "R";
 }
+
 /* not like */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=nlk]:before {
 	content: "N";
 }
+
 /* 空白 */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=blk]:before {
 	content: "B";
 }
+
 /* 非空白 */
 .ewa-lf-search-type-text .ewa-lf-search-type[tag=nblk]:before {
 	content: "H";
@@ -295,6 +310,7 @@
 	color: #f1f1f1;
 	background: #136291;
 }
+
 /* ListFRAME 分割符 */
 .ewa_lf_func_split {
 	float: left;
@@ -303,6 +319,7 @@
 	padding: 0px;
 	margin: 0px;
 }
+
 /*回收站*/
 .ewa-lf-func-recycle {
 	float: right;
@@ -319,10 +336,11 @@
 	background: rgba(255, 255, 255, 0.7);
 	color: #08c;
 }
+
 /* ??? */
 .EWA_LF_BUT_ACT {
 	FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#dddddddd',
-		endColorStr='#ffFFFFFF', gradientType='0');
+			endColorStr='#ffFFFFFF', gradientType='0');
 	color: #000;
 	border-left: 1px solid #FFF;
 	border-right: 1px solid #AAA;
@@ -333,11 +351,7 @@
 }
 
 .EWA_LF_BUT_DACT {
-	FILTER: progid:DXImageTransform.Microsoft.Gradient(     
-		            startColorStr=              
-		              '#ffFFFFFF', endColorStr=                             
-		     '#dddddddd', gradientType=           
-		                     '0');
+	FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#ffFFFFFF', endColorStr='#dddddddd', gradientType='0');
 	color: #111;
 	border-left: 1px solid #FFF;
 	border-right: 1px solid #AAA;
@@ -365,6 +379,7 @@
 	display: block;
 	background-repeat: no-repeat;
 }
+
 /* listframe ref edit */
 .ewa-lf-ref-buts {
 	position: absolute;
@@ -407,10 +422,6 @@
 	padding: 4px;
 }
 
-.ewa-lf-data-row>td.EWA_TD_M {
-	/* width: auto; */
-	
-}
 /* 表格滑动浮动颜色 */
 .ewa_grid_mover {
 	background-color: #fffad8;
@@ -424,6 +435,7 @@
 	background-color: lightblue;*/
 	background-color: #e1f6ff;
 }
+
 /* ListFrame 分组 */
 .EWA_LF_GROUP {
 	background-color: #f5f5f5;
@@ -432,12 +444,14 @@
 	height: 24px;
 	line-height: 24px;
 }
+
 .ewa-lf-grp-icon {
-	width:10px;
-	text-align:center;
+	width: 10px;
+	text-align: center;
 	display: inline-block;
 	margin-left: 5px;
 }
+
 /* ListFrame 编辑 */
 td.ewa-lf-edit {
 	position: relative;
@@ -451,8 +465,9 @@ td.ewa-lf-edit {
 	bottom: 0;
 }
 
-.EWA_LF_EDIT_CTRL>input, .EWA_LF_EDIT_CTRL>select, .EWA_LF_EDIT_CTRL>div
-	{
+.EWA_LF_EDIT_CTRL>input,
+.EWA_LF_EDIT_CTRL>select,
+.EWA_LF_EDIT_CTRL>div {
 	position: relative;
 }
 
@@ -461,6 +476,7 @@ td.ewa-lf-edit {
 	height: 100%;
 	border-bottom: 1px solid #ccc;
 }
+
 /* listframe 计算值*/
 .ewa-lf-sub-td {
 	text-align: right;
@@ -468,10 +484,12 @@ td.ewa-lf-edit {
 
 .ewa-lf-sub {
 	color: blue;
+	font-family: monospace;
 }
 
 .ewa-lf-fm-money {
 	text-align: right;
+	font-family: monospace;
 }
 
 .ewa-lf-frame .ewa-lf-data-row hr {
