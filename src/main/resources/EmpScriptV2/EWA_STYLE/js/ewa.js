@@ -18191,32 +18191,45 @@ function EWA_ListFrameClass() {
 	 *            memoName memo字段名称
 	 */
 	this.RewriteInfo = function (infoJson, idName, infoName, memoName) {
-		var tb = $X('EWA_LF_' + this._Id);
-		if (this._INFO == null) {
+		var tb = $('#EWA_LF_' + this._Id);
+		if (infoJson) {
 			this._INFO = {};
 			this._INFO.INFO = infoJson;
-			this._INFO.ID_NAME = idName;
-			this._INFO.INFO_NAME = infoName;
-			this._INFO.INFO_MEMO = memoName;
+			this._INFO.ID_NAME = idName || "id";
+			this._INFO.INFO_NAME = infoName || "info";
+			this._INFO.MEMO_NAME = memoName || "memo";
 		}
-		if (this._INFO.INFO == null) {
+		if (!this._INFO.INFO) {
 			return;
 		}
 		for (var i = 0; i < this._INFO.INFO.length; i++) {
 			var v = this._INFO.INFO[i];
 			var id = v[this._INFO.ID_NAME];
-			if (!$X(id)) {
+			let target = tb.find('[id="'+id+'"]:eq(0)');
+			if (target.length === 0) {
 				continue;
 			}
-			if (v[this._INFO.INFO_NAME] == null || v[this._INFO.INFO_NAME].trim() == '') {
-				var td = $X(id).parentNode.tagName == 'TD' ? $X(id).parentNode : $X(id).parentNode.parentNode;
-				for (var m = 0; m < td.parentNode.cells.length; m++) {
-					if (td.parentNode.cells[m] == td) {
+			let td = target.parentsUntil("tr").last();
+			let info = v[this._INFO.INFO_NAME];
+			let memo = v[this._INFO.MEMO_NAME];
+
+			if (info == null || info.trim() == '') { //隐藏列
+				let tr = td.parent()[0];
+				for (let m = 0; m < tr.cells.length; m++) {
+					if (tr.cells[m] == td[0]) {
 						this.ShowHiddenColumn(m, false);
+						break;
 					}
 				}
 			} else {
-				$X(id).innerHTML = v[this._INFO.INFO_NAME];
+				if(target.children().length == 0){
+					target.text(info);
+				} else {
+					target.children()[0].innerText = info;
+				}
+				if(memo){
+					target.attr('title', memo);
+				}
 			}
 		}
 	};
@@ -19340,7 +19353,7 @@ function EWA_ListFrameClass() {
 					targetTd.innerHTML = sourceTd.innerHTML;
 				}
 			}
-			changedTrClones.push({"before": clone, "current": targetTr[0]});
+			changedTrClones.push({ "before": clone, "current": targetTr[0] });
 		});
 		pNode.remove();
 
@@ -19364,7 +19377,7 @@ function EWA_ListFrameClass() {
 			this.ReloadAfterApp(httpReferer);
 		}
 
-		if(callBack){
+		if (callBack) {
 			callBack(changedTrClones);
 		}
 	};
