@@ -6010,8 +6010,7 @@ function EWA_ListFrameClass() {
 			this._INFO.ID_NAME = idName || "id";
 			this._INFO.INFO_NAME = infoName || "info";
 			this._INFO.MEMO_NAME = memoName || "memo";
-		}
-		if (!this._INFO.INFO) {
+		} else if (!(this._INFO && this._INFO.INFO)) {
 			return;
 		}
 		for (var i = 0; i < this._INFO.INFO.length; i++) {
