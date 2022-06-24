@@ -300,6 +300,9 @@ function EWA_ListFrameClass() {
 		this.SubBottomsArray = ids.split(',');
 		this._SubBottoms();
 	}
+	this.reCalcBottoms = function(){
+		this._SubBottoms();
+	};
 	this._SubBottoms = function () {
 		let tb = $('#EWA_LF_' + this._Id);
 		let r = tb.find('.ewa-lf-sub-tr');
@@ -314,9 +317,9 @@ function EWA_ListFrameClass() {
 		for (var i in this.SubBottomsArray) {
 			var id = this.SubBottomsArray[i];
 			var total = 0;
-			var exp = '#EWA_LF_' + this._Id + ' .ewa-col-' + id + '';
+			var exp = '#EWA_LF_' + this._Id + ' .ewa-lf-data-row [name="' + id + '"]';
 			$(exp).each(function () {
-				var v = GetInnerText(this).replace(/,/ig, '');
+				var v = this.value !=null ? this.value.replace(/,/ig, '') : GetInnerText(this).replace(/,/ig, '');
 				if (!isNaN(v)) {
 					total += v * 1;
 					if (v.indexOf(".") > 0) {
