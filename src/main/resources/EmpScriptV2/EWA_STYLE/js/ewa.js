@@ -13079,10 +13079,19 @@ function EWA_FrameCommonItems() {
 		if (!obj) {
 			return null;
 		}
+		if($(obj).attr('ewa_trim')){
+			return true;
+		}
 		let nodeItem = this.GetItem(obj.id);
 		let trim = nodeItem ? this.GetItemValue(nodeItem, "DataItem", "Trim") : "";
 		trim = trim ? trim.toUpperCase() : "YES";
-		return trim == "YES";
+		let isTrim =  trim == "YES";
+		if(isTrim){
+			$(obj).attr('ewa_trim','yes').on("blur", function(){ // 失去焦点后触发
+				this.value = this.value.trim();
+			});
+		}
+		return isTrim;
 	};
 
 	this.getFormat = function(obj) {
@@ -13188,7 +13197,7 @@ function EWA_FrameCommonItems() {
 			let s2 = s1.trim();
 			if (s2 !== s1) {
 				s1 = s2;
-				o1.value = s1;
+				// o1.value = s1; 放到失去焦点后触发，避免无法输入空格
 			}
 		}
 
