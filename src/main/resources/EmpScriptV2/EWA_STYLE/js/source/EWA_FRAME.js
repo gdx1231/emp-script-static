@@ -547,14 +547,14 @@ function EWA_FrameCommonItems() {
 				EWA.UI.Ext.IdCard($X(name));
 			}
 			if (isModify) {
-				this.disableOnModify(node); //修改时禁用
+				this.disableOnModify(node, name1); //修改时禁用
 			}
 		}
 	};
 	/**
 	* 修改时禁用
 	*/
-	this.disableOnModify = function(node) {
+	this.disableOnModify = function(node, name1) {
 		var DisableOnModify = this.GetItemValue(node, 'DataItem',
 			'DisableOnModify');
 		if (!(DisableOnModify && DisableOnModify.toUpperCase() == 'YES')) {
@@ -602,14 +602,20 @@ function EWA_FrameCommonItems() {
 		var nodeItem = this.GetItem(obj.id);
 		var errorInfos = [];
 
-		if (val == null) {
-			return true;
-		}
-
 		// 必须输入
 		var errorInfo = this._CheckMustInput(obj, val, nodeItem);
 		if (errorInfo)
 			errorInfos.push(errorInfo);
+
+		if (val == null || val == "") {
+			if (errorInfos.length == 0) {
+				EWA_FrameRemoveAlert(obj);
+				return true;
+			} else {
+				EWA_FrameShowAlert(obj, errorInfos.join(", "));
+				return false;
+			}
+		}
 
 		// 检查最大最小长度
 		errorInfo = this._CheckMaxMinLength(obj, val, nodeItem);
@@ -681,17 +687,21 @@ function EWA_FrameCommonItems() {
 	 * @return {}
 	 */
 	this._CheckDataType = function(obj, val, nodeItem) {
-		if (val.trim() == "") {
+		if (val == null || val.trim() == "") {
 			return null;
 		}
 		var errorInfo = null;
 		if (this.isNumber(obj)) {
-
-			var test = /^[0-9.-]{0,120}$/;
+			var val1 = val.replace(/,/ig, ''); //删除千分位
+			if (isNaN(val1)) {
+				errorInfo = _EWA_INFO_MSG['EWA.SYS.INVALID_NUMBER_FORMAT'];
+			}
+/* 对 12.312.12无效			
+var test = /^[0-9.-]{0,120}$/;
 			if (!test.test(val)) {
 				errorInfo = _EWA_INFO_MSG['EWA.SYS.INVALID_NUMBER_FORMAT'];
 			}
-		}
+*/		}
 		return errorInfo;
 	}
 
@@ -749,7 +759,7 @@ function EWA_FrameCommonItems() {
 			"IsMustInput");
 		var errorInfo = null;
 		if (mustInput == "1") {// 检查必填项是否输入
-			if (val.length == 0) {
+			if (val == null || val.length == 0) {
 				errorInfo = _EWA_JS_ALERT["IsMustInput"];
 				if (errorInfo) {
 					errorInfo = errorInfo.replace("{Name}", obj.id);
@@ -891,15 +901,15 @@ function EWA_FrameCommonItems() {
 		if (!obj) {
 			return null;
 		}
-		if($(obj).attr('ewa_trim')){
+		if ($(obj).attr('ewa_trim')) {
 			return true;
 		}
 		let nodeItem = this.GetItem(obj.id);
 		let trim = nodeItem ? this.GetItemValue(nodeItem, "DataItem", "Trim") : "";
 		trim = trim ? trim.toUpperCase() : "YES";
-		let isTrim =  trim == "YES";
-		if(isTrim){
-			$(obj).attr('ewa_trim','yes').on("blur", function(){ // 失去焦点后触发
+		let isTrim = trim == "YES";
+		if (isTrim) {
+			$(obj).attr('ewa_trim', 'yes').on("blur", function() { // 失去焦点后触发
 				this.value = this.value.trim();
 			});
 		}
@@ -921,7 +931,6 @@ function EWA_FrameCommonItems() {
 	 * @return {}
 	 */
 	this.GetObjectValue = function(obj) {
-
 		var tagName = obj.tagName.toUpperCase();
 		var o1 = obj;
 		var s1 = "";
@@ -1012,17 +1021,12 @@ function EWA_FrameCommonItems() {
 				// o1.value = s1; 放到失去焦点后触发，避免无法输入空格
 			}
 		}
-
-
-
 		if (tagName !== "INPUT") {
 			return s1;
 		}
-
 		if (!this.isNumber(obj)) {
 			return s1;
 		}
-
 		if (s1 === "") {
 			return;
 		}
@@ -1034,20 +1038,18 @@ function EWA_FrameCommonItems() {
 					s1 = v0 + "";
 					obj.value = s1;
 				} catch (e) {
-
+					return s1;
 				}
 			}
 		}
 		let format = this.getFormat(obj);
-		if ("LeastMoney" == format) { // 最短小数货币
+		if ("LeastMoney" == format || "Money" == format) { // 最短小数货币
 			let vs = s1.split('.');
 			if (vs.length == 1) {
 				obj.value = (s1 * 1).fm(0);
 			} else {
-				obj.value = (s1 * 1).fm(vs[1].length);
+				obj.value = (s1 * 1).fm(vs[1].length) + (vs[1].length == 0 ? "." : "");
 			}
-		} else if ("Money" == format) { // 货币表示，2位小数
-			obj.value = (s1 * 1).fm(2);
 		}
 		return s1;
 	};
