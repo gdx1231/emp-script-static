@@ -1,3 +1,9 @@
+.ewa-frame .EWA_TD_M>span,
+.ewa-frame .EWA_TD_M>a {
+	margin: 0 4px;
+}
+
+/* 手写签名 */
 .ewa-sign-box {
 	border: 1px solid #eee;
 }

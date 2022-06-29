@@ -158,7 +158,13 @@ a:hover, .ewa-map-button:hover {
 
 .ewa-text-color-black {
 	color: #000;
-}.ewa-sign-box {
+}.ewa-frame .EWA_TD_M>span,
+.ewa-frame .EWA_TD_M>a {
+	margin: 0 4px;
+}
+
+/* 手写签名 */
+.ewa-sign-box {
 	border: 1px solid #eee;
 }
 .ewa-sign-btns {
