@@ -26262,12 +26262,61 @@ installCfgMoveButton1 = function(id) {
 			}
 			parts[parts.length - 1].number = number;
 			prevName = null;
-			console.log(`num=${num},  number=${number}`);
+			//console.log(`num=${num},  number=${number}`);
 		}
-		console.log(parts)
+		//console.log(parts)
 		return parts;
 	}
+	function convertJflhNum(strs, alpha, loc) {
+		let fenv = strs[loc - 1];
+		let fenNum = chnNumChar[fenv];
+		if (!fenNum) {
+			return -1;
+		}
+		//一元=10角，一元=100分，一元=1000厘，一元=10000毫
+		if (alpha == '角') {
+			return ("0." + fenNum) * 1;
+		} else if (alpha == '分') {
+			return ("0.0" + fenNum) * 1;
+		} else if (alpha == '厘') {
+			return ("0.00" + fenNum) * 1;
+		} else if (alpha == '毫') {
+			return ("0.000" + fenNum) * 1;
+		} else {
+			return -1;
+		}
+	}
+	function convertJflh(strs) { // 角分厘毫
+		let sum = 0;
+		let inc = 0;
+		for (let i = strs.length - 1; i >= 0; i -= 2) {
+			let alpha = strs[i];
+			let num = convertJflhNum(strs, alpha, i);
+			if (num === -1) {
+				break;
+
+			} else {
+				sum += num;
+				inc++;
+			}
+		}
+		return {
+			sum: sum,
+			inc: inc,
+			strs: strs.splice(0, strs.length - inc * 2)
+		};
+	}
+	/**
+	 * 处理整数部分
+	 * @param {*} strs 字符串
+	 * @returns 整数
+	 */
 	function convert(strs) {
+		let jiaofen = convertJflh(strs);
+		console.log(jiaofen);
+
+		strs = jiaofen.strs;
+
 		let parts = convertToParts(strs);
 		let last = 0;
 		let scale1 = 1;
@@ -26277,9 +26326,13 @@ installCfgMoveButton1 = function(id) {
 			scale1 = scale1 * part.scale;
 			last += p * scale1;
 		}
-
-		return last;
+		return last + jiaofen.sum;
 	}
+	/**
+	 * 处理·小数部分
+	 * @param {*} strs 字符串
+	 * @returns 小数
+	 */
 	function convertDot(strs) {
 		let scale = 1;
 		let skip = 0;
@@ -26312,9 +26365,9 @@ installCfgMoveButton1 = function(id) {
 			return chnStr;
 		}
 		if (!isNaN(chnStr.toString())) {
-			return chnStr.toString();
+			return chnStr.toString() * 1;
 		}
-		let chnStrs = chnStr.replace(/，|,| /ig, '').replace(/点|。/ig, '.').split('.');
+		let chnStrs = chnStr.replace(/，|,| |元|圆/ig, '').replace(/点|。/ig, '.').split('.');
 		if (chnStrs.length > 2) {
 			throw '非数字表达式：' + chnStr;
 		}
@@ -26334,7 +26387,7 @@ installCfgMoveButton1 = function(id) {
 		let lastAlpha = strs[strs.length - 1];
 		if (skipTails[lastAlpha]) { //整
 			strs = strs.splice(0, strs.length - 1);
-		} else {
+		} else if (dots.length > 1) {
 			lastAlpha = dots[dots.length - 1];
 			if (skipTails[lastAlpha]) { //整
 				dots = dots.splice(0, dots.length - 1);
@@ -26342,7 +26395,7 @@ installCfgMoveButton1 = function(id) {
 		}
 
 		let number = convert(strs); // 
-		let number1 = convertDot(dots);
+		let number1 = dots.length > 0 ? convertDot(dots) : 0;
 		if (number1 == 0) { // 没有小数
 			return number * (isNegative ? -1 : 1);
 		}
