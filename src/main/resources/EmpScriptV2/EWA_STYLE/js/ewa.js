@@ -26210,19 +26210,27 @@ installCfgMoveButton1 = function(id) {
 	let skipTails = {
 		'整': true
 	};
+	function newPart() {
+		return { number: 0, scale: 1, items: [] };
+	}
+
 	function convertToParts(strs) {
-		let parts = [{ number: 0, scale: 1 }];
+		let parts = [newPart()];
 		let prevName = null;
 		for (let i = 0; i < strs.length; i++) {
 			let alpha = strs[i];
+
 			let name = chnNameValue[alpha];
+			let num = chnNumChar[alpha];
+			parts[parts.length - 1].items.push([alpha, name, num]);
 			if (name) {
 				if ((i == 0) && name.first) { //十
 					let number = 10;
 					parts[parts.length - 1].number = number;
 				} else if (name.stop) {
-					parts[parts.length - 1].scale = name.value;
-					parts.push({ number: 0, scale: 1 });
+					parts[parts.length - 1].scale = name.value || 1;
+					// 创建新的片段
+					parts.push(newPart());
 					scale = 1;
 					prevName = null;
 				} else {
@@ -26235,23 +26243,46 @@ installCfgMoveButton1 = function(id) {
 				continue;
 			}
 
-			let num = chnNumChar[alpha];
 			if (num == null) {
 				throw '非数字或单位：' + alpha;
 			}
 			num = (num);
 
-			let nextName = i == strs.length - 1 ? null : chnNameValue[strs[i + 1]];
+			let nextChar = i == strs.length - 1 ? null : strs[i + 1];
+			let nextName = i == strs.length - 1 ? null : chnNameValue[nextChar];
+			let nextNum = chnNumChar[nextChar];
+
 			if (nextName && nextName.stop) {
 				nextName = null;
 			}
 			let lastNum = parts[parts.length - 1].number;
 			let number;
+
+			let items = parts[parts.length - 1].items;
+			let itemPre = items[items.length - 2];//上一个
+			let itemPrePre = items[items.length - 3];// 上上个
 			if (nextName == null) {
 				if (prevName == null) {//连续的数字，例如 203
-					number = lastNum * 10 + num;
+					let skipTen = false;
+					if (itemPre && itemPre[2] === 0) {
+						if (itemPrePre && itemPrePre[1] != null/*是单位 */) {//捌仟零六 的零
+							skipTen = true;
+						}
+					} else if (itemPre && itemPre[1] && itemPre[1].value === 10) { //十六
+						skipTen = true;
+					}
+
+					if (skipTen) {
+						number = lastNum + num;
+					} else {
+						number = lastNum * 10 + num;
+					}
 				} else {// 例如 二千五，运算到五
-					number = lastNum + num;
+					if (itemPre && itemPre[1] && itemPre[1].value === 10 && (itemPrePre == null || itemPrePre[2] === 0 || itemPrePre[1] != null)) { //十六
+						number = lastNum + num + 10;
+					} else {
+						number = lastNum + num;
+					}
 				}
 			} else {
 				if (prevName == null) { // 例如 二千零五十
@@ -26313,7 +26344,7 @@ installCfgMoveButton1 = function(id) {
 	 */
 	function convert(strs) {
 		let jiaofen = convertJflh(strs);
-		console.log(jiaofen);
+		// console.log(jiaofen);
 
 		strs = jiaofen.strs;
 
@@ -26407,7 +26438,7 @@ installCfgMoveButton1 = function(id) {
 		return ((number + number1[0]) * scale).toFixed(fixed) * (isNegative ? -1 : 1);
 
 	}
-	if (window && window.EWA && window.EWA_Utils) {
+	if (typeof window != 'undefined' && window.EWA && window.EWA_Utils) {
 		window.EWA_Utils.chineseToNumber = chineseToNumber;
 	} else if (global) {
 		global.chineseToNumber = chineseToNumber;
