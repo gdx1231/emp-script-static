@@ -5080,8 +5080,8 @@ function EWA_UI_MenuClass(className) {
 		if (m > 0) {
 			var x = evt.x ? evt.x : evt.pageX;
 			var y = evt.y ? evt.y : evt.pageY;
-			y += document.body.scrollTop;
-			x += document.body.scrollLeft;
+			y += document.documentElement.scrollTop || document.body.scrollTop;
+			x += document.documentElement.scrollLeft || document.body.scrollLeft;
 
 			this.Dialog.Move(x, y);
 			this.Dialog.Show(true);
