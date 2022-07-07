@@ -511,7 +511,7 @@ var test = /^[0-9.-]{0,120}$/;
 		if (!this.isNumber(obj)) {
 			return s1;
 		}
-		if (s1 === "") {
+		if (s1 === "" || s1 === "-" || s1 === ".") {
 			return;
 		}
 		if (isNaN(s1)) {

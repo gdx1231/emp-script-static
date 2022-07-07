@@ -1234,7 +1234,10 @@ function EWA_ListFrameClass() {
 	 */
 	this.CheckValid = function (obj) {
 		var tagName = obj.tagName.toLowerCase();
-		if (tagName == 'span' || tagName == 'img' || tagName == 'div') {
+		if (tagName != 'input' && tagName != 'textarea' && tagName != 'select') {
+			return true;
+		}
+		if('button' == obj.type || 'submit' == obj.type || 'image' == obj.type){
 			return true;
 		}
 		var val = this.ItemList.GetObjectValue(obj);
