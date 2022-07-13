@@ -242,16 +242,6 @@ a:hover, .ewa-map-button:hover {
 	position: relative;
 }
 
-.ewa-frame-cols-1 .ewa-switch:after {
-	content: "";
-	display: block;
-	clear: both;
-}
-
-.ewa-frame-cols-1 .ewa-switch input[type=checkbox] {
-	float: right;
-}
-
 .ewa-switch-info {
 	position: absolute;
 	left: 5px;
@@ -279,6 +269,17 @@ a:hover, .ewa-map-button:hover {
 	outline: none;
 	cursor: pointer;
 	margin: 0 auto;
+}
+.ewa-frame .ewa-switch input[type=checkbox] {
+	margin: 0;
+}
+.ewa-frame-cols-1 .ewa-switch:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.ewa-frame-cols-1 .ewa-switch input[type=checkbox] {
+	float: right;
 }
 
 .ewa-switch input[type=checkbox]:before {

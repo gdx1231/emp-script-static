@@ -13122,6 +13122,12 @@ var test = /^[0-9.-]{0,120}$/;
 		var tagName = obj.tagName.toUpperCase();
 		var o1 = obj;
 		var s1 = "";
+		// 开关
+		if (tagName == "DIV" && $(obj).hasClass('ewa-switch')) {
+			var switchObj = obj.getElementsByTagName("input")[0];
+			return switchObj.checked?"on":"off";
+		}
+		// radio or checkbox
 		if (tagName == "DIV" && obj.getAttribute("TAG") == 'REPT') {
 			var objs = obj.getElementsByTagName("input");
 			for (var i = 0; i < objs.length; i = i + 1) {
