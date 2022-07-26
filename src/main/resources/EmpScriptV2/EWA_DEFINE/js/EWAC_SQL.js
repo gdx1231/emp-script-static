@@ -111,7 +111,9 @@ function EWAC_SqlCreator() {
 		f.Class.RequestValue1 = "rv.addValue(\"" + f.Name.toUpperCase()
 			+ "\", para" + f.Class.Name + ", \"" + f.Class.Type + "\", "
 			+ f.Length + ");";
-
+		let des = f.Description + ', ' + f.Type  + ', length:' + f.Length 
+			+ ', null:' + !f.MustInput + ', pk:' + f.IsPk;
+		f.Class.des = des;
 		var fjson = ["if(json.has(\"" + f.Name + "\"){\n o.set" + f.Class.Name + "("];
 
 		if (f.ClassType == 'Integer') {
@@ -129,19 +131,31 @@ function EWAC_SqlCreator() {
 	};
 	this.CreateClass = function() {
 		var s0 = [];
-		s0.push("import java.util.Date;");
+		s0.push("import java.util.*;");
 		s0.push("import com.gdxsoft.easyweb.datasource.ClassBase;");
+
+		// UInt32, UInt64, UInt16
+		for (var i = 0; i < this._Fields.length; i++) {
+			var f = this._Fields[i];
+			var fc = f.Class;
+			if (fc.Type.indexOf("UInt") == 0) {
+				s0.push("import  com.gdxsoft.easyweb.utils.types.*;");
+				break;
+			}
+		}
 
 		if (this.isCreateSwaggerAnnotations) {
 			s0.push("import io.swagger.annotations.ApiModel;");
 			s0.push("import io.swagger.annotations.ApiModelProperty;");
 		}
 
+
 		s0.push("/**表" + this._TableName + "映射类");
 		s0.push("* @author gdx 时间：" + new Date() + "*/");
 		if (this.isCreateSwaggerAnnotations) {
 			s0.push('@ApiModel(value = "' + this._TableName + '", description = "表' + this._TableName + '映射类")')
 		}
+
 		s0.push("public class " + this._ClassName + " extends ClassBase{");
 
 		var s2 = []; // 类声明
@@ -150,12 +164,11 @@ function EWAC_SqlCreator() {
 			var f = this._Fields[i];
 			var fc = f.Class;
 			var private_field_name = fc.PrivateName;
-			s2.push("private " + fc.Type + " " + private_field_name + "; // "
-				+ f.Description);
-
+			s2.push("// "	+ fc.des);
+			s2.push("private " + fc.Type + " " + private_field_name + ";");
 			// get
 			s3.push("\n\n/**\n * 获取 " + f.Description + "\n *");
-			s3.push("* @return " + f.Description + "\n" + "*/");
+			s3.push("* @return " + fc.des + "\n" + "*/");
 			if (this.isCreateSwaggerAnnotations) {
 				let swaggerAnnotation = this.createFieldSwaggerAnnotation(f);
 				s3.push(swaggerAnnotation);
@@ -165,9 +178,7 @@ function EWAC_SqlCreator() {
 
 			// set
 			s3.push("/**\n" + "* 赋值 " + f.Description);
-			s3.push("\n* @param para" + fc.Name + "\n" + "* " + f.Description
-				+ "\n */\n");
-
+			s3.push("\n* @param para" + fc.Name + "\n" + "* " + fc.des + "\n */\n");
 			s3.push("public void set" + fc.Name + "(" + fc.Type + " para"
 				+ fc.Name + "){");
 			s3.push('  super.recordChanged("' + f.Name + '", this.'
@@ -205,7 +216,7 @@ function EWAC_SqlCreator() {
 		var upd = this.CreateSqlUpdate().replace(/\r\n/ig, " ").replace(/  /ig,
 			" ");
 		var sel = this.CreateSqlSelect();
-		//
+
 		var rv = ["public RequestValue createRequestValue(" + this._ClassName
 			+ " para){"];
 		rv.push("RequestValue rv = new RequestValue();");
@@ -214,10 +225,11 @@ function EWAC_SqlCreator() {
 		for (var i = 0; i < this._Fields.length; i++) {
 			var f = this._Fields[i];
 			var fc = f.Class;
-			rv.push(fc.RequestValue + " // " + f.Description);
-			fieldList.push("\"" + f.Name + "\"");
+			rv.push(fc.RequestValue + " // " + fc.des);
+			//IsFk: false, IsIdentity: 0, IsPk: false, Length: 50, MustInput: 1
+			fieldList.push('"' + f.Name + '" /* ' + fc.des + ' */');
 			if (f.IsPk) {
-				pks.push("\"" + f.Name + "\"");
+				pks.push("\"" + f.Name + "\" /* " + fc.des + " */");
 			}
 		}
 		rv.push("return rv;\n\t}");
@@ -229,23 +241,29 @@ function EWAC_SqlCreator() {
 		s1.push("import com.gdxsoft.easyweb.datasource.IClassDao;");
 		s1.push("import com.gdxsoft.easyweb.datasource.ClassDaoBase;");
 
-		s1.push("/** \u8868" + this._TableName
-			+ "\u64cd\u4f5c\u7c7b\n * @author gdx \u65f6\u95f4\uff1a"
-			+ new Date() + "\n */");
+		// UInt32, UInt64, UInt16
+		for (var i = 0; i < this._Fields.length; i++) {
+			var f = this._Fields[i];
+			var fc = f.Class;
+			if (fc.Type.indexOf("UInt") == 0) {
+				s1.push("import  com.gdxsoft.easyweb.utils.types.*;");
+				break;
+			}
+		}
+
+		s1.push("/** " + this._TableName + "");
+		s1.push("* @author gdx date: " + new Date() + " */");
 		s1.push("public class " + this._ClassName + "Dao extends ClassDaoBase<"
 			+ this._ClassName + "> implements IClassDao<" + this._ClassName
-			+ ">{\n");
-		//s1.push(" private static String SQL_SELECT=\"" + sel + "\";");
-		//s1.push(" private static String SQL_UPDATE=\"" + upd + "\";");
-		//s1.push(" private static String SQL_DELETE=\"" + del + "\";");
-		s1.push(" private static String SQL_INSERT=\"" + ins + "\";");
+			+ ">{");
+		// s1.push(" private static String SQL_SELECT=\"" + sel + "\";");
+		// s1.push(" private static String SQL_UPDATE=\"" + upd + "\";");
+		// s1.push(" private static String SQL_DELETE=\"" + del + "\";");
+		// s1.push(" private static String SQL_INSERT=\"" + ins + "\";");
 
-		s1.push(" public static String TABLE_NAME =\"" + this._TableName
-			+ "\";");
-		s1.push(" public static String[] KEY_LIST = { " + pks.join(", ")
-			+ "   };");
-		s1.push(" public static String[] FIELD_LIST = { "
-			+ fieldList.join(", ") + " };");
+		s1.push(" public final static String TABLE_NAME =\"" + this._TableName + "\";");
+		s1.push(" public final static String[] KEY_LIST = { " + pks.join(", ") + "   };");
+		s1.push(" public final static String[] FIELD_LIST = { " + fieldList.join(", ") + " };");
 		s1.push(" public " + this._ClassName + "Dao(){ ");
 		s1.push("   // 设置数据库连接配置名称，在 ewa_conf.xml中定义");
 		s1.push("   // super.setConfigName(\"" + cfg + "\");");
@@ -254,86 +272,54 @@ function EWAC_SqlCreator() {
 		s1.push("   super.setTableName(TABLE_NAME);");
 		s1.push("   super.setFields(FIELD_LIST);");
 		s1.push("   super.setKeyFields(KEY_LIST);");
-		s1.push("   super.setSqlInsert(SQL_INSERT);");
+		// 自增字段
+		if (this._AutoIncrementField) {
+			s1.push("   // 自增字段 ");
+			s1.push('   super.setAutoKey("' + this._AutoIncrementField.Name + '");');
+		}
 		s1.push(" }");
 
-		var newRecord = ["/**\n\t * \u751f\u6210\u4e00\u6761\u8bb0\u5f55\n\t*@param para \u8868"
-			+ this._TableName + "\u7684\u6620\u5c04\u7c7b\n"];
-		newRecord.push("\t *@return \u662f\u5426\u6210\u529f\n\t*/\n");
-		newRecord.push("\tpublic boolean newRecord(" + this._ClassName
-			+ " para){\n");
-		newRecord.push("\t\tRequestValue rv=this.createRequestValue(para);\n");
-
-		console.log(this._AutoIncrementField);
-
-		if (this._AutoIncrementField) {
-			if (this._AutoIncrementField.Class.Type == 'Long') { //长整型
-				newRecord
-					.push("long autoKey = super.executeUpdateAutoIncrementLong(SQL_INSERT, rv);");
-			} else {
-				newRecord
-					.push("int autoKey = super.executeUpdateAutoIncrement(SQL_INSERT, rv);");
-			}
-			newRecord.push("if (autoKey > 0) {");
-			newRecord.push("para.set" + this._AutoIncrementField.Class.Name
-				+ "(autoKey);//自增");
-			newRecord.push("return true;");
-			newRecord.push("} else {");
-			newRecord.push("return false;");
-			newRecord.push("}");
-		} else {
-			newRecord.push("\t\treturn super.executeUpdate(SQL_INSERT, rv);\n");
-		}
-		newRecord.push("\t}\n");
+		var newRecord = [];
+		newRecord.push("/**");
+		newRecord.push(" * 生成一条记录");
+		newRecord.push(" * @param para  表" + this._TableName + "的映射类");
+		newRecord.push(" * @return true/false");
+		newRecord.push(" */");
+		newRecord.push("public boolean newRecord(" + this._ClassName + " para){");
+		newRecord.push("	Map<String, Boolean> updateFields = super.createAllUpdateFields(FIELD_LIST);");
+		newRecord.push("	return this.newRecord(para, updateFields);");
+		newRecord.push("}");
 
 		newRecord.push("/**");
 		newRecord.push(" * 生成一条记录");
-		newRecord.push(" * ");
-		newRecord.push(" * @param para");
-		newRecord.push(" *            表" + this._TableName + "的映射类");
-		newRecord.push(" * @param updateFields");
-		newRecord.push(" *            变化的字段Map");
-		newRecord.push(" * @return");
+		newRecord.push(" * @param para 表" + this._TableName + "的映射类");
+		newRecord.push(" * @param updateFields 变化的字段Map");
+		newRecord.push(" * @return true/false");
 		newRecord.push(" */");
-		newRecord.push("public boolean newRecord(" + this._ClassName
-			+ " para, HashMap<String, Boolean> updateFields){");
-		newRecord
-			.push("  String sql = super.sqlInsertChanged(TABLE_NAME, updateFields, para);");
+		newRecord.push("public boolean newRecord(" + this._ClassName + " para, Map<String, Boolean> updateFields){");
+		newRecord.push("  String sql = super.sqlInsertChanged(TABLE_NAME, updateFields, para);");
 		newRecord.push("  if (sql == null) { //没有可更新数据");
 		newRecord.push("  	return false;");
 		newRecord.push("  }");
 		newRecord.push("  RequestValue rv = this.createRequestValue(para);");
 		if (this._AutoIncrementField) {
-			if (this._AutoIncrementField.Class.Type == 'Long') { //长整型
-				newRecord
-					.push("long autoKey = super.executeUpdateAutoIncrementLong(sql, rv);");
-			} else {
-				newRecord
-					.push("int autoKey = super.executeUpdateAutoIncrement(sql, rv);");
-			}
-			newRecord.push("if (autoKey > 0) {");
-			newRecord.push("para.set" + this._AutoIncrementField.Class.Name
-				+ "(autoKey);");
-			newRecord.push("return true;");
-			newRecord.push("} else {");
-			newRecord.push("return false;");
-			newRecord.push("}");
+			let auto = this._createAutoIncrement(this._AutoIncrementField);
+			newRecord.push(auto);
 		} else {
 			newRecord.push("  return super.executeUpdate(sql, rv);");
 		}
 		newRecord.push("}");
 
-		var updRecord = ["/**", " * 更新一条记录",
+		var updRecord = ["/**", " * 更新一条记录，全字段",
 			"*@param para 表" + this._TableName + "的映射类"];
 		updRecord.push("\t *@return 是否成功 \n\t */");
-		updRecord.push("public boolean updateRecord(" + this._ClassName
-			+ " para){\n");
-		updRecord.push("  RequestValue rv = this.createRequestValue(para);");
-		updRecord.push("  return super.executeUpdate(SQL_UPDATE, rv);");
+		updRecord.push("public boolean updateRecord(" + this._ClassName + " para){\n");
+		updRecord.push("  Map<String, Boolean> updateFields = super.createAllUpdateFields(FIELD_LIST);");
+		updRecord.push("  return updateRecord(para, updateFields);");
 		updRecord.push("}");
 
 		updRecord.push("/**");
-		updRecord.push(" * 更新一条记录");
+		updRecord.push(" * 更新一条记录，根据类的字段变化");
 		updRecord.push(" * ");
 		updRecord.push(" * @param para");
 		updRecord.push(" *            表" + this._TableName + "的映射类");
@@ -341,12 +327,10 @@ function EWAC_SqlCreator() {
 		updRecord.push(" *            变化的字段Map");
 		updRecord.push(" * @return");
 		updRecord.push(" */");
-		updRecord.push("public boolean updateRecord(" + this._ClassName
-			+ " para, HashMap<String, Boolean> updateFields){");
+		updRecord.push("public boolean updateRecord(" + this._ClassName + " para, Map<String, Boolean> updateFields){");
 		updRecord.push("  // 没定义主键的话不能更新");
-		updRecord.push("  if(KEY_LIST.length==0){return false; } ");
-		updRecord
-			.push("  String sql = super.sqlUpdateChanged(TABLE_NAME, KEY_LIST, updateFields);");
+		updRecord.push("  if(KEY_LIST.length == 0){return false; } ");
+		updRecord.push("  String sql = super.sqlUpdateChanged(TABLE_NAME, KEY_LIST, updateFields);");
 		updRecord.push("  if (sql == null) { //没有可更新数据");
 		updRecord.push("  	return false;");
 		updRecord.push("  }");
@@ -354,19 +338,45 @@ function EWAC_SqlCreator() {
 		updRecord.push("  return super.executeUpdate(sql, rv);");
 		updRecord.push("}");
 
-		updRecord.push("public String getSqlDelete() {return SQL_DELETE;}");
-		updRecord.push("public String[] getSqlFields() {return FIELD_LIST;}");
-		updRecord.push("public String getSqlSelect() {return \"SELECT * FROM "
-			+ this._TableName + " where 1=1\";}");
-		updRecord.push("public String getSqlUpdate() {return SQL_UPDATE;}");
-		updRecord.push("public String getSqlInsert() {return SQL_INSERT;}");
-
-		updRecord = []; // 取消了
 		var sss = s1.join("\n") + newRecord.join("\n") + updRecord.join("\n")
 			+ this.CreateClassGetRecord() + this.CreateClassGetRecords()
 			+ this.CreateClassDeleteRecord() + rv.join("\n") + "}";
 		copyToClipboard(sss);
 		return sss;
+	};
+	this._createAutoIncrement = function(field) {
+		let newRecord = [];
+		let isUInt = false;
+		if (field.Class.Type == 'UInt32') { //长整型
+			isUInt = true;
+			newRecord
+				.push("UInt32 autoKey = super.executeUpdateAutoIncrementUInt32(sql, rv);");
+		} else if (field.Class.Type == 'UInt64') { //长整型
+			isUInt = true;
+			newRecord
+				.push("UInt64 autoKey = super.executeUpdateAutoIncrementUInt64(sql, rv);");
+		} else if (field.Class.Type == 'UInt16') { //长整型
+			isUInt = true;
+			newRecord
+				.push("UInt16 autoKey = super.executeUpdateAutoIncrementUInt16(sql, rv);");
+		} else if (field.Class.Type == 'Long') { //长整型
+			newRecord
+				.push("long autoKey = super.executeUpdateAutoIncrementLong(sql, rv);");
+		} else {
+			newRecord
+				.push("int autoKey = super.executeUpdateAutoIncrement(sql, rv);");
+		}
+		if (isUInt) {
+			newRecord.push("if (autoKey.doubleValue() > 0) {");
+		} else {
+			newRecord.push("if (autoKey > 0) {");
+		}
+		newRecord.push("para.set" + field.Class.Name + "(autoKey);");
+		newRecord.push("	return true;");
+		newRecord.push("} else {");
+		newRecord.push("	return false;");
+		newRecord.push("}");
+		return newRecord.join("\n")
 	};
 	this.CreateClassDaoMapFromJson = function() {
 		for (var n in this._Fields) {
@@ -634,6 +644,12 @@ function CreateType(s1) {
 	s1 = s1.toLowerCase();
 	if (s1 == 'bigint' || s1 == 'lang') {
 		return 'Long';
+	} else if (s1 == "smallint unsigned") {//UNSIGNED
+		return "UInt16";
+	} else if (s1 == "int unsigned") {//UNSIGNED
+		return "UInt32";
+	} else if (s1 == "bigint unsigned") {//UNSIGNED
+		return "UInt64";
 	} else if (s1.indexOf("int") >= 0) {
 		return "Integer";
 	} else if (s1.indexOf("decimal") >= 0 || s1.indexOf("num") >= 0
@@ -651,5 +667,11 @@ function CreateType(s1) {
 }
 // -------------------
 function copyToClipboard(text) {
-
+	let o = document.createElement('textarea');
+	document.body.appendChild(o);
+	o.value = text;
+	o.select();
+	document.execCommand('copy');
+	$Tip('Copyed');
+	document.body.removeChild(o);
 }
