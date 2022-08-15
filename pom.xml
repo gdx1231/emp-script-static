@@ -43,18 +43,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.gdxsoft.easyweb</groupId>
-			<artifactId>emp-script-utils</artifactId>
-			<version>1.1.4</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

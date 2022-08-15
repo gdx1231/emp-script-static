@@ -11,8 +11,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gdxsoft.easyweb.utils.Utils;
-
 
 public class Resources {
 	/**
@@ -100,11 +98,11 @@ public class Resources {
 			if (binary) {
 				byte[] buf = IOUtils.toByteArray(url);
 				r.setBuffer(buf);
-				r.setMd5(Utils.md5(buf));
+				r.setMd5(MyUtils.md5(buf));
 			} else {
 				String text = IOUtils.toString(url, StandardCharsets.UTF_8);
 				r.setContent(text);
-				r.setMd5(Utils.md5(text));
+				r.setMd5(MyUtils.md5(text));
 			}
 			LOGGER.debug(r.toString());
 			return r;
