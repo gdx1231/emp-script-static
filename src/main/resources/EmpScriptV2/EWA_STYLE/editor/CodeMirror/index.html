@@ -157,11 +157,54 @@ body {
 			parent_textarea.value = getText();
 		}
 	}
-	function aa() {
+	function beautify_code() {
+		var p = editor.getCursorPosition();
+		var s;
+		if (mode == 'ace/mode/javascript') {
+			s = js_beautify(getText());
+		} else if (mode == 'ace/mode/html' || mode == 'ace/mode/xml') {
+			s = html_beautify(getText());
+		} else if (mode == 'ace/mode/css') {
+			s = css_beautify(getText());
+		} else if (mode == 'ace/mode/sql') {
+			beautify_code_sql();
+			return;
+		} else {
+			$Tip('不支持类型格式化');
+			return;
+		}
+		editor.setValue(s, 1);
+		editor.moveCursorToPosition(p);
+		editor.selection.clearSelection();
+	}
+	function beautify_code_sql() {
+
+	}
+	function style_html(s1) {
+		var s = html_beautify(s1);
+		return s;
+	}
+	function getText() {
+		return editor.getValue();
+	}
+	function setText(t) {
+		editor.setValue(editor.getValue() + t, 1);
+	}
+	function change_code_theme(obj) {
+		editor.setTheme(obj.value);
+		window.localStorage["EWA_CODE_THENE"] = obj.value;
+	}
+	function change_font_size(obj){
+	    editor.setFontSize(obj.value);
+	    window.localStorage["EWA_CODE_FONTSIZE"] = obj.value;
+	}
+	(function () {
 		var iframes = window.parent.document.getElementsByTagName('iframe');
+		var thisIframe = null;
 		for (var i = 0; i < iframes.length; i++) {
 			var o = iframes[i];
 			if (o.contentWindow == window) {
+				thisIframe = o;
 				var textareas = o.parentNode.parentNode.getElementsByTagName('textarea');
 				if (textareas.length > 0) {
 					//存放markdown的数据
@@ -169,6 +212,7 @@ body {
 				} else {
 					// alert('parent textarea not found');
 				}
+				break;
 			}
 		}
 		editor = null;
@@ -183,7 +227,9 @@ body {
 		// console.log(markType);
 		var valId = u1.GetParameter("__SID__");
 		var val;
-		if (!valId) {
+		if(parent_textarea){
+			val = parent_textarea.value;
+		} else if (!valId) {
 			val = window.parent.__VAL__;
 		} else {
 			var objVal = parent.document.getElementById(valId);
@@ -292,49 +338,7 @@ body {
 			update();
 		});
 		editor.$blockScrolling = Infinity;
-	}
-	function beautify_code() {
-		var p = editor.getCursorPosition();
-		var s;
-		if (mode == 'ace/mode/javascript') {
-			s = js_beautify(getText());
-		} else if (mode == 'ace/mode/html' || mode == 'ace/mode/xml') {
-			s = html_beautify(getText());
-		} else if (mode == 'ace/mode/css') {
-			s = css_beautify(getText());
-		} else if (mode == 'ace/mode/sql') {
-			beautify_code_sql();
-			return;
-		} else {
-			$Tip('不支持类型格式化');
-			return;
-		}
-		editor.setValue(s, 1);
-		editor.moveCursorToPosition(p);
-		editor.selection.clearSelection();
-	}
-	function beautify_code_sql() {
-
-	}
-	function style_html(s1) {
-		var s = html_beautify(s1);
-		return s;
-	}
-	function getText() {
-		return editor.getValue();
-	}
-	function setText(t) {
-		editor.setValue(editor.getValue() + t, 1);
-	}
-	function change_code_theme(obj) {
-		editor.setTheme(obj.value);
-		window.localStorage["EWA_CODE_THENE"] = obj.value;
-	}
-	function change_font_size(obj){
-	    editor.setFontSize(obj.value);
-	    window.localStorage["EWA_CODE_FONTSIZE"] = obj.value;
-	}
-	aa();
+	})();
 	</script>
 </body>
 </html>
