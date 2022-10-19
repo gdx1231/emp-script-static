@@ -10561,9 +10561,10 @@ function EWA_UI_HtmlEditorClass() {
 		if (window_code.editor) {
 			window_code.editor.setValue(html);
 		} else {
-			__VAL__ = html;
-			__TYPE__ = 'html';
-			window_code.aa();
+			//__VAL__ = html;
+			//__TYPE__ = 'html';
+			// 调用初始化
+			window_code.initEditor(html, 'html');
 		}
 	};
 	this.execute = function(o1) {
@@ -10654,11 +10655,37 @@ function EWA_UI_HtmlEditorClass() {
 		$(bd).find('title').remove();
 		$(bd).find('colgroup').remove();
 
-		$(bd).find('*').attr('style', null).attr('class', null).attr('face',
-				null).attr('size', null).attr('href', null).attr('onerror',
-				null).attr('onload', null).attr('onclick', null).attr(
-				'onmousedown', null).attr('onmouseover', null).attr(
-				'onmouseout', null).attr('color', null).attr('className', null);
+		/*var attrs={
+			id:null,
+			name:null,
+			style:null,
+			class:null,
+			size:null,
+			href:null,
+			onload:null,
+			onerror:null,
+			onclick:null,
+			onmousedown:null,
+			onmousemove:null,
+			onmouseout:null,
+			onmouseover:null,
+			ontouchstart:null,
+			ontouch:null,
+			contenteditable:null,
+			color:null,
+		}
+		$(bd).find('*').attr(attrs);*/
+		
+		$(bd).find("*").each(function() {
+			let removeAttrs={};
+			for(let i=0;i<this.attributes.length;i++){
+				let item = this.attributes[i].name;
+				if(item != "src"){
+					removeAttrs[item] = null;
+				}
+			}
+			$(this).attr(removeAttrs);
+		});
 
 		// 重新写值
 		var exp = /<!--[\w\W\r\n]*?-->/gim; // 注释的正则表达式

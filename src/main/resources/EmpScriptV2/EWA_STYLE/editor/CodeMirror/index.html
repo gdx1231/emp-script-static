@@ -26,7 +26,8 @@
 	width: 100%;
 	line-height: 20px;
 	font-size: 12px;
-	font-family: "Microsoft YaHei", "微软雅黑", tahoma, Verdana, Arial, sans-serif, arial, STHeiti, 宋体;
+	font-family: "Microsoft YaHei", "微软雅黑", tahoma, Verdana, Arial,
+		sans-serif, arial, STHeiti, 宋体;
 	line-height: 20px;
 	overflow: hidden;
 	background-color: #111;
@@ -76,10 +77,10 @@ body {
 <body>
 	<pre id="code"></pre>
 	<div id='status'>
-		<a href="javascript:beautify_code()" title="(Cmd+Shift+F)">格式化代码</a> <a id='check_sql' href="javascript: checkSQL()">检查SQL语法</a>
-		<span style='float: right'>
-			<a>字号</a>
-			<select id='fontsize' size=1 onchange="change_font_size(this)">
+		<a href="javascript:beautify_code()" title="(Cmd+Shift+F)">格式化代码</a> <a
+			id='check_sql' href="javascript: checkSQL()">检查SQL语法</a> <span
+			style='float: right'> <a>字号</a> <select id='fontsize' size=1
+			onchange="change_font_size(this)">
 				<option value='12px'>12px</option>
 				<option value='13px'>13px</option>
 				<option value='14px'>14px</option>
@@ -88,9 +89,9 @@ body {
 				<option value='17px'>17px</option>
 				<option value='18px'>18px</option>
 				<option value='19px'>19px</option>
-				<option value='20px'>20px</option>	
-			</select>
-		 <a>Theme:</a> <select id="theme" size="1" onchange="change_code_theme(this)">
+				<option value='20px'>20px</option>
+		</select> <a>Theme:</a> <select id="theme" size="1"
+			onchange="change_code_theme(this)">
 				<optgroup label="Bright">
 					<option value="ace/theme/chrome">Chrome</option>
 					<option value="ace/theme/clouds">Clouds</option>
@@ -124,32 +125,50 @@ body {
 					<option value="ace/theme/solarized_dark">Solarized Dark</option>
 					<option value="ace/theme/terminal">Terminal</option>
 					<option value="ace/theme/tomorrow_night">Tomorrow Night</option>
-					<option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
-					<option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
-					<option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
+					<option value="ace/theme/tomorrow_night_blue">Tomorrow
+						Night Blue</option>
+					<option value="ace/theme/tomorrow_night_bright">Tomorrow
+						Night Bright</option>
+					<option value="ace/theme/tomorrow_night_eighties">Tomorrow
+						Night 80s</option>
 					<option value="ace/theme/twilight">Twilight</option>
 					<option value="ace/theme/vibrant_ink">Vibrant Ink</option>
 				</optgroup>
 		</select></span>
 	</div>
 	<script src="../../../EWA_STYLE/js/ewa.min.js" type="text/javascript"></script>
-	<script src="../../../third-party/ace/v1.4.12/src-min/ace.js" type="text/javascript"></script>
-	<script src="../../../third-party/ace/v1.4.12/src-min/ext-language_tools.js" type="text/javascript"></script>
+	<script src="../../../third-party/ace/v1.4.12/src-min/ace.js"
+		type="text/javascript"></script>
+	<script
+		src="../../../third-party/ace/v1.4.12/src-min/ext-language_tools.js"
+		type="text/javascript"></script>
 
-	<script src="../../../third-party/js-beautify/v1.13.0/lib/beautify.js" type="text/javascript" ></script>
-	<script src="../../../third-party/js-beautify/v1.13.0/lib/beautify-css.js" type="text/javascript" ></script>
-	<script src="../../../third-party/js-beautify/v1.13.0/lib/beautify-html.js" type="text/javascript" ></script>
+	<script src="../../../third-party/js-beautify/v1.13.0/lib/beautify.js"
+		type="text/javascript"></script>
+	<script
+		src="../../../third-party/js-beautify/v1.13.0/lib/beautify-css.js"
+		type="text/javascript"></script>
+	<script
+		src="../../../third-party/js-beautify/v1.13.0/lib/beautify-html.js"
+		type="text/javascript"></script>
 
 	<script src="../../../third-party/jquery/jquery-3.6.0.min.js"></script>
 
 	<script src="../../../third-party/raphael-master/raphael.min.js"></script>
-	<script src="../../../third-party/flowchart.js-master/release/flowchart.min.js"></script>
-	<script src="../../../third-party/markdown-editor-master/markdown-it.js" type="text/javascript"></script>
-	<script src="../../../third-party/markdown-editor-master/highlight.pack.js" type="text/javascript"></script>
-	<script src="../../../third-party/markdown-editor-master/markdown-it-footnote.js" type="text/javascript"></script>
+	<script
+		src="../../../third-party/flowchart.js-master/release/flowchart.min.js"></script>
+	<script
+		src="../../../third-party/markdown-editor-master/markdown-it.js"
+		type="text/javascript"></script>
+	<script
+		src="../../../third-party/markdown-editor-master/highlight.pack.js"
+		type="text/javascript"></script>
+	<script
+		src="../../../third-party/markdown-editor-master/markdown-it-footnote.js"
+		type="text/javascript"></script>
 
 
-	<script type="text/javascript">
+<script type="text/javascript">
 	var editor, beautify;
 	var parent_textarea;
 	function update() {
@@ -194,18 +213,19 @@ body {
 		editor.setTheme(obj.value);
 		window.localStorage["EWA_CODE_THENE"] = obj.value;
 	}
-	function change_font_size(obj){
-	    editor.setFontSize(obj.value);
-	    window.localStorage["EWA_CODE_FONTSIZE"] = obj.value;
+	function change_font_size(obj) {
+		editor.setFontSize(obj.value);
+		window.localStorage["EWA_CODE_FONTSIZE"] = obj.value;
 	}
-	(function () {
+	function initEditor(code, type) {
 		var iframes = window.parent.document.getElementsByTagName('iframe');
 		var thisIframe = null;
 		for (var i = 0; i < iframes.length; i++) {
 			var o = iframes[i];
 			if (o.contentWindow == window) {
 				thisIframe = o;
-				var textareas = o.parentNode.parentNode.getElementsByTagName('textarea');
+				var textareas = o.parentNode.parentNode
+						.getElementsByTagName('textarea');
 				if (textareas.length > 0) {
 					//存放markdown的数据
 					parent_textarea = textareas[0];
@@ -217,24 +237,25 @@ body {
 		}
 		editor = null;
 		var u1 = new EWA_UrlClass();
-		var markType = u1.GetParameter("__TYPE__");
+		var markType = type || u1.GetParameter("__TYPE__")
+				|| window.parent.__TYPE__;
 		if (!markType) {
-			if (!window.parent.__TYPE__) {
-				return;
-			}
-			markType = window.parent.__TYPE__;
+			return;
 		}
 		// console.log(markType);
-		var valId = u1.GetParameter("__SID__");
-		var val;
-		if(parent_textarea){
-			val = parent_textarea.value;
-		} else if (!valId) {
-			val = window.parent.__VAL__;
-		} else {
-			var objVal = parent.document.getElementById(valId);
-			if (objVal) {
-				val = objVal.value;
+
+		var val = code;
+		if (val == null) {
+			var valId = u1.GetParameter("__SID__");
+			if (parent_textarea) {
+				val = parent_textarea.value;
+			} else if (!valId) {
+				val = window.parent.__VAL__;
+			} else {
+				var objVal = parent.document.getElementById(valId);
+				if (objVal) {
+					val = objVal.value;
+				}
 			}
 		}
 		// console.log(val);
@@ -282,17 +303,17 @@ body {
 			}
 		}
 		editor.setTheme(theme_code);
-		
+
 		// 设置字体大小
-		if(window.localStorage && window.localStorage["EWA_CODE_FONTSIZE"]){
-		    var v = window.localStorage["EWA_CODE_FONTSIZE"];
-		    var selectFontsize = document.getElementById('fontsize');
-		    if(v) {
-		        selectFontsize.value = v;
-		        editor.setFontSize(v);
-		    }
+		if (window.localStorage && window.localStorage["EWA_CODE_FONTSIZE"]) {
+			var v = window.localStorage["EWA_CODE_FONTSIZE"];
+			var selectFontsize = document.getElementById('fontsize');
+			if (v) {
+				selectFontsize.value = v;
+				editor.setFontSize(v);
+			}
 		}
-		
+
 		editor.session.setMode(mode);
 		editor.getSession().setUseWrapMode(true);
 
@@ -338,7 +359,10 @@ body {
 			update();
 		});
 		editor.$blockScrolling = Infinity;
-	})();
-	</script>
+	}
+	(function() {
+		initEditor();
+	});
+</script>
 </body>
 </html>
