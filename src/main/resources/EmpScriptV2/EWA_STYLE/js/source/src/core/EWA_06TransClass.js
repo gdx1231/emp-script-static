@@ -377,11 +377,13 @@ function EWA_TransClass() {
 }
 window["EWA_UT_TRANS"] = EWA_TransClass;
 EWA_TransClass.prototype.transProvider = 'azure';
-/*	在微软 https://portal.azure.com/进行申请，此key为200万单词每月的免费配额 (guolei@sina.com)	 */
+/*	在微软 https://portal.azure.com/进行申请，
+ 此key为200万单词每月的免费配额 (root@gdxsoft.com)	 
+*/
 EWA_TransClass.prototype.azureTansCfg = {
 	url: "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0", //&from=en&to=zh-Hans
-	key: "91f44bf9567b4b02a16a525638ada82f",
-	location: "koreacentral"
+	key: "f436c44286474b5eaa928d8b3f251972",
+	location: "EastAsia"
 };
 /**	 * bing trans v2*/
 EWA_TransClass.prototype.bingTrans = '//api.microsofttranslator.com/V2/Ajax.svc/Translate?appid=50F7C8D4BC00A6E047C046D012F334DEC61FA003';

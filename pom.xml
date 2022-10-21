@@ -155,13 +155,13 @@
 				<executions>
 					<execution>
 						<id>copy-file</id>
-						<phase>generate-sources</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>
 						<configuration>
 							<sourceFile>target/${project.build.finalName}.jar</sourceFile>
-							<destinationFile>target/${artifactId}-last.jar</destinationFile>
+							<destinationFile>target/${project.artifactId}-last.jar</destinationFile>
 						</configuration>
 					</execution>
 				</executions>
