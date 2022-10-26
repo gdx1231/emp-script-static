@@ -658,6 +658,14 @@ function EWA_TreeClass(parentObject, className, url) {
 	 *            输入框
 	 */
 	this.RenameBlur = function(obj) {
+		let t0 = this._RenameBlurT0 || 0;
+		let t1 = (new Date()).getTime();
+		if(t1 - t0 < 100){ 
+			// 阻止多重调用
+			return;
+		}
+		this._RenameBlurT0 = t1;
+		
 		var oldVal = obj.getAttribute("EWA_OLD_VAL");
 		var node = this._RenameNode;
 		var pNode = this.GetNode(node.GetObject().parentNode);
