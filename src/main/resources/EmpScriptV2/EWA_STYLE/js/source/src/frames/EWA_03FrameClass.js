@@ -1429,33 +1429,37 @@ function EWA_FrameClass() {
 	 *            memoName memo字段名称
 	 */
 	this.RewriteInfo = function(infoJson, idName, infoName, memoName) {
-		for (var i = 0; i < info.length; i++) {
-			var v = info[i];
+		var tb = $('#EWA_FRAME_' + this._Id);
+		var arr =[];
+		for (var i = 0; i < infoJson.length; i++) {
+			var v = infoJson[i];
 			var id = v[idName];
-			if (!$X(id)) {
+			var target = tb.find('#' + id);
+			if (target.length == 0) {
 				continue;
 			}
-			var td = $X(id).parentNode.tagName == 'TD' ? $X(id).parentNode : $X(id).parentNode.parentNode;
-			if ($X(id).getAttribute('ewa_tag') == 'IMG_UPLOAD') {
-				td = $X(id).parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
-			}
-			var tr = td.parentNode;
+			var tr = target.parentsUntil('tr[show_msg]').last().parent();
 			if (v[infoName] == null || v[infoName].trim() == '') {
-				tr.style.display = 'none';
-			} else {
-				if (tr.cells.length == 3) {
-					tr.cells[2].innerHTML = v[memoName];
-					tr.cells[0].innerHTML = v[infoName];
-				} else if (tr.cells.length == 1) {
-					var tr1 = tr.previousSibling;
-					if (tr1.nodeType == 3) {
-						tr1 = tr1.previousSibling;
-					}
-					tr1.cells[1].innerHTML = v[memoName];
-					tr1.cells[0].innerHTML = v[infoName];
+				tr.hide();
+				continue;
+			}
+			if (tr[0].cells.length == 3) {
+				arr.push(tr[0]);
+				tr[0].cells[2].innerHTML = v[memoName];
+				tr[0].cells[0].innerHTML = v[infoName];
+			} else if (tr[0].cells.length == 2) {
+				arr.push(tr[0]);
+				tr[0].cells[0].innerHTML = v[infoName];
+			} else if (tr[0].cells.length == 1) {
+				var tr1 = tr.prev();
+				if (tr1[0].cells.length > 1) {
+					tr1[0].cells[1].innerHTML = v[memoName];
 				}
+				arr.push(tr1[0]);
+				tr1[0].cells[0].innerHTML = v[infoName];
 			}
 		}
+		return arr;
 	};
 
 	this._HiddenMemo = function(obj, tb) {
@@ -2147,7 +2151,7 @@ function EWA_FrameClass() {
 
 			var ewa_tag = o1.getAttribute('ewa_tag');
 			let val = null;
-			
+
 			// 检查签名数据是否变化，如果有就获取变化的数据，否则为空白字符串
 			if ("signature" == ewa_tag) {
 				let changed = 'N';
@@ -2159,7 +2163,7 @@ function EWA_FrameClass() {
 						break;
 					}
 				}
-				if(changed == 'Y'){
+				if (changed == 'Y') {
 					val = this._GetObjectValue(o1);
 				} else {
 					val = "";
@@ -2167,8 +2171,8 @@ function EWA_FrameClass() {
 				// 签名数据是否变化
 				ajax.AddParameter(id + "_CHANGED", changed);
 			} else {
-			  	val = this._GetObjectValue(o1);
-			 }
+				val = this._GetObjectValue(o1);
+			}
 			if (val != null) {
 				ajax.AddParameter(id, val);
 			}
@@ -2177,7 +2181,7 @@ function EWA_FrameClass() {
 				var upImgsUuid = $X('UP_IMG_' + id).value;
 				ajax.AddParameter(id + '_imgs_split', upImgsUuid);
 			}
-			
+
 			if ('swffile' == ewa_tag || 'IMG_UPLOAD' == ewa_tag) {
 				var s = o1.getAttribute("UP_PARAS");
 				if (s != null && s.length > 0) {
