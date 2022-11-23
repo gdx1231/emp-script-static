@@ -1427,10 +1427,15 @@ function EWA_FrameClass() {
 	 *            infoName info字段名称
 	 * @param {String}
 	 *            memoName memo字段名称
+	 * @param cb 循环info回调的方法，p0当前tr，p1当前info, p2当前序号
+	 * @return 影响的Tr数组
 	 */
-	this.RewriteInfo = function(infoJson, idName, infoName, memoName) {
+	this.RewriteInfo = function(infoJson, idName, infoName, memoName, cb) {
 		var tb = $('#EWA_FRAME_' + this._Id);
-		var arr =[];
+		var arr = [];
+		idName = idName || "id";
+		infoName = infoName || "info";
+		memoName = memoName || "memo";
 		for (var i = 0; i < infoJson.length; i++) {
 			var v = infoJson[i];
 			var id = v[idName];
@@ -1441,15 +1446,24 @@ function EWA_FrameClass() {
 			var tr = target.parentsUntil('tr[show_msg]').last().parent();
 			if (v[infoName] == null || v[infoName].trim() == '') {
 				tr.hide();
+				if (cb) {
+					cb(tr[0], v, i);
+				}
 				continue;
 			}
 			if (tr[0].cells.length == 3) {
 				arr.push(tr[0]);
 				tr[0].cells[2].innerHTML = v[memoName];
 				tr[0].cells[0].innerHTML = v[infoName];
+				if (cb) {
+					cb(tr[0], v, i);
+				}
 			} else if (tr[0].cells.length == 2) {
 				arr.push(tr[0]);
 				tr[0].cells[0].innerHTML = v[infoName];
+				if (cb) {
+					cb(tr[0], v, i);
+				}
 			} else if (tr[0].cells.length == 1) {
 				var tr1 = tr.prev();
 				if (tr1[0].cells.length > 1) {
@@ -1457,7 +1471,11 @@ function EWA_FrameClass() {
 				}
 				arr.push(tr1[0]);
 				tr1[0].cells[0].innerHTML = v[infoName];
+				if (cb) {
+					cb(tr1[0], v, i);
+				}
 			}
+
 		}
 		return arr;
 	};
