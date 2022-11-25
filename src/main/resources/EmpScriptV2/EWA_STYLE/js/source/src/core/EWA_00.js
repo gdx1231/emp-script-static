@@ -82,17 +82,15 @@ EWA_Utils.ShowBgPic = function(obj) {
 		return;
 	}
 	u = u.slice(4, u.length - 1); // url("aaa/bbb/ccc.png")
-	if (u) {
-		if (u.startsWith('"') || u.startsWith("'")) { // chrome 50+
-			u = u.slice(1, u.length - 1);
-		}
-		if (u.indexOf('pic_no.jpg') > 0 || u.indexOf('transparent.png') > 0) {
-			return;
-		}
-		u = u.replace("_SMAILL.", ".").split('$resized')[0];
-		u = u.replace("small", "a");
-		window.open(u);
+	if (u.startsWith('"') || u.startsWith("'")) { // chrome 50+
+		u = u.slice(1, u.length - 1);
 	}
+	if (u.indexOf('pic_no.jpg') > 0 || u.indexOf('transparent.png') > 0) {
+		return;
+	}
+	u = u.replace("_SMAILL.", ".").split('$resized')[0];
+	u = u.replace("small", "a");
+	window.open(u);
 };
 /**
  * 静态，执行命令
