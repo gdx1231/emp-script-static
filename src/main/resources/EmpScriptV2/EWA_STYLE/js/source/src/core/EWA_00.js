@@ -5,19 +5,19 @@
  */
 
 window.EWA = window.EWA || {
-	VERSION : 2.6,
+	VERSION: 2.6,
 	/** 版本 */
-	LANG : 'zhcn',
+	LANG: 'zhcn',
 	/** 当前语言代码 */
-	SHOW_ERROR : true // 是否提示执行错误
+	SHOW_ERROR: true // 是否提示执行错误
 };
-if(!EWA["CP"]){
-	EWA. __p = window.location.pathname;
+if (!EWA["CP"]) {
+	EWA.__p = window.location.pathname;
 	EWA.__inc = 0;
 	while (EWA.__p.indexOf('//') == 0) {
 		EWA.__p = EWA.__p.replace('//', '/');
 		EWA.__inc++;
-	
+
 		if (EWA.__inc > 100) {
 			break;
 		}
@@ -30,14 +30,14 @@ var userAgent = window.navigator.userAgent.toLowerCase();
  * 浏览器类型
  */
 EWA.B = {
-	VERSION : (userAgent.match(/.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/) || [])[1],
-	SAFAIR : /webkit/.test(userAgent),
-	OPERA : /opera/.test(userAgent),
-	IE : (/msie/.test(userAgent) || /traaaaaident/.test(userAgent)) && !/opera/.test(userAgent),
-	MOZILLA : /mozilla/.test(userAgent) && !/(compatible|webkit)/.test(userAgent),
-	GOOGLE : /chrome/.test(userAgent),
-	PAD : /ipad|iphone|android|mobile/.test(userAgent),
-	IS_ANDROID : /android/.test(userAgent)
+	VERSION: (userAgent.match(/.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/) || [])[1],
+	SAFAIR: /webkit/.test(userAgent),
+	OPERA: /opera/.test(userAgent),
+	IE: (/msie/.test(userAgent) || /traaaaaident/.test(userAgent)) && !/opera/.test(userAgent),
+	MOZILLA: /mozilla/.test(userAgent) && !/(compatible|webkit)/.test(userAgent),
+	GOOGLE: /chrome/.test(userAgent),
+	PAD: /ipad|iphone|android|mobile/.test(userAgent),
+	IS_ANDROID: /android/.test(userAgent)
 };
 
 var EWA_Utils = {};
@@ -46,11 +46,11 @@ var EWA_Utils = {};
  * 公共工具 COMMON
  */
 EWA["C"] = {
-	Utils : EWA_Utils, /* 工具 */
-	Ajax : EWA_AjaxClass, /* AJAX */
-	Xml : EWA_XmlClass, /* XML */
-	Url : EWA_UrlClass
-/* URL工具 */
+	Utils: EWA_Utils, /* 工具 */
+	Ajax: EWA_AjaxClass, /* AJAX */
+	Xml: EWA_XmlClass, /* XML */
+	Url: EWA_UrlClass
+	/* URL工具 */
 };
 
 /**
@@ -59,14 +59,14 @@ EWA["C"] = {
  * @param {Object}
  *            obj
  */
-EWA_Utils.ShowPic = function (obj) {
+EWA_Utils.ShowPic = function(obj) {
 	var u = obj.src;
 	if (u.indexOf('pic_no.jpg') > 0) {
 		return;
 	}
-	if(u.indexOf('$resized/')>0){
+	if (u.indexOf('$resized/') > 0) {
 		var loc = u.indexOf('$resized/');
-		u = u.substring(0,loc);
+		u = u.substring(0, loc);
 	} else {
 		u = u.replace("_SMAILL.", ".");
 		u = u.replace("small", "a");
@@ -76,21 +76,22 @@ EWA_Utils.ShowPic = function (obj) {
 /**
  * 显示背景图片
  */
-EWA_Utils.ShowBgPic = function (obj) {
+EWA_Utils.ShowBgPic = function(obj) {
 	var u = $(obj).css('background-image');
+	if (!u) {
+		return;
+	}
+	u = u.slice(4, u.length - 1); // url("aaa/bbb/ccc.png")
 	if (u) {
-		u = u.slice(4, u.length - 1); // url("aaa/bbb/ccc.png")
-		if (u) {
-			if (u.startsWith('"') || u.startsWith("'")) { // chrome 50+
-				u = u.slice(1, u.length - 1);
-			}
-			if (u.indexOf('pic_no.jpg') > 0) {
-				return;
-			}
-			u = u.replace("_SMAILL.", ".").split('$resized')[0];
-			u = u.replace("small", "a");
-			window.open(u);
+		if (u.startsWith('"') || u.startsWith("'")) { // chrome 50+
+			u = u.slice(1, u.length - 1);
 		}
+		if (u.indexOf('pic_no.jpg') > 0 || u.indexOf('transparent.png') > 0) {
+			return;
+		}
+		u = u.replace("_SMAILL.", ".").split('$resized')[0];
+		u = u.replace("small", "a");
+		window.open(u);
 	}
 };
 /**
@@ -99,7 +100,7 @@ EWA_Utils.ShowBgPic = function (obj) {
  * @param obj:
  *            如果类型为string,则执行，如果为HtmlObject, 则执行getAttribute("EWA_CMD")
  */
-EWA_Utils.RunCmd = function (obj, msg) {
+EWA_Utils.RunCmd = function(obj, msg) {
 	// 执行命令
 	var cmd = "";
 	if (typeof obj == "string") {
@@ -123,7 +124,7 @@ EWA_Utils.RunCmd = function (obj, msg) {
 /**
  * 静态，验证错误，重新刷新验证图片
  */
-EWA_Utils.ReloadValidCodeImage = function () {
+EWA_Utils.ReloadValidCodeImage = function() {
 	var os = document.getElementsByTagName("IMG");
 	for (var i = 0; i < os.length; i = i + 1) {
 		var o = os[i];
@@ -140,7 +141,7 @@ EWA_Utils.ReloadValidCodeImage = function () {
  * @param {}
  *            htmlAndJs
  */
-EWA_Utils.JsRegisters = function (htmlAndJs) {
+EWA_Utils.JsRegisters = function(htmlAndJs) {
 	var s1 = /<[\s]*?script[^>]*?>[\s\S]*?<[\s]*?\/[\s]*?script[\s]*?>/ig;
 	var exp = /addEvent\([^\)]+\){1}/ig;
 	var m = htmlAndJs.match(s1);
@@ -199,7 +200,7 @@ EWA_Utils.JsRegisters = function (htmlAndJs) {
  * @param onlyonce
  *            只注册一次
  */
-EWA_Utils.JsRegisterSrc = function (src, onlyonce) {
+EWA_Utils.JsRegisterSrc = function(src, onlyonce) {
 	var hash = src.hashCode();
 	var script_id = "ewa_js_register_" + hash;
 	if (onlyonce && $X(script_id)) {
@@ -225,7 +226,7 @@ EWA_Utils.JsRegisterSrc = function (src, onlyonce) {
  * @param {}
  *            js
  */
-EWA_Utils.JsRegister = function (js) {
+EWA_Utils.JsRegister = function(js) {
 	// hash执行效率太慢，不适合
 	// var hash = js.hashCode();
 	// var script_id = "ewa_js_register_" + hash;
@@ -250,12 +251,12 @@ EWA_Utils.JsRegister = function (js) {
 /**
  * 后加载背景图
  */
-EWA_Utils.LazyBackgroundLoad = function (objs, checkHeight) {
+EWA_Utils.LazyBackgroundLoad = function(objs, checkHeight) {
 	var h = checkHeight
-			|| ((document.compatMode == "CSS1Compat" ? document.documentElement.clientHeight + document.documentElement.scrollTop : document.body.clientHeight
-					+ document.body.scrollTop) + 50);
+		|| ((document.compatMode == "CSS1Compat" ? document.documentElement.clientHeight + document.documentElement.scrollTop : document.body.clientHeight
+			+ document.body.scrollTop) + 50);
 	var objs1 = objs || $('.EWA_GRID_BG_IMG[is_lazy_load=true]');
-	objs1.each(function () {
+	objs1.each(function() {
 		var o = $(this);
 		// console.log(h, o.offset().top);
 		if (o.offset().top < h) {
@@ -265,7 +266,7 @@ EWA_Utils.LazyBackgroundLoad = function (objs, checkHeight) {
 		}
 	});
 };
-EWA_Utils.ImageAdjust = function (img, maxWidth, maxHeight) {
+EWA_Utils.ImageAdjust = function(img, maxWidth, maxHeight) {
 	if (maxWidth == null || maxHeight == null) {
 		return;
 	}
@@ -312,7 +313,7 @@ EWA_Utils.ImageAdjust = function (img, maxWidth, maxHeight) {
 /**
  * 创建临时编号
  */
-EWA_Utils.tempId = function (prefix) {
+EWA_Utils.tempId = function(prefix) {
 	if (!this.__TMPIDS) {
 		this.__TMPIDS = {};
 	}
@@ -448,7 +449,7 @@ function SetInnerText(obj, text) {
 }
 // firefox
 if (typeof document.readyState == 'undefined') {
-	EWA.B._T = window.setInterval(function () {
+	EWA.B._T = window.setInterval(function() {
 		if (EWA.CP) {
 			window.clearInterval(EWA.B._T);
 			document.readyState = 'complete';
@@ -463,7 +464,7 @@ if (typeof document.readyState == 'undefined') {
 function UrlParas() {
 	var paras = GetUrlParas();
 	var tmp = [];
-	for ( var n in paras) {
+	for (var n in paras) {
 		var name = n.toUpperCase();
 		if (name == 'XMLNAME' || name == 'ITEMNAME' || name.indexOf('EWA') >= 0) {
 			continue;
@@ -558,22 +559,22 @@ function AddEvent(obj, name, event) {
 
 // ----- String prototype -------
 
-String.prototype.lTrim = function () {
+String.prototype.lTrim = function() {
 	return this.replace(/(^\s*)/g, "");
 };
-String.prototype.rTrim = function () {
+String.prototype.rTrim = function() {
 	return this.replace(/(\s*$)/g, "");
 };
 
-String.prototype.trimEx = function () {
+String.prototype.trimEx = function() {
 	return this.trim().replace(/(^　*)|(　*$)/g, "");
 };
 if (!String.prototype.startsWith) {
-	String.prototype.trim = function () {
+	String.prototype.trim = function() {
 		return this.replace(/(^\s*)|(\s*$)/g, "");
 	};
 
-	String.prototype.startsWith = function (s2) {
+	String.prototype.startsWith = function(s2) {
 		var s1 = this;
 		if (s2 == null) {
 			return false;
@@ -586,7 +587,7 @@ if (!String.prototype.startsWith) {
 			return true;
 		return false;
 	};
-	String.prototype.endsWith = function (s2) {
+	String.prototype.endsWith = function(s2) {
 		var s1 = this;
 		if (s2 == null) {
 			return false;
@@ -600,19 +601,19 @@ if (!String.prototype.startsWith) {
 		return false;
 	};
 }
-String.prototype.toURL = function () {
+String.prototype.toURL = function() {
 	return encodeURIComponent(this);
 };
-String.prototype.toInputValue = function () {
+String.prototype.toInputValue = function() {
 	if (this == null || this == '') {
 		return this;
 	}
 	return this.replace(/\</ig, "&lt;").replace(/\>/ig, "&gt;").replace(/\"/ig, "&quot;");
 };
-String.prototype.unURL = function () {
+String.prototype.unURL = function() {
 	return decodeURIComponent(this);
 };
-String.prototype.toMoney = function () {
+String.prototype.toMoney = function() {
 	var v = this;
 	if (v == null || v == '') {
 		return v;
@@ -647,7 +648,7 @@ String.prototype.toMoney = function () {
 /**
  * 获取字符串的hashcode
  */
-String.prototype.hashCode = function () {
+String.prototype.hashCode = function() {
 	var str = this;
 	var h = 0;
 	var len = str.length;
@@ -661,15 +662,15 @@ String.prototype.hashCode = function () {
 	return h;
 };
 // 格式化数字为货币
-Number.prototype.fm = function (places, symbol, thousand, decimal) {
+Number.prototype.fm = function(places, symbol, thousand, decimal) {
 	places = !isNaN(places = Math.abs(places)) ? places : 2;
 	symbol = symbol !== undefined ? symbol : "";
 	thousand = thousand || ",";
 	decimal = decimal || ".";
 	var number = this, negative = number < 0 ? "-" : "", i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "", j = (j = i.length) > 3 ? j % 3
-			: 0;
+		: 0;
 	return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand)
-			+ (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+		+ (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
 };
 function $X(id) {
 	return document.getElementById(id);
@@ -731,7 +732,7 @@ function $GMap(callAfter) {
 		return;
 	}
 	if (!EWA._____set_google_map) {
-		setTimeout(function () {
+		setTimeout(function() {
 			var s = document.createElement('script');
 			if (EWA.RV_STATIC_PATH) {
 				s.src = EWA.RV_STATIC_PATH + "/EWA_STYLE/js/js_jquery/EWA_GOOGLE_MAP.js";
@@ -742,7 +743,7 @@ function $GMap(callAfter) {
 		}, 123);
 		EWA._____set_google_map = true;
 	}
-	setTimeout(function () {
+	setTimeout(function() {
 		$GMap(callAfter);
 	}, 100);
 }

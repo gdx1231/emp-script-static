@@ -6112,7 +6112,7 @@ function EWA_ListFrameClass() {
 	 * @param {String}
 	 *            memoName memo字段名称
 	 * @param cb 循环info回调的方法，p0当前td，p1当前info, p2当前序号
-	 * @return 影响的标题栏的td数组
+	 * @return 影响的标题栏的nobr数组
 	 */
 	this.RewriteInfo = function(infoJson, idName, infoName, memoName, cb) {
 		var tb = $('#EWA_LF_' + this._Id);
@@ -6530,9 +6530,9 @@ function EWA_ListFrameClass() {
 			}
 			var o = map[name.toUpperCase()];
 			if (tag == 'lt' || tag == 'lte') {
-				o.para2 = para1.unURL();
+				o.para2 = para1.unURL().replace(/\+/ig, ' ');
 			} else {
-				o.para1 = para1.unURL();
+				o.para1 = para1.unURL().replace(/\+/ig, ' ');
 			}
 		}
 		return map;
