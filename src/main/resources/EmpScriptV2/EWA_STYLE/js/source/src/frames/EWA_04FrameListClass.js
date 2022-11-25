@@ -1809,9 +1809,9 @@ function EWA_ListFrameClass() {
 			}
 			var o = map[name.toUpperCase()];
 			if (tag == 'lt' || tag == 'lte') {
-				o.para2 = para1.unURL();
+				o.para2 = para1.unURL().replace(/\+/ig, ' ');
 			} else {
-				o.para1 = para1.unURL();
+				o.para1 = para1.unURL().replace(/\+/ig, ' ');
 			}
 		}
 		return map;
