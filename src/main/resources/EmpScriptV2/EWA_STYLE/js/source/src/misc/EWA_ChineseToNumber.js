@@ -24,13 +24,18 @@
 		'百': { value: 100 },
 		'佰': { value: 100 },
 		'陌': { value: 100 },
+		
 		'千': { value: 1000 },
 		'阡': { value: 1000 },
 		'仟': { value: 1000 },
 		'k': { value: 1000, stop: true },
 		'K': { value: 1000, stop: true },
+		
 		'万': { value: 10000, stop: true },
 		'萬': { value: 10000, stop: true },
+		'w': { value: 10000, stop: true },
+		'W': { value: 10000, stop: true },
+		
 		'M': { value: 1000 * 1000, stop: true }, // million
 		'm': { value: 1000 * 1000, stop: true },
 		'亿': { value: 100000000, stop: true },

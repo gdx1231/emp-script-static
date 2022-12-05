@@ -27,7 +27,7 @@ cat ${target}/EWA.js ${target}/EWA_UI.js ${target}/EWA_FRAME.js  ${target}/EWA_M
 echo start compress with google 
 
 #echo start compress EWA_ALL.js
-java -jar ${sh_dir}/compiler.jar --js ${target}/EWA_ALL.js --js_output_file ${target}/EWA_ALL.min.js --create_source_map ${target}/EWA_ALL.min.map
+java -jar ${sh_dir}/compiler.jar --js ${target}/EWA_ALL.js --js_output_file ${target}/EWA_ALL.min.js --language_out ECMASCRIPT5 --create_source_map ${target}/EWA_ALL.min.map
 
 echo "//# sourceMappingURL=ewa.min.map" >> ${target}/EWA_ALL.min.js
 echo start combine EWA_ALL.min.2.0.js

@@ -1179,6 +1179,15 @@ function EWA_FrameClass() {
 
 	this.isShowPostWaitting = true; // 是否显示提交时的等待框
 
+	this.textareaAutoSize = function(){
+		// /third-party/autosize-master/dist/autosize.min.js
+		if(!window.autosize){
+			console.log('autosize.js 没有引入，/third-party/autosize-master/dist/autosize.min.js');
+			return;
+		}
+		autosize(this.getObj('textarea').addClass('ewa-textarea-auto-size'));
+	};
+
 	this.getObj = function(exp) {
 		var tb = $('#EWA_FRAME_' + this._Id);
 		if (exp) {

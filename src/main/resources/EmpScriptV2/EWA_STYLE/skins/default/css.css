@@ -487,7 +487,9 @@ a:hover, .ewa-map-button:hover {
 .EWA_TEXTAREA {
 	height: 100px;
 }
-
+.ewa-textarea-auto-size {
+	display: block;
+}
 .ewa-with-icon {
 	position: relative;
 }
