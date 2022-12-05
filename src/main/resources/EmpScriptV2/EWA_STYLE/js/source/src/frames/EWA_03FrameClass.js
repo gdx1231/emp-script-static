@@ -16,7 +16,7 @@ function EWA_FrameClass() {
 	this.textareaAutoSize = function(){
 		// /third-party/autosize-master/dist/autosize.min.js
 		if(!window.autosize){
-			console.log('autosize.js 没有引入，/third-party/autosize-master/dist/autosize.min.js');
+			console.warn('autosize.js 没有引入，/third-party/autosize-master/dist/autosize.min.js');
 			return;
 		}
 		autosize(this.getObj('textarea').addClass('ewa-textarea-auto-size'));
