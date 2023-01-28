@@ -11,7 +11,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class Resources {
 	/**
 	 * 
@@ -84,9 +83,17 @@ public class Resources {
 			r.setType("text/css");
 		} else if (ext.equalsIgnoreCase("xml")) {
 			r.setType("text/xml");
-		} else if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("png")
-				|| ext.equalsIgnoreCase("gif")) {
-			r.setType("image/" + ext);
+		} else if (ext.equalsIgnoreCase("jif") || ext.equalsIgnoreCase("jiff") || ext.equalsIgnoreCase("jpg")
+				|| ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif")
+				|| ext.equalsIgnoreCase("webp") || ext.equalsIgnoreCase("apng")) {
+			String type = ext;
+			if ("jpg".equalsIgnoreCase(type) || type.equalsIgnoreCase("jif") || type.equalsIgnoreCase("jiff")) {
+				type = "jpeg";
+			}
+			r.setType("image/" + type);
+			binary = true;
+		} else if (ext.equalsIgnoreCase("woff2") || ext.equalsIgnoreCase("ttf") || ext.equalsIgnoreCase("woff")) {
+			r.setType("font/" + ext);
 			binary = true;
 		} else {
 			r.setType("application/octet-stream");
@@ -153,5 +160,4 @@ public class Resources {
 		return r;
 	}
 
-	 
 }
