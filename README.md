@@ -1,4 +1,5 @@
 # emp-script-static
+EWA 项目静态文件
 
 ```
 <dependency>
