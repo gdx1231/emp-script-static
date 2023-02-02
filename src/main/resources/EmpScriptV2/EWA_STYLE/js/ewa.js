@@ -26546,7 +26546,7 @@ var EWAC_WfOrg = function () {
     this.GetMaster = function (usrId) {
         var u = this.Users[usrId];
         if (u == null) {
-            alert((EWA.LANG == 'enus' ? 'NONE of ' : '没有啊') + usrId);
+            console.log((EWA.LANG == 'enus' ? 'NONE of ' : '没有啊') + usrId);
             return;
         }
         var dep = u.Dept;
@@ -26560,7 +26560,7 @@ var EWAC_WfOrg = function () {
                 }
             }
         }
-        alert(EWA.LANG == 'enus' ? '	No manager' : '没有管理者');
+        console.log(EWA.LANG == 'enus' ? '	No manager' : '没有管理者');
     }
 
     this.IsMaster = function (usrId) {
@@ -27687,7 +27687,9 @@ function loadWfShow(units, cnns, sts, logics, pid, admId, deptId, postId, curUni
             td.insertBefore(back, td.getElementsByTagName('input')[1]);
         }
         var xitems = _EWA_WF.WF_SHOW;
-        showControls(tb, xitems);
+        if(xitems){
+            showControls(tb, xitems);
+        }
     }
 }
 function showControls(tb, xitems) {
