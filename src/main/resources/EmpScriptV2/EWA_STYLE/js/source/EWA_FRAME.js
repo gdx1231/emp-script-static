@@ -3666,7 +3666,10 @@ function EWA_FrameClass() {
 		url = u1.GetUrl();
 
         this.posting = true;
-		this._Ajax.PostNew(url, EWA.F.F.CUR._CallBack);
+        let that = this;
+		this._Ajax.PostNew(url, function(){
+            that._CallBack();
+        } );
 
 		// 隐藏提交时候等待框 郭磊 2018-04-02
 		if (!this.isShowPostWaitting) {
@@ -3678,23 +3681,24 @@ function EWA_FrameClass() {
         return true;
 	};
 	this._CallBack = function() {
-		var ajax = EWA.F.F.CUR._Ajax;
+        let that = this; // EWA.F.F.CUR
+		var ajax = that._Ajax;
 		if (!ajax.IsRunEnd()) {
 			return;
 		}
-		$('#EWA_FRAME_' + EWA.F.F.CUR._Id + ' input[type=submit]').attr('disabled', null);
-        this.posting = false;
+		$('#EWA_FRAME_' + that._Id + ' input[type=submit]').attr('disabled', null);
+        that.posting = false;
 		// 外部指定的 DoPostEnd，用于显示或提示写东西
-		if (EWA.F.F.CUR.DoPostEnd) {
-			EWA.F.F.CUR.DoPostEnd(ajax, ajax._Http.status, ajax._Http.responseText, ajax._Http.statusText);
+		if (that.DoPostEnd) {
+			that.DoPostEnd(ajax, ajax._Http.status, ajax._Http.responseText, ajax._Http.statusText);
 		}
 		if (ajax._Http.status == 200) {
 			var ret = ajax._Http.responseText;
 			if (EWA.F.CheckCallBack(ret)) {
-				EWA.F.F.CUR.ValidCodeError(true); // 重新刷新验证码
+				that.ValidCodeError(true); // 重新刷新验证码
 				try {
-					if (EWA.F.F.CUR.ReloadAfter) {
-						EWA.F.F.CUR.ReloadAfter(ret);
+					if (that.ReloadAfter) {
+						that.ReloadAfter(ret);
 					}
 					eval(ret);
 				} catch (e) {
