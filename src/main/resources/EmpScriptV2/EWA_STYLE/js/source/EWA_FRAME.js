@@ -3512,6 +3512,9 @@ function EWA_FrameClass() {
 		return true;
 	};
 	this.DoPost = function(objForm, url, isSkipDoPostBefore) {
+        if( this.posting){
+            return false;
+        }
 		if (!isSkipDoPostBefore) {
 			var rst = this.DoPostBefore();
 			if (rst instanceof Array) {
@@ -3589,7 +3592,7 @@ function EWA_FrameClass() {
 		if (ht5takephotos.length > 0 && !this.uploadProcess) {
 			// 如果没有开始上传，先检查一下所有对象是否合法，否则不检查
 			if (!this.CheckValidAll(objForm)) {
-				return;
+				return false;
 			}
 		}
 
@@ -3629,12 +3632,12 @@ function EWA_FrameClass() {
 
 		if (this._stopPostError) { // 停止提交的错误原因，系统错误，客户端无效处理
 			EWA.UI.Msg.ShowError(this._stopPostError, "");
-			return;
+			return false;
 		}
 
 		var ajax = this.CreateAjax(objForm);
 		if (ajax == null) {
-			return;
+			return false;
 		}
 
 		if (url == null) {
@@ -3662,6 +3665,7 @@ function EWA_FrameClass() {
 		}
 		url = u1.GetUrl();
 
+        this.posting = true;
 		this._Ajax.PostNew(url, EWA.F.F.CUR._CallBack);
 
 		// 隐藏提交时候等待框 郭磊 2018-04-02
@@ -3670,6 +3674,8 @@ function EWA_FrameClass() {
 		}
 
 		$('#EWA_FRAME_' + this._Id + ' input[type=submit]').attr('disabled', 'disabled');
+
+        return true;
 	};
 	this._CallBack = function() {
 		var ajax = EWA.F.F.CUR._Ajax;
@@ -3677,7 +3683,7 @@ function EWA_FrameClass() {
 			return;
 		}
 		$('#EWA_FRAME_' + EWA.F.F.CUR._Id + ' input[type=submit]').attr('disabled', null);
-
+        this.posting = false;
 		// 外部指定的 DoPostEnd，用于显示或提示写东西
 		if (EWA.F.F.CUR.DoPostEnd) {
 			EWA.F.F.CUR.DoPostEnd(ajax, ajax._Http.status, ajax._Http.responseText, ajax._Http.statusText);
