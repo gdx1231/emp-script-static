@@ -2,10 +2,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>editor</title>
-		<script type="text/javascript" src="../js/EWA.js">
-</script>
-		<script type="text/javascript" src="htmlformat.js">
-</script>
+		<script type="text/javascript" src="../js/ewa.min.js"></script>
+		<script type="text/javascript" src="htmlformat.js"></script>
 		<style type="text/css">
 .but div {
 	overflow: hidden;
@@ -72,7 +70,7 @@ function mDown(evt) {
 				__VAL__ = html;
 				__TYPE__ = 'html';
 
-				window.frames[1].aa();
+				window.frames[1].initEditor();
 			}
 		} else {
 			document.getElementById('txt').style.display = 'none';
