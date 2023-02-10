@@ -1273,7 +1273,12 @@ function EWA_UI_MenuClass(className) {
 			var o = subMenus[0];
 			var pid = o.getAttribute('EWA_MF_PID');
 			var div = document.createElement('div');
-			div.innerHTML = '<div class="ewa_lmenu_bar1"></div><div style="padding-left:4px;display:none"></div>'
+			div.innerHTML = '<div class="ewa_lmenu_bar1"></div><div style="padding-left:4px;display:none"></div>';
+            if(!$X(pid)){
+                console.warn('not found pid', pid, o);
+                $(o).remove();
+                continue;
+            }
 			var menu0 = $X(pid).parentNode.parentNode;
 			$(menu0).addClass('ewa-lmenu-children');
 			menu0.childNodes[1].appendChild(div);
