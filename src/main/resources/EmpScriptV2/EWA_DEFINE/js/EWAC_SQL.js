@@ -644,6 +644,10 @@ function CreateType(s1) {
 	s1 = s1.toLowerCase();
 	if (s1 == 'bigint' || s1 == 'lang') {
 		return 'Long';
+	} else if (s1 == "smallint") {//UNSIGNED
+		return "Short";
+	} else if (s1 == "tinyint") {//UNSIGNED
+		return "Byte";
 	} else if (s1 == "smallint unsigned") {//UNSIGNED
 		return "UInt16";
 	} else if (s1 == "int unsigned") {//UNSIGNED
@@ -661,6 +665,8 @@ function CreateType(s1) {
 	} else if (s1.indexOf("bin") >= 0 || s1.indexOf("blob") >= 0
 		|| s1.indexOf("image") >= 0) {
 		return "byte[]";
+	}  else if (s1 == "bit" || s1.indexOf("bool") >= 0) {
+		return "Boolean";
 	} else {
 		return "String";
 	}
