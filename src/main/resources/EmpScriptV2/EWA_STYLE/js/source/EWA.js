@@ -871,7 +871,12 @@ function EWA_AjaxClass(isAsync) {
 			console.log('ajax url not null');
 			return;
 		}
-		if (url.href) {
+        
+        if(url.GetUrl){
+            url = url.GetUrl();
+        } else if(url.getUrl){
+            url = url.getUrl();
+        } else if (url.href) {
 			url = url.href;
 		}
 		if (url.indexOf('|') >= 0) {
