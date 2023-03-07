@@ -4,7 +4,16 @@
 	width: 100%;
 	overflow: auto;
 }
-
+.ewa_app_upload_remove {
+	position: absolute;
+	top: 0;
+	right:0;
+	display: inline-block;
+	font-family: FontAwesome;
+}
+.ewa_app_upload_remove::before {
+	content: "\f00d";
+}
 .ewa_app_upload_form {
 	margin: 5px;
 	width: 70px;

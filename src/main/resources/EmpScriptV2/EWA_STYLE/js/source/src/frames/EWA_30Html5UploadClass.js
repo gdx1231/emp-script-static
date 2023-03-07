@@ -11,6 +11,40 @@ function EWA_Html5UploadClass() {
 	this.UPLOAD_STATUS = ""; // start,checking,ok ,nofile(没有上传文件)
 	this.WAIT_ID = EWA_Utils.tempId("ht5upload_wait_");
 
+	this.loadFiles = function(url, fileName, filePath, funcRemove, funcShowFile) {
+		let that = this;
+		$J(url, function(rst) {
+			for (let n in rst) {
+				let d = rst[n];
+				that.loadFile(d, fileName, filePath, funcRemove, funcShowFile);
+			}
+		})
+	};
+	// 加载文件
+	this.loadFile = function(d, fileName, filePath, funcRemove, funcShowFile) {
+		let img;
+
+		img = d[filePath];
+		let tb = this.showPreviewUrl(img);
+
+		if (funcRemove) {
+			let s = $("<a class='ewa_app_upload_remove'></a>").attr(d);
+			s.on("click", function() {
+				funcRemove(this);
+			});
+			$(tb).css("position", "relative").append(s);
+		}
+
+		if (funcShowFile) {
+			$(tb).find("img").css("cursor", "pointer").attr(d).on("click", function() {
+				funcShowFile(this);
+			});
+		}
+		$(tb).find(".name div").attr("title", d[fileName]).text(d[fileName]);
+	};
+	this.remove = function(obj){ //obj 时删除A
+		$(obj).parent().remove();
+	};
 	//限制上传文件类型，类型应在配置中，服务器端判断配置参数
 	this.changeUpExts = function(exts) {
 		let input = $('#' + this.INPUT_FILE_ID);
@@ -71,10 +105,10 @@ function EWA_Html5UploadClass() {
 			return;
 		}
 		let sizeLimit = 0; //文件大小限制,0表示无限制
-		if(!this.UpLimit){
+		if (!this.UpLimit) {
 			this.UpLimit = "10M"; // 未指定的话，默认10M
 		}
-		
+
 		let limit = (this.UpLimit + "").toLocaleLowerCase().replace(/,/ig, "").replace(/ /ig, "");
 		if (limit.endsWith("m")) {
 			let num = limit.substring(0, limit.length - 1);
@@ -97,7 +131,7 @@ function EWA_Html5UploadClass() {
 			}
 			sizeLimit = limit * 1;
 		}
-		 
+
 		let errs = [];
 		if (sizeLimit > 0) {//检查每个文件的大小
 			for (var i = 0; i < source.files.length; i++) {
@@ -479,14 +513,14 @@ function EWA_Html5UploadClass() {
 		if (ss.length === 0) {
 			this.UPLOAD_STATUS = "ok";
 			return;
-		} 
-		
+		}
+
 		// 上传有错误		
 		var buts = [];
 		var that = this;
 		buts[0] = {
 			Text: _EWA_INFO_MSG['BUT.OK'],
-			Event: function(){
+			Event: function() {
 				that.UPLOAD_STATUS = "error";
 			},
 			Default: true
