@@ -13823,6 +13823,15 @@ function EWA_FrameClass() {
         var u1 = new EWA_UrlClass(this.Url);
         u1.AddParameter("EWA_AJAX", "SELECT_RELOAD");
         u1.AddParameter("EWA_RELOAD_ID", itemName);
+        // 当前表单上的所有元素同时提交，避免因为上下元素关联出现问题
+        this.getObj('input,select').each(function(){
+			if(this.name == itemName){
+				return;
+			}
+			if(this.value.length < 100){
+			 	u1.AddParameter(this.name, this.value);
+			}
+		});
         var u = u1.GetUrl();
         var o = this.getObj("#" + itemName)[0];
         let map = {};
