@@ -2917,6 +2917,13 @@ function EWA_FrameClass() {
     // ajax = null;
     // };
     this.ValidCodeError = function (isHiddenAlert) {
+		let t0 = this._t_ValidCodeError || 0;
+		let t1 = new Date().getTime();
+		if(t1 - t0 < 1000){
+			// 出现重复情况
+			return;
+		}
+		this._t_ValidCodeError = t1;
         $('.ewa-valid-code-img').each(function () {
             this.click()
 
