@@ -1184,6 +1184,7 @@ tr[error] .ewa-tip-error:after {
 	margin-right: 4px;
 	cursor: pointer;
 	-webkit-user-select: none;
+	user-select: none;
 }
 
 .ewa-lf-func-recycle:hover {
@@ -1345,7 +1346,7 @@ td.ewa-lf-edit {
 	font-family: monospace;
 }
 
-.ewa-lf-fm-money,.ewa-lf-fm-leastmoney {
+.ewa-lf-fm-money,.ewa-lf-fm-leastmoney,.ewa-lf-fm-percent {
 	text-align: right;
 	font-family: monospace;
 }
@@ -1809,12 +1810,14 @@ td.ewa-lf-edit {
 	z-index:1;
     background-size: cover;
 }
-
+.ewa-dialog {
+	position: fixed;	
+}
 .ewa-ui-dialog-cover {
 	top: 0px;
 	left: 0px;
-	background-color: #000;
-	position: absolute;
+	background-color: #999;
+	position: fixed;
 	filter: alpha(opacity = 50);
 	opacity: 0.5;
 }

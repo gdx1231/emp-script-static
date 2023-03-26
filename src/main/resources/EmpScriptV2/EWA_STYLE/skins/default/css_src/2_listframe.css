@@ -326,6 +326,7 @@
 	margin-right: 4px;
 	cursor: pointer;
 	-webkit-user-select: none;
+	user-select: none;
 }
 
 .ewa-lf-func-recycle:hover {
@@ -487,7 +488,7 @@ td.ewa-lf-edit {
 	font-family: monospace;
 }
 
-.ewa-lf-fm-money,.ewa-lf-fm-leastmoney {
+.ewa-lf-fm-money,.ewa-lf-fm-leastmoney,.ewa-lf-fm-percent {
 	text-align: right;
 	font-family: monospace;
 }

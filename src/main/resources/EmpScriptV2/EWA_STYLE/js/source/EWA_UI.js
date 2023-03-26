@@ -2864,8 +2864,9 @@ function EWA_UI_DialogClass() {
 		}
 		w._EWA_UI_DIALOG_COVERINDEX += 1;
 		this.zIndex = w._EWA_UI_DIALOG_COVERINDEX;
-		var position = window.EWA_UI_DIALOG_FIXED ? "position:fixed"
-				: "position:absolute";
+		//var position = window.EWA_UI_DIALOG_FIXED ? "position:fixed" : "position:absolute";
+		// 在css中定义		
+		var position = "";		
 		// 主框体
 		var styleFrame = "display:none; " + position + "; width:" + this.Width
 				+ "; height:" + this.Height + "; z-index:" + this.zIndex

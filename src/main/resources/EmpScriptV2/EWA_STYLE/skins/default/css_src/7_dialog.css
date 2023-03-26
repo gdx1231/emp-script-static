@@ -114,12 +114,14 @@
 	z-index:1;
     background-size: cover;
 }
-
+.ewa-dialog {
+	position: fixed;	
+}
 .ewa-ui-dialog-cover {
 	top: 0px;
 	left: 0px;
-	background-color: #000;
-	position: absolute;
+	background-color: #999;
+	position: fixed;
 	filter: alpha(opacity = 50);
 	opacity: 0.5;
 }
