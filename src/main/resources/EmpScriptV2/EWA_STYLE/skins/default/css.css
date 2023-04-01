@@ -1276,22 +1276,20 @@ tr[error] .ewa-tip-error:after {
 	float: right;
 }
 
-.ewa-lf-data-row>td {
+.ewa-lf-data-row>td, 
+.ewa-lf-sub-tr>td
+{
 	height: 25px;
 	padding: 4px;
 }
-
+ 
 /* 表格滑动浮动颜色 */
 .ewa_grid_mover {
 	background-color: #fffad8;
-	height: 22px;
 }
 
 /* 表格滑动选中颜色 */
 .ewa_grid_down {
-	height: 22px;
-	/*
-	background-color: lightblue;*/
 	background-color: #e1f6ff;
 }
 
@@ -1339,18 +1337,26 @@ td.ewa-lf-edit {
 /* listframe 计算值*/
 .ewa-lf-sub-td {
 	text-align: right;
-}
-
-.ewa-lf-sub {
 	color: blue;
-	font-family: monospace;
+	font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
 }
 
 .ewa-lf-fm-money,.ewa-lf-fm-leastmoney,.ewa-lf-fm-percent {
 	text-align: right;
-	font-family: monospace;
+	font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
 }
-
+.ewa-lf-fm-datetime {
+	text-align:center;
+	width: 125px;
+}
+.ewa-lf-fm-dateshorttime {
+	text-align:center;
+	width: 120px;
+}
+.ewa-lf-fm-date {
+	text-align:center;
+	width: 100px;
+}
 .ewa-lf-frame .ewa-lf-data-row hr {
 	margin-top: 5px;
 	margin-bottom: 5px;

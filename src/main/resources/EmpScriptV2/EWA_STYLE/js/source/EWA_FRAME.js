@@ -4911,6 +4911,16 @@ function EWA_ListFrameClass() {
 			$(this).addClass('ewa-map-button');
 		});
 	};
+	this.Merges = function(cfgs) {
+		if(cfgs == null || cfgs.length == 0){
+			console.log("cfg.from, cfg.to, cfg.str, cfg.func, cfg.header");
+			return;
+		}
+		for (let i = 0; i < cfgs.length; i++) {
+			let cfg = cfgs[i];
+			this.Merge(cfg.from, cfg.to, cfg.str, cfg.func, cfg.header);
+		}
+	};
 	/**
 	 *  合并单元格
 	 * @param from 来源对象的id
@@ -4923,7 +4933,12 @@ function EWA_ListFrameClass() {
 	 */
 	this.Merge = function(from, to, mergeStr, funcEachRow, isMergeHeader) {
 		let tb = $('#EWA_LF_' + this._Id);
-		tb.find('tr[ewa_key]').each(function() {
+		if (mergeStr == null) {
+			mergeStr = "";
+		} else if (mergeStr.indexOf('<') == -1) {
+			mergeStr = "<span class='ewa-merge-str ewa-mearge-str'>" + mergeStr + "</span>"
+		}
+		tb.find('tr[ewa_key],tr.ewa-lf-sub-tr').each(function() {
 			let toObj = $(this).find('[id="' + to + '"]');
 			let toParent = toObj.parentsUntil('tr').last();
 			if (toParent.attr('ewa-merged') == 'yes') {// 已经合并
@@ -4935,13 +4950,9 @@ function EWA_ListFrameClass() {
 			let fromobjParent = fromobj.parentsUntil('tr').last();
 			fromobjParent.hide();
 
-			if (mergeStr == null) {
-				mergeStr = "<br>"
-			} else if (mergeStr.indexOf('<') >= 0) {
-				toParent.append(mergeStr); // html 方式
-			} else { //字符串
-				toParent.append("<span class='ewa-merge-str ewa-mearge-str'>" + mergeStr + "</span>");
-			}
+			// 分割字符
+			toParent.append(mergeStr); 
+			 
 			toParent.append(fromobj);
 			if (funcEachRow) {
 				funcEachRow(toParent, this); // td, tr
@@ -5013,7 +5024,7 @@ function EWA_ListFrameClass() {
 			tb.find('tr[ewa_tag="HEADER"] [id="' + toParent + '"]').html(headersHtml);
 		}
 
-		tb.find('tr[ewa_key]').each(function() {
+		tb.find('tr[ewa_key],tr.ewa-lf-sub-tr').each(function() {
 			var target = $(this).find('[id="' + toParent + '"]');
 			if (target.length == 0) {
 				console.log('not find ' + toParent);
@@ -5086,7 +5097,7 @@ function EWA_ListFrameClass() {
 			var total = 0;
 			var exp = '#EWA_LF_' + this._Id + ' .ewa-lf-data-row [name="' + id + '"]';
 			$(exp).each(function() {
-				var v = this.value != null ? this.value.replace(/,/ig, '') : GetInnerText(this).replace(/,/ig, '');
+				var v = this.value != null ? this.value.replace(/,/ig, '') : this.title;
 				if (!isNaN(v)) {
 					total += v * 1;
 					if (v.indexOf(".") > 0) {
@@ -5094,7 +5105,8 @@ function EWA_ListFrameClass() {
 					}
 				}
 			});
-			r.find('td[id=ADD_ROW_' + id + "]").html("<nobr class='ewa-lf-sub'>" + total.fm(fm_length) + "</nobr>");
+			let html = "<span id='"+id+"' name='"+id+"' class='ewa-lf-sub'>" + total.fm(fm_length) + "</span>";
+			r.find('td[id=ADD_ROW_' + id + "]").html(html);
 		}
 	};
 
