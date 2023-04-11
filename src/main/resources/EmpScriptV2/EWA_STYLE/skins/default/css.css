@@ -440,7 +440,7 @@ a:hover, .ewa-map-button:hover {
 
 /* Frame 左部 */
 .EWA_TD_L, .EWA_TD_R, .EWA_TD_M, .EWA_TD_B {
-	height: 22px;
+	height: 24px;
 	background-color: white;
 }
 
@@ -1286,11 +1286,15 @@ tr[error] .ewa-tip-error:after {
 /* 表格滑动浮动颜色 */
 .ewa_grid_mover {
 	background-color: #fffad8;
+	height: 25px;
+	padding: 4px;
 }
 
 /* 表格滑动选中颜色 */
 .ewa_grid_down {
 	background-color: #e1f6ff;
+	height: 25px;
+	padding: 4px;
 }
 
 /* ListFrame 分组 */
