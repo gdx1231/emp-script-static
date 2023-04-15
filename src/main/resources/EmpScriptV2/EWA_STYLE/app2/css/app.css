@@ -274,6 +274,7 @@ section>.content a.act {
 /* 取消ios */
 input[type=button], input[type=submit] {
 	-webkit-appearance: none;
+	appearance: none;
 }
 
 #slider_bar {
@@ -337,6 +338,7 @@ section {
 	text-size-adjust: none;
 	background-color: #f1f1f1;
 	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 }
 /* 向上弹出 */
 section.ewa-app-pop {
@@ -379,16 +381,13 @@ section.firstsection {
 	-moz-transform: translateX(0);
 	-ms-transform: translateX(0);
 	-o-transform: translateX(0);
+	transform: translateX(0);
 }
 
 section>div.content {
 	flex: 1;
 	overflow: hidden;
 	position: relative;
-}
-
-section .iscroller {
-	
 }
 
 section.ewa-app-pop>div.content {
@@ -427,11 +426,9 @@ section .reloading:before {
 	text-align: center;
 	font-size: 12px;
 }
+
 .enus section .reloading:before {
 	content: 'Loading...';
-}
-section .loadingmore {
-	
 }
 
 section .loadingmore-scroller {
@@ -449,15 +446,18 @@ section .loadingmore:after {
 	text-align: center;
 	font-size: 12px;
 }
+
 .enus section .loadingmore:after {
 	content: 'Loading...';
 }
+
 select, input, textarea {
 	font-size: inherit;
 }
 
 section select, section input {
 	-webkit-appearance: none;
+	appearance: none;
 }
 
 section {
@@ -539,22 +539,23 @@ footer .ft-item-txt {
 	white-space: nowrap;
 }
 
-footer .footer-badges{
-	color:red;
+footer .footer-badges {
+	color: red;
 	display: none;
 }
+
 footer .footer-badges:after {
-    content: "";
-    display: block;
-    width: 10px;
-    height: 10px;
-    position: absolute;
-    background: red;
-    left: 50%;
-    top: 50%;
-    border-radius: 100%;
-    margin-left: 5px;
-    margin-top: -18px;
+	content: "";
+	display: block;
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	background: red;
+	left: 50%;
+	top: 50%;
+	border-radius: 100%;
+	margin-left: 5px;
+	margin-top: -18px;
 }
 
 /* 下拉放大图片的 iscroll 的 div */
@@ -665,11 +666,6 @@ footer .footer-badges:after {
 	margin-top: 12px;
 }
 
-.android section>div.content {
-	/*top: 40px;*/
-	
-}
-
 /*
 查看图片
 */
@@ -755,7 +751,6 @@ footer .footer-badges:after {
 #bbs-pic-view-box .view-large-image .page .imga {
 	max-width: 100%;
 	max-height: 100%;
-	amargin-left: 20px;
 }
 
 #bbs-pic-view-box .view-large-image .page td {
@@ -817,6 +812,45 @@ a.ewa-app-lf-menu-item.ref-id-session:before {
 	background-image: url(/static/images/share/icon64_wx_logo.png);
 }
 
+.fullscreen .header_but_back_fack_home, .fullscreen #header_but_back,
+	.fullscreen #header_but_plus, .fullscreen .header-right-func,
+	.fullscreen .ewa-app-btn {
+	top: 36px;
+}
+
+.fullscreen 	header {
+	height: 74px;
+}
+
+.fullscreen 	header>div {
+	padding-top: 30px;
+}
+
+.fullscreen 	header h1 {
+	margin-top: 44px;
+}
+
+.fullscreen 	section>div.content {
+	bottom: 74px;
+	top: 0;
+}
+
+.fullscreen 	footer {
+	height: 74px;
+	padding-bottom: 24px;
+}
+
+.fullscreen 	section.ewa-app-pop footer {
+	height: 70px;
+}
+
+.fullscreen 	.ewa-app-lf-menu.ewa-ddl-box {
+	padding-bottom: constant(safe-area-inset-bottom); /* 34px */
+}
+
+.fullscreen 	.login .EWA_TABLE {
+	margin-top: constant(safe-area-inset-top);
+}
 /* iphone x */
 @media only screen and (device-width: 375px) and (device-height: 812px)
 	and (-webkit-device-pixel-ratio:3) {

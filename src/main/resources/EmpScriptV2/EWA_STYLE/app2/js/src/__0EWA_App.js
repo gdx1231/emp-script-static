@@ -8,36 +8,37 @@
 	PicsViewer : __PicsViewer, // 图片缩放
 */
 var EWA_App = {
-	IS_STOP_TOUCH_MOVE : true,
-	EWA_ROOT : "ewa.jsp",
+	IS_STOP_TOUCH_MOVE: true,
+	EWA_ROOT: "ewa.jsp",
 
-	CFGS : null, // 所有配置信息
-	CFGS_CURRENT : null, // 当前配置信息
+	CFGS: null, // 所有配置信息
+	CFGS_CURRENT: null, // 当前配置信息
 	/* 在微信中 */
-	IS_IN_WEIXIN : /micromessenger/ig.test(navigator.userAgent),
+	IS_IN_WEIXIN: /micromessenger/ig.test(navigator.userAgent),
 	/* 在小程序中 */
-	IS_IN_WEIXIN_MINI : /miniprogram/ig.test(navigator.userAgent),
+	IS_IN_WEIXIN_MINI: /miniprogram/ig.test(navigator.userAgent),
 	/* 安卓 */
-	IS_IN_ANDROID : /android/ig.test(navigator.userAgent),
+	IS_IN_ANDROID: /android/ig.test(navigator.userAgent),
 	/* iphone */
-	IS_IN_IPHONE : /iphone/ig.test(navigator.userAgent),
-
+	IS_IN_IPHONE: /iphone/ig.test(navigator.userAgent),
+	/* ipad */
+	IS_IN_IPAD: /ipad/ig.test(navigator.userAgent),
 	/**
 	 * 初始化配置信息
 	 * 
 	 * @param cfgs
 	 *            配置信息列表
 	 */
-	initCfgs : function (cfgs) {
+	initCfgs: function(cfgs) {
 		var aa = {};
-		for ( var n in cfgs) {
+		for (var n in cfgs) {
 			var c = cfgs[n];
 			var id = c.ID;
 			var c1 = this.convertCfg(c);
 			aa[id] = c1;
 		}
 		this.CFGS = {
-			"INIT" : aa
+			"INIT": aa
 		};
 		this.CFGS_CURRENT = aa;
 		__SECTIONS = this.CFGS_CURRENT;
@@ -50,9 +51,9 @@ var EWA_App = {
 	 * @param cfgs
 	 *            配置信息列表
 	 */
-	attatchCfgs : function (tag, cfgs) {
+	attatchCfgs: function(tag, cfgs) {
 		var aa = {};
-		for ( var n in cfgs) {
+		for (var n in cfgs) {
 			var c = cfgs[n];
 			var id = c.ID;
 			var c1 = this.convertCfg(c);
@@ -62,7 +63,7 @@ var EWA_App = {
 		this.CFGS[tag] = aa;
 		__SECTIONS = this.CFGS_CURRENT;
 	},
-	changeCfgs : function (tag) {
+	changeCfgs: function(tag) {
 		if (!tag) {
 			tag = "INIT";
 		}
@@ -76,24 +77,24 @@ var EWA_App = {
 	/**
 	 * 转换配置信息
 	 */
-	convertCfg : function (config) {
+	convertCfg: function(config) {
 		var map_boolean = {
-			IScroll : 1,
-			PageFooter : 1,
-			PageHeader : 1,
-			Refresh : 1,
-			ButtonOnFooter : 1,
-			EWA : 1,
-			IScrollMore : 1
+			IScroll: 1,
+			PageFooter: 1,
+			PageHeader: 1,
+			Refresh: 1,
+			ButtonOnFooter: 1,
+			EWA: 1,
+			IScrollMore: 1
 		};
 		var map_js = {
-			Installed : 1,
-			Losted : 1,
-			RefreshAfter : 1,
-			ShowCompleted : 1
+			Installed: 1,
+			Losted: 1,
+			RefreshAfter: 1,
+			ShowCompleted: 1
 		};
 		var c1 = {};
-		for ( var m in config) {
+		for (var m in config) {
 			var v = config[m];
 			if (v != null && typeof v == "string") {
 				v = v.trim();
@@ -118,10 +119,10 @@ var EWA_App = {
 		}
 		return c1;
 	},
-	log : function () {
+	log: function() {
 		var u = "console.jsp";
 		var data = {};
-		for ( var n in arguments) {
+		for (var n in arguments) {
 			var o = arguments[n];
 			try {
 				var v = JSON.stringify(o);
@@ -130,17 +131,51 @@ var EWA_App = {
 			}
 			data['log' + n] = v;
 		}
-		$JP2(u, data, function () {
+		$JP2(u, data, function() {
 
 		});
+	},
+	getBodySize: function() {
+		let vertical = false;
+
+		if (screen.orientation) {
+			if (screen.orientation.angle === 0 || screen.orientation.angle === 180) {
+				vertical = true;
+			}
+			return { width: screen.availWidth, height: screen.availHeight, orientation: vertical ? "v" : "h" };
+		}
+
+		if (this.IS_IN_IPHONE || this.IS_IN_IPAD) {
+			if (window.orientation === 180 || window.orientation === 0) {
+				//ipad,iphone： 0 或180 竖屏
+				vertical = true;
+			}
+		} else {
+			if (window.orientation === 180 || window.orientation === 0) {
+				//Andriod：0 或180 横屏
+				vertical = false;
+			} else {
+				vertical = true;
+			}
+		}
+		let w = screen.availWidth;
+		let h = screen.availHeight;
+		if (vertical) {
+			return { width: w < h ? w : h, height: w < h ? h : w, orientation: "v" };
+		} else {
+			return { height: w > h ? h : w, width: w > h ? w : h, orientation: "h" };
+		}
 	},
 	/**
 	 * 改变窗体高度，同时判断是否横屏
 	 */
-	changeBodyHeight : function (w, h, src) {
+	changeBodyHeight: function(w, h, src) {
 		if (!w) {
-			w = document.documentElement.clientWidth;
-			h = document.documentElement.clientHeight;
+			let s = this.getBodySize();
+			w = s.width;
+			h = s.height;
+			//w = document.documentElement.clientWidth;
+			//h = document.documentElement.clientHeight;
 		}
 		if (EWA_App.DEBUG)
 			console.log("changeBodyHeight", w, h, src);
@@ -152,7 +187,7 @@ var EWA_App = {
 			$('body').removeClass('landscape');
 		}
 	},
-	start : function (fristId) {
+	start: function(fristId) {
 		if (!fristId) {
 			$Tip('请定义 fristId《第一个页面id》');
 			return;
@@ -162,15 +197,18 @@ var EWA_App = {
 			return;
 		}
 		this.FirstId = fristId;
-		window.addEventListener('orientationchange', function (event) {
+		var c = this;
+		window.addEventListener('orientationchange', function(event) {
 			// 延时处理，以便微信反馈正确的高度
-			setTimeout(function () {
+			setTimeout(function() {
 				var w, h;
 				if (EWA_App.DEBUG)
 					console.log("orientation:" + window.orientation);
-				h = document.documentElement.clientHeight;
-				w = document.documentElement.clientWidth;
-
+				let s = c.getBodySize();
+				//h = document.documentElement.clientHeight;
+				//w = document.documentElement.clientWidth;
+				h = s.height;
+				w = s.width;
 				if (w && h)
 					EWA_App.changeBodyHeight(w, h, '延时1');
 			}, 501);
@@ -178,9 +216,10 @@ var EWA_App = {
 
 		// 每隔一秒检查一次窗体的高度（对付ios微信的下部导航栏）
 		this._clientHeight = document.documentElement.clientHeight;
-		var c = this;
-		window.setInterval(function () {
-			var h = document.documentElement.clientHeight;
+
+		window.setInterval(function() {
+			//var h = document.documentElement.clientHeight;
+			let h = c.getBodySize().height;
 			if (c._clientHeight == h) {
 				return;
 			}
@@ -236,8 +275,8 @@ var EWA_App = {
 		}
 
 	},
-	
-	SplitEwa : function (fid, x, i) {
+
+	SplitEwa: function(fid, x, i) {
 		var ewa = EWA.F.FOS[fid];
 		var u = ewa.Url;
 		var u1 = new EWA_UrlClass();
@@ -246,7 +285,7 @@ var EWA_App = {
 		u1.AddParameter('itemname', i);
 		ewa.Url = u1.GetUrl();
 	},
-	back : function (o) {
+	back: function(o) {
 		if (o) {
 			var t0 = $(o).attr('t') || 0;
 			var t = new Date().getTime();
@@ -334,5 +373,5 @@ var EWA_App = {
 		}
 	},
 	*/
-	
+
 };
