@@ -15112,7 +15112,7 @@ function EWA_FrameClass() {
 			_Ajax = null;
 		});
 	};
-	 
+
 	this.ValidCodeError = function(isHiddenAlert) {
 		let t0 = this._t_ValidCodeError || 0;
 		let t1 = new Date().getTime();
@@ -15786,7 +15786,9 @@ function EWA_FrameClass() {
 					// 检查计数器==0 用前面的结果，避免多次检查
 					var rst = c._checkStatusInc == 0 ? c._checkStatusFristResult : c.DoPostBefore();
 					c._checkStatusInc++;
-					if (rst[0] == null) {
+					let result = rst[0];
+
+					if (result === null || result === undefined) {
 						return;
 					}
 					window.clearInterval(c._checkStatusTimer);
@@ -15794,22 +15796,25 @@ function EWA_FrameClass() {
 					c._checkStatusInc = null;
 					c._checkStatusFristResult = null;
 
-					if (rst[0] == false) {
-						if (rst[2]) {// 参数2=true，用Confirm确认
-							$Confirm(rst[1], rst[1], function() {
-								// yes
-								rst[0] = rst[1] = null;
-								c.DoPost(objForm, url, true);
-							}, function() {
-								// no
-								return;
-							});
-						} else {
-							$Tip(rst[1]);
-						}
-					} else {// 参数0 = true，直接提交
-						rst[0] = rst[1] = null;
+
+					let tipMsg = rst[1];
+					let useTip = rst[2];
+					if (result && !useTip) {
 						c.DoPost(objForm, url, true);
+						return;
+					}
+					if (result && useTip) {
+						$Confirm(tipMsg, tipMsg, function() {
+							// yes
+							c.DoPost(objForm, url, true);
+						}, function() {
+							// no
+							return;
+						});
+						return;
+					}
+					if (tipMsg) {
+						$Tip(tipMsg);
 					}
 				}, 232);
 				return;

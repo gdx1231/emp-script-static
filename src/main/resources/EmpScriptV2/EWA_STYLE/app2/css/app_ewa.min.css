@@ -1,5 +1,8 @@
-tr[ewa_tag='group']{display:block;width:100%;margin:10px 0 0 0;clear:both}.EWA_LF_GROUP{display:block;width:100%;line-height:40px;padding:18px 20px 5px 20px;background-color:#fff;box-sizing:border-box}
-.ewa-lf-grp-icon,.ewa-lf-grp-des{display:none}.EWA_LF_GROUP>div{position:relative;box-sizing:border-box;font-size:19px;font-weight:700}.EWA_LF_GROUP>div::before{width:20px;border-left:4px solid #28cdbc;box-sizing:border-box;content:"";display:block;left:0;position:absolute;top:50%;line-height:20px;height:20px;margin-top:-10px}
+.ewa-sign-box{border:1px solid #eee}.ewa-sign-btns{border-top:1px solid #eee;line-height:50px;text-align:center;display:flex}.ewa-sign-btns a{flex:1;color:#08c}.ewa-sign-btns a:hover{color:red}
+.ewa-sign-btn-clear::before{content:"清除内容"}.ewa-sign-btn-revoke::before{content:"撤销上一步"}.enus .ewa-sign-btn-clear::before{content:"Clear tablet"}
+.enus .ewa-sign-btn-revoke::before{content:"Revoke last"}tr[ewa_tag='group']{display:block;width:100%;margin:10px 0 0 0;clear:both}
+.EWA_LF_GROUP{display:block;width:100%;line-height:40px;padding:18px 20px 5px 20px;background-color:#fff;box-sizing:border-box}.ewa-lf-grp-icon,.ewa-lf-grp-des{display:none}.EWA_LF_GROUP>div{position:relative;box-sizing:border-box;font-size:19px;font-weight:700}
+.EWA_LF_GROUP>div::before{width:20px;border-left:4px solid #28cdbc;box-sizing:border-box;content:"";display:block;left:0;position:absolute;top:50%;line-height:20px;height:20px;margin-top:-10px}
 .EWA_LF_GROUP>div::after{content:"更多";font-size:14px;color:#afafaf;text-align:right;right:0;display:block;position:absolute;top:50%;line-height:20px;height:20px;margin-top:-6px}
 .enus .EWA_LF_GROUP>div::after{content:"more"}.EWA_LF_GROUP span{margin-left:9px}.ewa-lf-search .ewa-lf-header{display:block;height:30px;margin-top:-1px;overflow:hidden}
 .ewa-lf-search .ewa-lf-header:after{content:"";display:block;clear:both}.ewa-lf-search .ewa-lf-header .ewa-col-A{display:none}.ewa-app-lf-order{box-sizing:border-box;display:block;padding:0;float:left}

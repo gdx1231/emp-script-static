@@ -1,3 +1,39 @@
+/* 手写签名 */
+.ewa-sign-box {
+	border: 1px solid #eee
+}
+
+.ewa-sign-btns {
+	border-top: 1px solid #eee;
+	line-height: 50px;
+	text-align: center;
+	display: flex
+}
+
+.ewa-sign-btns a {
+	flex: 1;
+	color: #08c;
+}
+.ewa-sign-btns a:hover{
+	color: red;
+}
+
+.ewa-sign-btn-clear::before {
+	content: "清除内容";
+}
+
+.ewa-sign-btn-revoke::before {
+	content: "撤销上一步"
+}
+
+.enus .ewa-sign-btn-clear::before {
+	content: "Clear tablet"
+}
+
+.enus .ewa-sign-btn-revoke::before {
+	content: "Revoke last"
+}
+
 /* 列表分组 */
 /* 分组 tr*/
 tr[ewa_tag='group'] {
@@ -77,7 +113,6 @@ tr[ewa_tag='group'] {
 	clear: both;
 }
 
-
 .ewa-lf-search .ewa-lf-header .ewa-col-A {
 	display: none;
 }
@@ -88,6 +123,7 @@ tr[ewa_tag='group'] {
 	padding: 0px;
 	float: left;
 }
+
 .ewa-app-lf-order a {
 	display: block;
 	font-size: 12px;
@@ -153,7 +189,8 @@ section .ewa-frame .EWA_TD_M select.ewa-select-filter-target {
 	display: none;
 }
 
-.ewa-app-use-ewa-lf .ewa-lf-frame>tbody, .ewa-ddl-list .ewa-lf-frame>tbody {
+.ewa-app-use-ewa-lf .ewa-lf-frame>tbody, .ewa-ddl-list .ewa-lf-frame>tbody
+	{
 	display: block;
 }
 
@@ -191,7 +228,8 @@ section .ewa-frame .EWA_TD_M select.ewa-select-filter-target {
 	width: 100% !important;
 }
 
-.ewa-app-use-ewa-lf .ewa-lf-data-row>td, .ewa-ddl-list .ewa-lf-data-row>td {
+.ewa-app-use-ewa-lf .ewa-lf-data-row>td, .ewa-ddl-list .ewa-lf-data-row>td
+	{
 	display: inline;
 	border: 0;
 	padding: 0px;
@@ -393,6 +431,7 @@ section .ewa-lf-add-pre-row .EWA_TD_L {
 .ewa-lf-search-item-title {
 	display: none;
 }
+
 .ewa-lf-search-item-title a {
 	display: none;
 }
@@ -417,7 +456,8 @@ section .ewa-lf-add-pre-row .EWA_TD_L {
 	white-space: nowrap;
 }
 
-.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div, .ewa-lf-search-fix-m0 .ewa-lf-search-item-ctl>div {
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div, .ewa-lf-search-fix-m0 .ewa-lf-search-item-ctl>div
+	{
 	height: 30px;
 	line-height: 30px;
 	text-align: left;
@@ -425,7 +465,8 @@ section .ewa-lf-add-pre-row .EWA_TD_L {
 	position: relative;
 }
 /* 覆盖层，避免点击事件 */
-.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div::before, .ewa-lf-search-fix-m0 .ewa-lf-search-item-ctl>div::before {
+.ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div::before,
+	.ewa-lf-search-fix-m0 .ewa-lf-search-item-ctl>div::before {
 	position: absolute;
 	content: "";
 	width: 100%;
@@ -458,7 +499,8 @@ section .ewa-lf-add-pre-row .EWA_TD_L {
 	background-color: #08c;
 }
 
-.ewa-lf-search-item-ctl input[type=text], .ewa-lf-search-item-ctl input[type=date] {
+.ewa-lf-search-item-ctl input[type=text], .ewa-lf-search-item-ctl input[type=date]
+	{
 	font-size: 12px;
 	height: 30px;
 	background-color: #fff;
@@ -493,8 +535,8 @@ section .ewa-lf-add-pre-row .EWA_TD_L {
 	padding: 0 10px;
 }
 
-.ewa-lf-search-type-date .ewa-lf-search-item-ctl tr>td:nth-child(1), .ewa-lf-search-type-date .ewa-lf-search-item-ctl tr>td:nth-child(3)
-	{
+.ewa-lf-search-type-date .ewa-lf-search-item-ctl tr>td:nth-child(1),
+	.ewa-lf-search-type-date .ewa-lf-search-item-ctl tr>td:nth-child(3) {
 	width: 47%;
 }
 
@@ -511,7 +553,8 @@ section .ewa-lf-add-pre-row .EWA_TD_L {
 	height: 30px;
 }
 
-.ewa-lf-search-type-number .ewa-lf-search-item-ctl::after, .ewa-lf-search-type-date .ewa-lf-search-item-ctl::after {
+.ewa-lf-search-type-number .ewa-lf-search-item-ctl::after,
+	.ewa-lf-search-type-date .ewa-lf-search-item-ctl::after {
 	content: "";
 	display: block;
 	clear: both;
@@ -1139,8 +1182,8 @@ section.ewa .EWA_TD_R {
 	color: red;
 }
 
-section .ewa-col-A, section .ewa-col-A1, section .ewa-col-A2, section .ewa-col-A3, section .ewa-col-A4, section .ewa-col-A5
-	{
+section .ewa-col-A, section .ewa-col-A1, section .ewa-col-A2, section .ewa-col-A3,
+	section .ewa-col-A4, section .ewa-col-A5 {
 	position: absolute;
 	left: 0;
 	width: 100%;
@@ -1148,16 +1191,17 @@ section .ewa-col-A, section .ewa-col-A1, section .ewa-col-A2, section .ewa-col-A
 	top: 0;
 }
 
-section .ewa-col-A a, section .ewa-col-A1 a, section .ewa-col-A2 a, section .ewa-col-A3 a, section .ewa-col-A4 a,
-	section .ewa-col-A5 a {
+section .ewa-col-A a, section .ewa-col-A1 a, section .ewa-col-A2 a,
+	section .ewa-col-A3 a, section .ewa-col-A4 a, section .ewa-col-A5 a {
 	display: block;
 	height: 100%;
 	color: transparent;
 	background: transparent;
 }
 /* 右键头 */
-section .ewa-col-A a:after, section .ewa-col-A1 a:after, section .ewa-col-A2 a:after, section .ewa-col-A3 a:after,
-	section .ewa-col-A4 a:after, section .ewa-col-A5 a:after {
+section .ewa-col-A a:after, section .ewa-col-A1 a:after, section .ewa-col-A2 a:after,
+	section .ewa-col-A3 a:after, section .ewa-col-A4 a:after, section .ewa-col-A5 a:after
+	{
 	content: "\f105";
 	line-height: 20px;
 	position: absolute;
@@ -1169,14 +1213,16 @@ section .ewa-col-A a:after, section .ewa-col-A1 a:after, section .ewa-col-A2 a:a
 	font-size: 20px;
 }
 /* 向上 */
-section .ewa-col-A a.pop:after, section .ewa-col-A1 a.pop:after, section .ewa-col-A2 a.pop:after, section .ewa-col-A3 a.pop:after,
-	section .ewa-col-A4 a.pop:after, section .ewa-col-A5 a.pop:after {
+section .ewa-col-A a.pop:after, section .ewa-col-A1 a.pop:after, section .ewa-col-A2 a.pop:after,
+	section .ewa-col-A3 a.pop:after, section .ewa-col-A4 a.pop:after,
+	section .ewa-col-A5 a.pop:after {
 	transform: rotate(-90deg);
 	margin-right: 5px;
 }
 
-section .ewa-col-A a:hover, section .ewa-col-A1 a:hover, section .ewa-col-A2 a:hover, section .ewa-col-A3 a:hover,
-	section .ewa-col-A4 a:hover, section .ewa-col-A5 a:hover {
+section .ewa-col-A a:hover, section .ewa-col-A1 a:hover, section .ewa-col-A2 a:hover,
+	section .ewa-col-A3 a:hover, section .ewa-col-A4 a:hover, section .ewa-col-A5 a:hover
+	{
 	background: rgba(0, 255, 0, 0.3);
 }
 
@@ -1186,19 +1232,23 @@ section .ewa-col-A a:hover, section .ewa-col-A1 a:hover, section .ewa-col-A2 a:h
 	height: 45px;
 }
 
-.EWA_GROUP_ITEM5 .EWA_GROUP_CNT_TOP1, .EWA_GROUP_ITEM5 .EWA_GROUP_CNT_TOP {
+.EWA_GROUP_ITEM5 .EWA_GROUP_CNT_TOP1, .EWA_GROUP_ITEM5 .EWA_GROUP_CNT_TOP
+	{
 	width: 20%;
 }
 
-.EWA_GROUP_ITEM4 .EWA_GROUP_CNT_TOP1, .EWA_GROUP_ITEM4 .EWA_GROUP_CNT_TOP {
+.EWA_GROUP_ITEM4 .EWA_GROUP_CNT_TOP1, .EWA_GROUP_ITEM4 .EWA_GROUP_CNT_TOP
+	{
 	width: 25%;
 }
 
-.EWA_GROUP_ITEM3 .EWA_GROUP_CNT_TOP1, .EWA_GROUP_ITEM3 .EWA_GROUP_CNT_TOP {
+.EWA_GROUP_ITEM3 .EWA_GROUP_CNT_TOP1, .EWA_GROUP_ITEM3 .EWA_GROUP_CNT_TOP
+	{
 	width: 33.3333%;
 }
 
-.EWA_GROUP_ITEM2 .EWA_GROUP_CNT_TOP1, .EWA_GROUP_ITEM2 .EWA_GROUP_CNT_TOP {
+.EWA_GROUP_ITEM2 .EWA_GROUP_CNT_TOP1, .EWA_GROUP_ITEM2 .EWA_GROUP_CNT_TOP
+	{
 	width: 50%;
 }
 
@@ -1452,9 +1502,9 @@ i.ewa-app-radio.fa-check:after {
 }
 
 .ewa-mark {
-    z-index: 11111;
-    position: absolute;
-    background: rgba(214, 53, 194, 0.58);
+	z-index: 11111;
+	position: absolute;
+	background: rgba(214, 53, 194, 0.58);
 }
 
 .ewa-file-ext-color-pdf {
