@@ -137,12 +137,15 @@ var EWA_App = {
 	},
 	getBodySize: function() {
 		let vertical = false;
-
+		let domWidth = document.documentElement.clientWidth;
+		let domHeight = document.documentElement.clientHeight;
 		if (screen.orientation) {
 			if (screen.orientation.angle === 0 || screen.orientation.angle === 180) {
 				vertical = true;
 			}
-			return { width: screen.availWidth, height: screen.availHeight, orientation: vertical ? "v" : "h" };
+			//return { width: screen.availWidth, height: screen.availHeight, orientation: vertical ? "v" : "h" };
+			return { width: domWidth, height: domHeight, orientation: vertical ? "v" : "h" };
+			
 		}
 
 		if (this.IS_IN_IPHONE || this.IS_IN_IPAD) {
@@ -158,8 +161,8 @@ var EWA_App = {
 				vertical = true;
 			}
 		}
-		let w = screen.availWidth;
-		let h = screen.availHeight;
+		let w = domWidth; //screen.availWidth;
+		let h = domHeight; //screen.availHeight;
 		if (vertical) {
 			return { width: w < h ? w : h, height: w < h ? h : w, orientation: "v" };
 		} else {
