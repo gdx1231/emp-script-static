@@ -324,18 +324,31 @@ function EWA_ListFrameClass() {
 		} else {
 			r.find('td').text("");
 		}
-		var fm_length = 0;
-		for (var i in this.SubBottomsArray) {
-			var id = this.SubBottomsArray[i];
-			var total = 0;
-			var exp = '#EWA_LF_' + this._Id + ' .ewa-lf-data-row [name="' + id + '"]';
+		
+		for (let i in this.SubBottomsArray) {
+			let id = this.SubBottomsArray[i];
+			let total = 0;
+			let exp = '#EWA_LF_' + this._Id + ' .ewa-lf-data-row [name="' + id + '"]';
+			let fm_length = 0;
 			$(exp).each(function() {
-				var v = this.value != null ? this.value.replace(/,/ig, '') : this.title;
-				if (!isNaN(v)) {
-					total += v * 1;
-					if (v.indexOf(".") > 0) {
-						fm_length = 2;
-					}
+				let v;
+				if(this.hasAttribute('value')){
+					v = this.value;
+				} else if(this.hasAttribute('title')){
+					v = this.title;
+				} else {
+					v = this.innerText;
+				}
+				if(v == null || v.length===0){
+					return;
+				}
+				v = v.replace(/,/ig, '') ;
+				if (isNaN(v)) {
+					return;
+				}
+				total += v * 1;
+				if (v.indexOf(".") > 0) {
+					fm_length = 2;
 				}
 			});
 			let html = "<span id='"+id+"' name='"+id+"' class='ewa-lf-sub'>" + total.fm(fm_length) + "</span>";
