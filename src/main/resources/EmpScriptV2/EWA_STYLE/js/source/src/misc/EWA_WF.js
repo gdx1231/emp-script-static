@@ -1360,7 +1360,6 @@ function loadParentInfoJson(w, fjson, tbMe) {
     }
 }
 function loadParentInfo() {
-
     EWA.OW.Load();
     if (!EWA.OW.PWin) {
         window.setTimeout(loadParentInfo, 300);
@@ -1438,14 +1437,8 @@ function loadParentInfo() {
     var r = rows[0];
     var rH = r.parentNode.rows[0];
 
-    for (var i = r.cells.length - 1; i >= 1; i--) {
+    for (var i = r.cells.length - 1; i >= 0; i--) {
         if (r.cells[i].getElementsByTagName('input') > 0) {
-            continue;
-        }
-        if (r.cells[i].getElementsByTagName('img') > 0) {
-            continue;
-        }
-        if (r.cells[i].getElementsByTagName('a') > 0) {
             continue;
         }
 
