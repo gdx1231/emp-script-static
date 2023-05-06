@@ -9,8 +9,9 @@ function EWA_FrameClass() {
 	this._ValidExFail = null;
 	this._ValidExObj = null;
 	this._Id = null;
-	this.ReloadAfter = null; // Ajax刷新后的事件，用户定义
-
+	// this.ReloadAfter = null; // POST后的事件，用户定义
+	// 替代ReloadAfter
+	this.doPostAfter = null;// POST后的事件，用户定义
 	this.isShowPostWaitting = true; // 是否显示提交时的等待框
 
 	this.textareaAutoSize = function() {
@@ -2563,11 +2564,17 @@ function EWA_FrameClass() {
 			if (EWA.F.CheckCallBack(ret)) {
 				that.ValidCodeError(true); // 重新刷新验证码
 				try {
-					if (that.ReloadAfter) {
+					if (that.doPostAfter) {
+						that.doPostAfter(ret);
+					} else if (that.ReloadAfter) {
+						console.log('请用：'+ doPostAfter);
 						that.ReloadAfter(ret);
-					}
+					} 
+					
 					eval(ret);
 				} catch (e) {
+					console.log(ret);
+					console.error(e);
 					alert(ret);
 				}
 
@@ -2584,6 +2591,7 @@ function EWA_FrameClass() {
 		// guolei 2020-05-26，当初指定了id，其实任何效果也没有
 		console.log('Reload1 这个干嘛用？谁在调用？');
 	};
+
 	/**
 	 * 重新加载Frame,guolei 2020-05-26
 	 */
@@ -2609,6 +2617,7 @@ function EWA_FrameClass() {
 			}
 		});
 	};
+	
 	/**
 	 * 检查所有对象合法性
 	 * 
