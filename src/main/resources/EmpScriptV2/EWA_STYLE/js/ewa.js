@@ -15960,7 +15960,7 @@ function EWA_FrameClass() {
 					if (that.doPostAfter) {
 						that.doPostAfter(ret);
 					} else if (that.ReloadAfter) {
-						console.log('请用：'+ doPostAfter);
+						console.log('请用：doPostAfter');
 						that.ReloadAfter(ret);
 					} 
 					
