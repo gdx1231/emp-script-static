@@ -137,8 +137,8 @@ var EWA_App = {
 	},
 	getBodySize: function() {
 		let vertical = false;
-		let domWidth = document.documentElement.clientWidth;
-		let domHeight = document.documentElement.clientHeight;
+		let domWidth = (EWA_App.IS_IN_IPHONE || EWA_App.IS_IN_IPAD)?window.innerWidth: document.documentElement.clientWidth;
+		let domHeight = (EWA_App.IS_IN_IPHONE || EWA_App.IS_IN_IPAD)?window.innerHeight: document.documentElement.clientHeight;
 		if (screen.orientation) {
 			if (screen.orientation.angle === 0 || screen.orientation.angle === 180) {
 				vertical = true;

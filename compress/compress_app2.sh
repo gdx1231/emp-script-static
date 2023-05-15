@@ -6,8 +6,9 @@ sh_dir=`dirname $0`
 src=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_STYLE/app2/js/src
 target=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_STYLE/app2/js
 
-cd `dirname $0`
-echo 当前目录：$(pwd)
+echo   DIR：${sh_dir}
+echo   SRC：${src}
+echo TARGET：${target}
 
 cat ${src}/*.js  > ${target}/app2.js
  
