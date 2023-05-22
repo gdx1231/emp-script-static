@@ -137,15 +137,20 @@ var EWA_App = {
 	},
 	getBodySize: function() {
 		let vertical = false;
-		let domWidth = (EWA_App.IS_IN_IPHONE || EWA_App.IS_IN_IPAD)?window.innerWidth: document.documentElement.clientWidth;
-		let domHeight = (EWA_App.IS_IN_IPHONE || EWA_App.IS_IN_IPAD)?window.innerHeight: document.documentElement.clientHeight;
+		// 在iOS中，window.innerHeight有时会返回错误的值 
+		// let domWidth = (EWA_App.IS_IN_IPHONE || EWA_App.IS_IN_IPAD)?window.innerWidth: document.documentElement.clientWidth;
+		// let domHeight = (EWA_App.IS_IN_IPHONE || EWA_App.IS_IN_IPAD)?window.innerHeight: document.documentElement.clientHeight;
+
+		let domWidth = document.documentElement.clientWidth;
+		let domHeight = document.documentElement.clientHeight;
+
 		if (screen.orientation) {
 			if (screen.orientation.angle === 0 || screen.orientation.angle === 180) {
 				vertical = true;
 			}
 			//return { width: screen.availWidth, height: screen.availHeight, orientation: vertical ? "v" : "h" };
 			return { width: domWidth, height: domHeight, orientation: vertical ? "v" : "h" };
-			
+
 		}
 
 		if (this.IS_IN_IPHONE || this.IS_IN_IPAD) {
