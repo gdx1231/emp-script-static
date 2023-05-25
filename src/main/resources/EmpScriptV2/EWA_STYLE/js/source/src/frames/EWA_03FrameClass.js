@@ -707,7 +707,7 @@ function EWA_FrameClass() {
 	 * 设置为非必填项
 	 */
 	this.setUnMust = function(name) {
-		var a = this.ItemList.Items[name];
+		var a = this.ItemList.Items[name.toUpperCase()];
 		if (a) {
 			var b = a.getElementsByTagName("IsMustInput")[0].getElementsByTagName("Set")[0];
 			b.setAttribute("IsMustInput", 0);
@@ -717,7 +717,7 @@ function EWA_FrameClass() {
 	 * 设置必填项
 	 */
 	this.setMust = function(name) {
-		var a = this.ItemList.Items[name];
+		var a = this.ItemList.Items[name.toUpperCase()];
 		if (a) {
 			var b = a.getElementsByTagName("IsMustInput")[0].getElementsByTagName("Set")[0];
 			b.setAttribute("IsMustInput", 1);
