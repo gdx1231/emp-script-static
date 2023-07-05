@@ -804,7 +804,7 @@ function EWA_AjaxClass(isAsync) {
 				this._CreateWaittingImg();
 			}
 		} else {
-			o1.style.display = ""; 
+			o1.style.display = "";
 		}
 		o1 = null;
 	};
@@ -817,7 +817,7 @@ function EWA_AjaxClass(isAsync) {
 		o1.id = this._WaittingId;
 		o1.innerHTML = "Waiting...";
 		document.body.appendChild(o1);
-		o1.className='ewa-wait-txt';
+		o1.className = 'ewa-wait-txt';
 		o1 = null;
 	};
 	/**
@@ -831,7 +831,7 @@ function EWA_AjaxClass(isAsync) {
 		td.align = "center";
 		td.innerHTML = "<img src='" + this._getLoaddingImg() + "'>";
 		document.body.appendChild(o1);
-		o1.className='ewa-wait-img';
+		o1.className = 'ewa-wait-img';
 		o1 = td = tr = null;
 	};
 	/**
@@ -871,12 +871,12 @@ function EWA_AjaxClass(isAsync) {
 			console.log('ajax url not null');
 			return;
 		}
-        
-        if(url.GetUrl){
-            url = url.GetUrl();
-        } else if(url.getUrl){
-            url = url.getUrl();
-        } else if (url.href) {
+
+		if (url.GetUrl) {
+			url = url.GetUrl();
+		} else if (url.getUrl) {
+			url = url.getUrl();
+		} else if (url.href) {
 			url = url.href;
 		}
 		if (url.indexOf('|') >= 0) {
@@ -954,7 +954,7 @@ function EWA_AjaxClass(isAsync) {
 	 */
 	this.PostNew = function(url, callback) {
 		var s = [];
-		for ( var n in this._Parameters) {
+		for (var n in this._Parameters) {
 			var v = this._Parameters[n];
 			if (v == null) {
 				continue;
@@ -1006,8 +1006,8 @@ function EWA_AjaxClass(isAsync) {
 		var oldPosition = null;
 		if (!notShowWaitting) {// 不显示等待图标
 			oldPosition = parent.css('position');
-			if('static' == oldPosition){
-				parent.css('position','relative');
+			if ('static' == oldPosition) {
+				parent.css('position', 'relative');
 			}
 			var loadding = "<div class='ewa-ajax-install-waitting'></div>";
 			parent.append(loadding);
@@ -1017,8 +1017,8 @@ function EWA_AjaxClass(isAsync) {
 			if (!_ajax_gdx.IsRunEnd()) {
 				return;
 			}
-			if('static' == oldPosition){
-				parent.css('position',oldPosition);
+			if ('static' == oldPosition) {
+				parent.css('position', oldPosition);
 			}
 			var rst = _ajax_gdx.GetRst();
 			if (_ajax_gdx.IsError()) {
@@ -1175,7 +1175,7 @@ function $JPA(url, postData, func) {
 		cmds.push(arguments[i]);
 	}
 	if (postData) {
-		for ( var n in postData) {
+		for (var n in postData) {
 			ajax.AddParameter(n, postData[n]);
 		}
 	}
@@ -1280,7 +1280,7 @@ function $JP(url, postData, func) {
 		cmds.push(arguments[i]);
 	}
 	if (postData) {
-		for ( var n in postData) {
+		for (var n in postData) {
 			ajax.AddParameter(n, postData[n]);
 		}
 	}
@@ -1300,7 +1300,7 @@ function $JP2(url, postData, func) {
 		cmds.push(arguments[i]);
 	}
 	if (postData) {
-		for ( var n in postData) {
+		for (var n in postData) {
 			ajax.AddParameter(n, postData[n]);
 		}
 	}
@@ -1433,8 +1433,33 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 		}
 	}
 
+	function getText(d, textName) {
+		if(!textName){
+			return "not defined textName";
+		}
+		if(textName instanceof Function){
+			return textName[d];
+		}
+		if (textName.indexOf("@@") == -1) {
+			return d[textName];
+		}
+		// textName="@@id3 (@@id4)"
+		let r1 = /\@\@[a-zA-Z0-9\-\._:]*\b/ig;
+		let m1 = textName.match(r1);
+		let tmp_html = textName;
+
+		for (let i = 0; i < m1.length; i++) {
+			let key = m1[i];
+			let id = key.replace('@@', '');
+			let rep = d[id] || "";
+			tmp_html = tmp_html.replace(key, rep);
+		}
+
+		return tmp_html;
+	}
+
 	function addOpt(d, lvl) {
-		var optText = d[textName];
+		var optText = getText(d, textName); // d[textName];
 		var optValue = d[valueName];
 		var opt = obj.options[obj.options.length] = new Option(optText, optValue);
 
@@ -1446,7 +1471,7 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 			spaces.push(optText);
 			optText = spaces.join("　");
 		}
-		for ( var n in d) {
+		for (var n in d) {
 			if (d[n]) {
 				opt.setAttribute("para_" + n.toLowerCase(), d[n]);
 			}
@@ -1458,10 +1483,10 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 	if (parentKeyName) {
 		// 按照parent排序
 		var map = {
-			"___ROOT___" : []
+			"___ROOT___": []
 		};
 		var map1 = {
-			"___ROOT___" : {}
+			"___ROOT___": {}
 		};
 		var pkey, key, d;
 		for (var i = 0; i < data.length; i++) {
