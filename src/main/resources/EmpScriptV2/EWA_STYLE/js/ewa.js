@@ -13009,16 +13009,27 @@ var test = /^[0-9.-]{0,120}$/;
 	this._CheckMustInput = function(obj, val, nodeItem) {
 		var mustInput = this.GetItemValue(nodeItem, "IsMustInput",
 			"IsMustInput");
-		var errorInfo = null;
-		if (mustInput == "1") {// 检查必填项是否输入
-			if (val == null || val.length == 0) {
-				errorInfo = _EWA_JS_ALERT["IsMustInput"];
-				if (errorInfo) {
-					errorInfo = errorInfo.replace("{Name}", obj.id);
-				} else {
-					errorInfo = "*";
-				}
+		if (mustInput != "1") {
+			return null;
+		}
+		// 检查必填项是否输入
+		if (val != null && val.length > 0) {
+			return null;
+		}
+
+		if ("hidden" == obj.type && "ht5upload" == $(obj).attr('ewa_tag')) { //h5upload
+			// 检查是否有之前的上传文件
+			if ($(obj).parent().find('.ewa_app_upload_form1:visible').length > 0) {
+				return null;
 			}
+		}
+
+		var errorInfo = null;
+		errorInfo = _EWA_JS_ALERT["IsMustInput"];
+		if (errorInfo) {
+			errorInfo = errorInfo.replace("{Name}", obj.id);
+		} else {
+			errorInfo = "*";
 		}
 		return errorInfo;
 	}
@@ -13189,7 +13200,7 @@ var test = /^[0-9.-]{0,120}$/;
 		// 开关
 		if (tagName == "DIV" && $(obj).hasClass('ewa-switch')) {
 			var switchObj = obj.getElementsByTagName("input")[0];
-			return switchObj.checked?"on":"off";
+			return switchObj.checked ? "on" : "off";
 		}
 		// radio or checkbox
 		if (tagName == "DIV" && obj.getAttribute("TAG") == 'REPT') {
