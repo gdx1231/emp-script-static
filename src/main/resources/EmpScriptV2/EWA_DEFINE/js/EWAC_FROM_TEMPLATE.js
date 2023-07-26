@@ -251,7 +251,7 @@ var EWAC_F = {
 			return;
 		}
 
-		var X = "|ewa|ewa.xml";
+		var X = "/ewa/ewa.xml";
 		var I = "sql_run";
 		var P = "db=globaltravel&EWA_FRAMESET_NO=1&ewa_action=run&ewa_ajax=json&sql=" + sql.toURL();
 		var u1 = $U2(X, I, P, true);
@@ -474,7 +474,7 @@ var EWAC_F = {
 		}
 
 		var keys = key.split(';');
-		var u = './?xmlname=ewa%7Cewa.xml&EWA_FRAMESET_NO=1&itemname=fields&cfg=' + keys[1] + '&tablename=' + keys[3]
+		var u = './?xmlname=ewa/ewa.xml&EWA_FRAMESET_NO=1&itemname=fields&cfg=' + keys[1] + '&tablename=' + keys[3]
 			+ '&ewa_ajax=json';
 		var ajax = new EWA_AjaxClass();
 
@@ -540,7 +540,7 @@ var EWAC_F = {
 		}
 		ds = ds.split(';')[1];
 
-		var X = "|ewa|ewa.xml";
+		var X = "/ewa/ewa.xml";
 		var I = "sql_create";
 		var P = "F_XMLNAME=" + F_XMLNAME + "&FrameTag=ListFrame&auto=1&cfg=" + ds + "&tablename=" + tb;
 		var u1 = $U2(X, I, P, true);
@@ -583,7 +583,9 @@ var EWAC_F = {
 		ss.push("</form>");
 		var str = ss.join("\n");
 
-		var txt1 = style_html(str, 1, '\t', 80);
+		//var txt1 = style_html(str, 1, '\t', 80);
+		var txt1 = str;
+		
 		$(xml.XmlDoc).find('Page FrameHtml Set').html("<FrameHtml />");
 		var fhtmls = $(xml.XmlDoc).find('Page FrameHtml Set FrameHtml');
 		for (var i = 0; i < fhtmls.length; i++) {
