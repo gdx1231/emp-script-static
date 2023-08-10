@@ -12263,9 +12263,9 @@ if (typeof EWA == 'undefined') {
  * F: Frame L: ListFrame T: Tree
  */
 EWA.F = {
-	FOS : {}, /* Frame对象集合 */
-	GetFOSOne : function() {/* 获得第一个对象 */
-		for ( var n in EWA.F.FOS) {
+	FOS: {}, /* Frame对象集合 */
+	GetFOSOne: function() {/* 获得第一个对象 */
+		for (var n in EWA.F.FOS) {
 			return EWA.F.FOS[n];
 		}
 	},
@@ -12274,7 +12274,7 @@ EWA.F = {
 	 * 
 	 * @param parent 父对象（JQ表达式或dom对象）
 	 */
-	getSubEwas : function(parent){
+	getSubEwas: function(parent) {
 		var ewas = [];
 		var tb = $(parent).find('.EWA_TABLE');
 		tb.each(function() {
@@ -12291,11 +12291,11 @@ EWA.F = {
 		return ewas;
 	},
 	/* Upload */
-	U : {
-		WND : null
+	U: {
+		WND: null
 	},
 	// cmd
-	Cmd : function() {
+	Cmd: function() {
 		this.EWA_ACTION = null;
 		this.EWA_AJAX = "1";
 		this.EWA_NO_CONTENT = "1";
@@ -12319,7 +12319,7 @@ EWA.F = {
 	 * @param {String}
 	 *            parameters
 	 */
-	Install : function(parentId, xmlName, itemName, parameters, afterJs) {
+	Install: function(parentId, xmlName, itemName, parameters, afterJs) {
 		var url;
 		if (window.EWA_CGI) { // 全局替换cgi-bin路径
 			url = window.EWA_CGI;
@@ -12343,7 +12343,7 @@ EWA.F = {
 	 *            afterJs
 	 * @return {TypeName}
 	 */
-	InstallHtml : function(parentId, html, afterJs) {
+	InstallHtml: function(parentId, html, afterJs) {
 		var obj = $X(parentId);
 		if (obj == null) {
 			alert('Object [' + parentId + '] not found');
@@ -12363,11 +12363,26 @@ EWA.F = {
 				console.log(e);
 			}
 		}
+	},
+	//替换当前包含路径的xmlname，替换文件名为新的xml文件名，路径不变
+	replaceXmlName: function(refXmlFullPath, newOnlyXmlName) {
+		let paths = refXmlFullPath.unURL().replace(/\|/ig, '/').split('/');
+		let newPaths = [];
+		for (let i = 0; i < paths.length - 1; i++) {
+			let p = paths[i];
+			if (p === "") {
+				continue;
+			}
+			newPaths.push(p);
+		}
+		newPaths.push(newOnlyXmlName);
+
+		return newPaths.join("/");
 	}
-}
+};
 EWA.F.POP = {
-	AJAX : null,
-	PostBehavior : function(frameUnid, parameters, ewaAction) {
+	AJAX: null,
+	PostBehavior: function(frameUnid, parameters, ewaAction) {
 		var f = EWA.F.FOS[frameUnid];
 		if (f == null) {
 			alert('Object EWA.F.FOS.' + frameUnid + ' not exists!');
@@ -12394,7 +12409,7 @@ EWA.F.POP = {
 		EWA.F.POP.AJAX.LoadingType = "image";
 		EWA.F.POP.AJAX.Post(url, s1, EWA.F.POP.CallBack);
 	},
-	CallBack : function() {
+	CallBack: function() {
 		var ajax = EWA.F.POP.AJAX;
 		if (ajax._Http.readyState != 4) {
 			ajax = null;
@@ -12468,23 +12483,23 @@ EWA.F.GetStatusCallBack = function() {
 }
 
 EWA.F.Ajax = {
-	TIMER_ID : null,
-	AJAX_LIST : [],
+	TIMER_ID: null,
+	AJAX_LIST: [],
 
-	_GetId : function(obj) {
+	_GetId: function(obj) {
 		var id = this.AJAX_LIST.length;
 		this.AJAX_LIST[id] = obj;
 		return id;
 	},
 
-	_StartMonitor : function() {
+	_StartMonitor: function() {
 		if (this.TIMER_ID != null) {
 			return;
 		}
 		this.TIMER_ID = window.setInterval(this._Moninter, 100);
 	},
 
-	_Moninter : function() {
+	_Moninter: function() {
 		var stop = true;
 		for (var i = 0; i < EWA.F.Ajax.AJAX_LIST.length; i++) {
 			var a = EWA.F.Ajax.AJAX_LIST[i];
@@ -12506,7 +12521,7 @@ EWA.F.Ajax = {
 	 *            installAjax
 	 * @return {Boolean}
 	 */
-	_CallBack : function(installAjax) {
+	_CallBack: function(installAjax) {
 		var ajax = installAjax.ajax;
 		if (ajax._Http.readyState != 4) {
 			return false;
@@ -12533,7 +12548,7 @@ EWA.F.Ajax = {
 	 * @param {String}
 	 *            replaceObjId Html对象id
 	 */
-	Install : function(url, replaceObjId) {
+	Install: function(url, replaceObjId) {
 		this.replaceId = replaceObjId;
 		this.CLASS_NAME = 'EWA.F.Ajax.Install';
 		this.ajax = new EWA.C.Ajax();
@@ -12638,19 +12653,19 @@ EWA.F.I.DropList = function(obj) {
 			if ($(this).next().val() == '') {
 				this.value = '';
 				var afterEvent = $(this).next().attr('afterevent');
-				if (afterEvent ) {
+				if (afterEvent) {
 					// val, text, hidObj, txtObj
-					if(window[afterEvent]){
+					if (window[afterEvent]) {
 						window[afterEvent]('', '', $(this).next()[0], this);
 					} else {
-						try{
-							var func  = eval(afterEvent);
-							func ('', '', $(this).next()[0], this);
-						}catch(e){
+						try {
+							var func = eval(afterEvent);
+							func('', '', $(this).next()[0], this);
+						} catch (e) {
 							console.log(e);
 						}
 					}
-				} 
+				}
 			}
 		});
 	}
