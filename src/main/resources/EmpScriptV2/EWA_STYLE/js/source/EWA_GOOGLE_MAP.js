@@ -2,9 +2,9 @@ var _ewa_google_key = window._ewa_google_key || "AIzaSyDF2i_2bppCyUdkpEqm2iaoW6e
 // document.write("<scr" + "ipt
 // src='http://maps.googleapis.com/maps/api/js?key="
 // + _ewa_google_key + "&sensor=true'></scr" + "ipt>");
-document.body.appendChild(document.createElement('script')).src = window.location.protocol + '//ditu.google.cn/maps/api/js?key='
+document.body.appendChild(document.createElement('script')).src = window.location.protocol + '//maps.googleapis.com/maps/api/js?key='
 	+ _ewa_google_key;
-// document.write("<scr" + "ipt src='http://ditu.google.cn/maps/api/js?key=" +
+// document.write("<scr" + "ipt src='http://maps.googleapis.com/maps/api/js?key=" +
 // _ewa_google_key + "&sensor=true'></scr" + "ipt>");
 // ==ClosureCompiler==
 // @compilation_level ADVANCED_OPTIMIZATIONS
@@ -1900,7 +1900,7 @@ var EWA_GMapClass = function() {
 		var bounds = new google.maps.LatLngBounds();
 		for ( var n in this.markers) {
 			var marker = this.markers[n];
-			var icon = "//ditu.google.cn/mapfiles/marker_green.png";
+			var icon = "//maps.googleapis.com/mapfiles/marker_green.png";
 			var p = marker.getPosition();
 			bounds.extend(p);
 		}
@@ -1920,7 +1920,7 @@ var EWA_GMapClass = function() {
 				continue;
 			}
 			var marker = this.markers[mark_id];
-			var icon = "//ditu.google.cn/mapfiles/marker_green.png";
+			var icon = "//maps.googleapis.com/mapfiles/marker_green.png";
 			marker.setAnimation(google.maps.Animation.BOUNCE);
 			marker.setIcon(icon);
 			cnt++;
@@ -1949,7 +1949,7 @@ var EWA_GMapClass = function() {
 		if (marker.map.getZoom() < 18) {
 			marker.map.setZoom(18);
 		}
-		var icon = "//ditu.google.cn/mapfiles/marker_green.png";
+		var icon = "//maps.googleapis.com/mapfiles/marker_green.png";
 		marker.map.setCenter(marker.getPosition());
 		marker.setIcon(icon);
 		
@@ -1973,7 +1973,7 @@ var EWA_GMapClass = function() {
 		}
 
 		var marker = this.markers[mark_id];
-		var icon = "//ditu.google.cn/mapfiles/marker_green.png";
+		var icon = "//maps.googleapis.com/mapfiles/marker_green.png";
 		marker.map.setCenter(marker.getPosition());
 		marker.setIcon(icon);
 

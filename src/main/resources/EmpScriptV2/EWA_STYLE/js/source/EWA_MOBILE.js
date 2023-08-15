@@ -2342,7 +2342,7 @@ var EWA_GpsClass = function(funcShow, funcErr) {
 			});
 
 			var c = this;
-			var icon = "http://ditu.google.cn/mapfiles/marker_green.png";
+			var icon = "http://maps.googleapis.com/mapfiles/marker_green.png";
 			this.marker.setIcon(icon);
 			google.maps.event.addListener(this.marker, 'click', function(e) {
 				var infoWindow = new google.maps.InfoWindow({
@@ -2520,7 +2520,7 @@ var EWA_GpsClass = function(funcShow, funcErr) {
 		if (provider == 'google') {
 			var _ewa_google_key = "AIzaSyCObGlANQukwOXzCS3W2W7QMLFq-iiT-SY";
 			var s = document.createElement('script');
-			s.src = "http://ditu.google.cn/maps/api/js?key=" + _ewa_google_key + "&sensor=true&callback=gpsInitialize";
+			s.src = "http://maps.googleapis.com/maps/api/js?key=" + _ewa_google_key + "&sensor=true&callback=gpsInitialize";
 			document.getElementsByTagName("head")[0].appendChild(s);
 		} else if (provider == 'baidu') {
 			// http://api.map.baidu.com/api?v=2.0&ak=7goiTc5NqfxdoaW4BCAGqAC7
