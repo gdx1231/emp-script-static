@@ -1,4 +1,4 @@
-.ewa-frame .EWA_TD_M>span, .ewa-frame .EWA_TD_M>a {
+.ewa-frame>tbody>tr>.EWA_TD_M>span, .ewa-frame>tbody>tr>.EWA_TD_M>a {
 	margin: 0 4px;
 }
 
