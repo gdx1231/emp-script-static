@@ -292,7 +292,7 @@ a:hover, .ewa-map-button:hover {
 	float: right;
 }
 
-.ewa-switch input[type=checkbox]:before {
+.ewa-switch input[type=checkbox]::before {
 	content: '';
 	width: 19px;
 	height: 19px;
@@ -314,6 +314,13 @@ a:hover, .ewa-map-button:hover {
 .ewa-switch input[type=checkbox]:checked:before {
 	right: 0px;
 	left: auto;
+}
+
+.ewa-switch input[type=checkbox]:disabled {
+	background-color: #eee;
+}
+.ewa-switch input[type=checkbox]:disabled::before {
+	background-color: #eee;
 }
 
 .ewa-select-filter-char {
