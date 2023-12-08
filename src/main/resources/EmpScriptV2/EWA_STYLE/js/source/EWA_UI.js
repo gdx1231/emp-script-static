@@ -3884,16 +3884,26 @@ function EWA_UI_DiaNewClass() {
 	};
 	this.SetSize = function(width, height) {
 		var obj = $('#' + this.Id + "_content");
-		var box_w1 = width ? width : 400;
+		if(!width){
+			let dw = document.documentElement.clientWidth;
+			if(dw> 410){
+				width = 400;
+			} else if(dw > 300){
+				width = dw - 10;
+			} else {
+				width = 300;
+			}
+		}
+		var box_w1 = width ? width : width;
 		var box_h1 = height ? height : 200;
 
 		obj.css('width', box_w1);
 		obj.css('height', box_h1);
 
-		var title_height = 0;
-		if ($('#' + this.Id + '_title span').length > 0)
+		// var title_height = 0;
+		if ($('#' + this.Id + '_title span').length > 0){
 			title_height = $('#' + this.Id + '_title').height();
-
+		}
 		// $('#' + this.Id + '_box').css('width', box_w1);
 		// $('#' + this.Id + '_box').css('height', box_h1 + title_height);
 	};
