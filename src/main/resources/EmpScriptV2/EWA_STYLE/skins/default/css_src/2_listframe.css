@@ -95,7 +95,8 @@
 
 .ewa-lf-search-item-ctl input {
 	width: 60px;
-	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px rgba(255, 255, 255, 0.1);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px
+		rgba(255, 255, 255, 0.1);
 	border: 1px solid #dadada;
 	border-radius: 3px;
 	background: #fff;
@@ -107,8 +108,8 @@
 	width: 155px;
 }
 
-.ewa-lf-search-item-ctl input[type=radio],
-.ewa-lf-search-item-ctl input[type=checkbox] {
+.ewa-lf-search-item-ctl input[type=radio], .ewa-lf-search-item-ctl input[type=checkbox]
+	{
 	width: auto;
 	height: auto;
 }
@@ -118,7 +119,8 @@
 	-webkit-appearance: menulist-button;
 	-webkit-font-smoothing: antialiased;
 	-webkit-rtl-ordering: logical;
-	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px rgba(255, 255, 255, 0.1);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px
+		rgba(255, 255, 255, 0.1);
 	border: 1px solid #dadada !important;
 	border-radius: 3px;
 	background: #fff;
@@ -341,7 +343,7 @@
 /* ??? */
 .EWA_LF_BUT_ACT {
 	FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#dddddddd',
-			endColorStr='#ffFFFFFF', gradientType='0');
+		endColorStr='#ffFFFFFF', gradientType='0');
 	color: #000;
 	border-left: 1px solid #FFF;
 	border-right: 1px solid #AAA;
@@ -352,7 +354,8 @@
 }
 
 .EWA_LF_BUT_DACT {
-	FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#ffFFFFFF', endColorStr='#dddddddd', gradientType='0');
+	FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#ffFFFFFF',
+		endColorStr='#dddddddd', gradientType='0');
 	color: #111;
 	border-left: 1px solid #FFF;
 	border-right: 1px solid #AAA;
@@ -418,25 +421,19 @@
 	float: right;
 }
 
-.ewa-lf-data-row>td, 
-.ewa-lf-sub-tr>td
-{
-	height: 25px;
-	padding: 4px;
-}
- 
-/* 表格滑动浮动颜色 */
-.ewa_grid_mover {
-	background-color: #fffad8;
+.ewa-lf-data-row>td, .ewa-lf-sub-tr>td {
 	height: 25px;
 	padding: 4px;
 }
 
+/* 表格滑动浮动颜色 */
+.EWA_TD_M.ewa_grid_mover {
+	background-color: #fffad8;
+}
+
 /* 表格滑动选中颜色 */
-.ewa_grid_down {
+.EWA_TD_M.ewa_grid_down {
 	background-color: #e1f6ff;
-	height: 25px;
-	padding: 4px;
 }
 
 /* ListFrame 分组 */
@@ -468,9 +465,8 @@ td.ewa-lf-edit {
 	bottom: 0;
 }
 
-.EWA_LF_EDIT_CTRL>input,
-.EWA_LF_EDIT_CTRL>select,
-.EWA_LF_EDIT_CTRL>div {
+.EWA_LF_EDIT_CTRL>input, .EWA_LF_EDIT_CTRL>select, .EWA_LF_EDIT_CTRL>div
+	{
 	position: relative;
 }
 
@@ -484,25 +480,31 @@ td.ewa-lf-edit {
 .ewa-lf-sub-td {
 	text-align: right;
 	color: blue;
-	font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
+	font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro,
+		monospace;
 }
 
-.ewa-lf-fm-money,.ewa-lf-fm-leastmoney,.ewa-lf-fm-percent {
+.ewa-lf-fm-money, .ewa-lf-fm-leastmoney, .ewa-lf-fm-percent {
 	text-align: right;
-	font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
+	font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro,
+		monospace;
 }
+
 .ewa-lf-fm-datetime {
-	text-align:center;
+	text-align: center;
 	width: 125px;
 }
+
 .ewa-lf-fm-dateshorttime {
-	text-align:center;
+	text-align: center;
 	width: 120px;
 }
+
 .ewa-lf-fm-date {
-	text-align:center;
+	text-align: center;
 	width: 100px;
 }
+
 .ewa-lf-frame .ewa-lf-data-row hr {
 	margin-top: 5px;
 	margin-bottom: 5px;

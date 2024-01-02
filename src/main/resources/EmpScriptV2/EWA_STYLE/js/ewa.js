@@ -17628,7 +17628,6 @@ function EWA_ListFrameClass() {
 			return;
 		}
 
-		var className = 'EWA_TD_M';
 		if (this._CurTr.getAttribute('__ewa_lf_mdown') == '1') {
 			return;
 		}
@@ -17900,15 +17899,13 @@ function EWA_ListFrameClass() {
 	};
 
 	this._MSetBg = function(tr, type) {
-		var className = 'EWA_TD_M';
+		let className = '';
 		if (type == 'down') {
 			className = 'ewa_grid_down';
 		} else if (type == 'over') {
 			className = 'ewa_grid_mover';
 		}
-		for (var i = 0; i < tr.cells.length; i++) {
-			$(tr.cells[i]).removeClass('ewa_grid_mover ewa_grid_down EWA_TD_M').addClass(className);
-		}
+		$(tr).children("td").removeClass('ewa_grid_mover ewa_grid_down').addClass(className);
 	};
 	/**
 	 * 用于检索辅助快速点击

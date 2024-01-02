@@ -218,8 +218,16 @@
 .dark .ewa_redraw_info {
 	border-left-color: #363636;
 }
+ 
+/* 表格滑动浮动颜色 */
+.dark .EWA_TD_M.ewa_grid_mover {
+	background-color: #fffad8;
+	color: #000;
+}
 
-.dark .ewa_grid_mover, .dark .ewa_grid_down {
+/* 表格滑动选中颜色 */
+.dark .EWA_TD_M.ewa_grid_down {
+	background-color: #e1f6ff;
 	color: #000;
 }
 
@@ -446,7 +454,15 @@
 	.light .EWA_TD, .light .STEP td {
 	background: #f1f1f1;
 }
+/* 表格滑动浮动颜色 */
+.light .EWA_TD_M.ewa_grid_mover {
+	background-color: #fffad8;
+}
 
+/* 表格滑动选中颜色 */
+.light .EWA_TD_M.ewa_grid_down {
+	background-color: #e1f6ff;
+}
 .light .templates .name {
 	font-size: 16px;
 	color: orange !important;
