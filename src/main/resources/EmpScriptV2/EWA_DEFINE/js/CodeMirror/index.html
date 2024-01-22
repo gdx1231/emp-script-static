@@ -73,7 +73,7 @@ body {
 </style>
 </head>
 <body>
-	<script type="text/javascript" src="../../../EWA_STYLE/js/js_jquery/EWA_ALL.min.2.0.js"></script>
+	<script type="text/javascript" src="../../../EWA_STYLE/js/ewa.min.js"></script>
 	<script type="text/javascript" src="../../../EWA_DEFINE/js/EWAC.js"></script>
 	<pre id="code"></pre>
 	<div id='status'>
@@ -123,9 +123,11 @@ body {
 	<script src="../../../third-party/ace/v1.4.12/src-min/ace.js" type="text/javascript"></script>
 	<script src="../../../third-party/ace/v1.4.12/src-min/ext-language_tools.js" type="text/javascript"></script>
 
-	<script src="../../../third-party/js-beautify/v1.13.0/lib/beautify.js"></script>
-	<script src="../../../third-party/js-beautify/v1.13.0/lib/beautify-css.js"></script>
-	<script src="../../../third-party/js-beautify/v1.13.0/lib/beautify-html.js"></script>
+	<script src="../../../third-party/js-beautify/v1.14.11/lib/beautify.min.js"></script>
+	<script src="../../../third-party/js-beautify/v1.14.11/lib/beautify-css.min.js"></script>
+	<script src="../../../third-party/js-beautify/v1.14.11/lib/beautify-html.min.js"></script>
+	
+	<script src="../../../third-party/sql-formatter/dist/sql-formatter.min.js"></script>
 
 	<script src="../../../third-party/jquery/jquery-3.6.0.min.js"></script>
 
@@ -137,294 +139,305 @@ body {
 
 
 	<script type="text/javascript">
-		var editor, aceBeautify, markType;
-		function aa() {
-			if (!window.parent.__TYPE__) {
-				return;
-			}
-			editor = null;
-			markType = window.parent.__TYPE__;
+var editor, aceBeautify, markType;
+function aa() {
+	if (!window.parent.__TYPE__) {
+		return;
+	}
+	editor = null;
+	markType = window.parent.__TYPE__;
 
-			var val = window.parent.__VAL__;
-			if (val == null) {
-				val = "";
-			}
-			//console.log(markType,val);
-			mode = 'ace/mode/html';
-			document.getElementById('check_sql').style.display = 'none';
-			if (markType == 'sql') {
-				mode = 'ace/mode/sql';
-				document.getElementById('check_sql').style.display = '';
-			} else if (markType == 'jscript' || markType == 'js') {
-				mode = 'ace/mode/javascript';
-			} else if (markType == 'xml') {
-				mode = 'ace/mode/xml';
-			} else if (markType == 'css') {
-				mode = 'ace/mode/css';
-			} else if (markType == 'json') {
-				mode = 'ace/mode/json';
-			} else if (markType == 'md') {
-				mode = 'ace/mode/markdown';
-			}
-			if (document.getElementById('code')) {
-				document.body.removeChild(document.getElementById('code'));
-				var pre = document.createElement('pre');
-				pre.id = 'code';
-				document.body.appendChild(pre);
-			}
-			
-			ace.require("ace/ext/language_tools");
+	var val = window.parent.__VAL__;
+	if (val == null) {
+		val = "";
+	}
+	//console.log(markType,val);
+	mode = 'ace/mode/html';
+	document.getElementById('check_sql').style.display = 'none';
+	if (markType == 'sql') {
+		mode = 'ace/mode/sql';
+		document.getElementById('check_sql').style.display = '';
+	} else if (markType == 'jscript' || markType == 'js') {
+		mode = 'ace/mode/javascript';
+	} else if (markType == 'xml') {
+		mode = 'ace/mode/xml';
+	} else if (markType == 'css') {
+		mode = 'ace/mode/css';
+	} else if (markType == 'json') {
+		mode = 'ace/mode/json';
+	} else if (markType == 'md') {
+		mode = 'ace/mode/markdown';
+	}
+	if (document.getElementById('code')) {
+		document.body.removeChild(document.getElementById('code'));
+		var pre = document.createElement('pre');
+		pre.id = 'code';
+		document.body.appendChild(pre);
+	}
+	
+	ace.require("ace/ext/language_tools");
 
-			editor = ace.edit("code");
+	editor = ace.edit("code");
 
-			var theme_code = "ace/theme/cobalt";
-			if (window.localStorage && window.localStorage["EWA_CODE_THENE"]) {
-				var v = window.localStorage["EWA_CODE_THENE"];
-				var obj = document.getElementById('theme');
-				for (var i = 0; i < theme.options.length; i++) {
-					var v1 = obj.options[i].value;
-					if (v1 == v) {
-						theme_code = v1;
-						obj.value = v1;
-						break;
-					}
-				}
-			}
-
-			editor.setTheme(theme_code);
-			editor.session.setMode(mode);
-			editor.getSession().setUseWrapMode(true);
-
-			editor.setOptions({
-				enableBasicAutocompletion : true,
-				enableSnippets : true,
-				enableLiveAutocompletion : true
-			});
-			if (window.localStorage && window.localStorage.EWA_CODE_FONTSIZE) {
-				editor.setOption('fontSize', window.localStorage.EWA_CODE_FONTSIZE);
-			}
-			editor.commands.addCommand({
-				name : 'myCommand',
-				bindKey : {
-					win : 'Ctrl-Shift-F',
-					mac : 'Command-Shift-F'
-				},
-				exec : function(editor) {
-					beautify_code();
-				},
-				readOnly : true
-			});
-			editor.commands.addCommand({
-				name : 'myCommandSave',
-				bindKey : {
-					win : 'Ctrl-S',
-					mac : 'Command-S'
-				},
-				exec : function(editor) {
-					try {
-						parent.parent.save();
-						top.saveXml();
-					} catch (e) {
-						console.log(e);
-					}
-				},
-				readOnly : true
-			});
-			editor.$blockScrolling = Infinity;
-
-			editor.setValue(val, 1);
-			editor.selection.clearSelection();
-			if (markType == 'xml') {
-				editor.setOption('readOnly', true);
-			}
-			if (markType == 'json') {
-				beautify_code();
-			}
-
-			var iframes = window.parent.document.getElementsByTagName('iframe');
-			for (var i = 0; i < iframes.length; i++) {
-				var o = iframes[i];
-				if (o.contentWindow == window) {
-					if (markType == 'md') {
-						o.style.cssText = 'left:0;width:50%;top:0;bottom:0;position:absolute;';
-						var s = '<div id="markdown_html" class="ewa-mark-down" style="white-space:normal;overflow:auto;left:50%;right:0;top:0;bottom:0;position:absolute;padding:10px;box-sizing:border-box;"></div>';
-						window.parent.$(o.parentNode).append(s);
-						init_editor_markdown();
-						updateMarkDown();
-					} else {
-						o.style.width = '100%';
-						window.parent.$("#markdown_html").remove();
-					}
-					break;
-				}
+	var theme_code = "ace/theme/cobalt";
+	if (window.localStorage && window.localStorage["EWA_CODE_THENE"]) {
+		var v = window.localStorage["EWA_CODE_THENE"];
+		var obj = document.getElementById('theme');
+		for (var i = 0; i < theme.options.length; i++) {
+			var v1 = obj.options[i].value;
+			if (v1 == v) {
+				theme_code = v1;
+				obj.value = v1;
+				break;
 			}
 		}
-		function init_editor_markdown() {
-			var languageOverrides = {
-				js : 'javascript',
-				html : 'xml'
-			};
-			var flow_opt = {
-				'x' : 0,
-				'y' : 0,
-				'line-width' : 2,
-				'line-length' : 50,
-				'text-margin' : 10,
-				'font-size' : 14,
-				'font-color' : 'black',
-				'line-color' : 'black',
-				'element-color' : 'black',
-				'fill' : 'white',
-				'yes-text' : 'yes',
-				'no-text' : 'no',
-				'arrow-end' : 'block',
-				'scale' : 1,
-				// style symbol types
-				'symbols' : {
-					'start' : {
-						'font-color' : 'red',
-						'element-color' : 'green',
-						'fill' : 'yellow'
-					},
-					'end' : {
-						'class' : 'end-element'
-					}
-				},
-				// even flowstate support ;-)
-				'flowstate' : {
-					// 'past' : { 'fill' : '#CCCCCC', 'font-size' : 12},
-					// 'current' : {'fill' : 'yellow', 'font-color' : 'red', 'font-weight' : 'bold'},
-					// 'future' : { 'fill' : '#FFFF99'},
-					'request' : {
-						'fill' : 'blue'
-					}
-				//,
-				// 'invalid': {'fill' : '#444444'},
-				// 'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'APPROVED', 'no-text' : 'n/a' },
-				// 'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'n/a', 'no-text' : 'REJECTED' }
-				}
-			};
-			md = markdownit({
-				html : true,
-				highlight : function(code, lang) {
-					if (languageOverrides[lang])
-						lang = languageOverrides[lang];
-					if (lang && hljs.getLanguage(lang)) {
-						try {
-							return hljs.highlight(lang, code).value;
-						} catch (e) {
-						}
-					}
-					if (lang && lang == 'flow') {
-						try {
-							if (map_svg[code]) {
-								return map_svg[code];
-							}
-							var diagram = flowchart.parse(code, flow_opt);
-							var id = 'flow-' + Math.random();
-							obj.id = id;
-							var h = "<div id='" + id + "'></div>";
-							setTimeout(function() {
-								diagram.drawSVG(document.getElementById(id));
+	}
 
-								if (parent_textarea_html) {
-									parent_textarea_html.value = document.getElementById('out').innerHTML;
-								}
-								map_svg[code] = document.getElementById(id).outerHTML;
+	editor.setTheme(theme_code);
+	editor.session.setMode(mode);
+	editor.getSession().setUseWrapMode(true);
 
-							}, 1);
-							return h;
-						} catch (e) {
-							return e;
-						}
-					}
-					return '';
-				}
-			}).use(markdownitFootnote);
-			editor.getSession().on('change', function(e) {
-				updateMarkDown();
-			});
-		}
-		function updateMarkDown() {
+	editor.setOptions({
+		enableBasicAutocompletion : true,
+		enableSnippets : true,
+		enableLiveAutocompletion : true
+	});
+	if (window.localStorage && window.localStorage.EWA_CODE_FONTSIZE) {
+		editor.setOption('fontSize', window.localStorage.EWA_CODE_FONTSIZE);
+	}
+	editor.commands.addCommand({
+		name : 'myCommand',
+		bindKey : {
+			win : 'Ctrl-Shift-F',
+			mac : 'Command-Shift-F'
+		},
+		exec : function(editor) {
+			beautify_code();
+		},
+		readOnly : true
+	});
+	editor.commands.addCommand({
+		name : 'myCommandSave',
+		bindKey : {
+			win : 'Ctrl-S',
+			mac : 'Command-S'
+		},
+		exec : function(editor) {
+			try {
+				parent.parent.save();
+				top.saveXml();
+			} catch (e) {
+				console.log(e);
+			}
+		},
+		readOnly : true
+	});
+	editor.$blockScrolling = Infinity;
+
+	editor.setValue(val, 1);
+	editor.selection.clearSelection();
+	if (markType == 'xml') {
+		editor.setOption('readOnly', true);
+	}
+	if (markType == 'json') {
+		beautify_code();
+	}
+
+	var iframes = window.parent.document.getElementsByTagName('iframe');
+	for (var i = 0; i < iframes.length; i++) {
+		var o = iframes[i];
+		if (o.contentWindow == window) {
 			if (markType == 'md') {
-				var mdCnt = getText();
-				var html = md.render(mdCnt);
-				window.parent.$("#markdown_html").html(html);
-			}
-		}
-		function beautify_code() {
-			/* 效果不好 
-			if(!aceBeautify){
-				aceBeautify= ace.require("ace/ext/beautify");
-			}
-			aceBeautify.beautify(editor.session); */
-			var p = editor.getCursorPosition();
-			var s;
-			if (mode == 'ace/mode/javascript' || mode == 'ace/mode/json') {
-				s = js_beautify(getText());
-			} else if (mode == 'ace/mode/html' || mode == 'ace/mode/xml') {
-				s = html_beautify(getText());
-			} else if (mode == 'ace/mode/css') {
-				s = css_beautify(getText());
-			} else if (mode == 'ace/mode/sql') {
-				beautify_code_sql();
-				return;
+				o.style.cssText = 'left:0;width:50%;top:0;bottom:0;position:absolute;';
+				var s = '<div id="markdown_html" class="ewa-mark-down" style="white-space:normal;overflow:auto;left:50%;right:0;top:0;bottom:0;position:absolute;padding:10px;box-sizing:border-box;"></div>';
+				window.parent.$(o.parentNode).append(s);
+				init_editor_markdown();
+				updateMarkDown();
 			} else {
-				$Tip('不支持类型格式化');
-				return;
+				o.style.width = '100%';
+				window.parent.$("#markdown_html").remove();
 			}
-			editor.setValue(s, 1);
-			editor.moveCursorToPosition(p);
-			editor.selection.clearSelection(); 
+			break;
 		}
-		function beautify_code_sql() {
-			var p = editor.getCursorPosition();
-			var txt = getText();
-			var u = '../../EWA_DEFINE/cgi-bin/xml/?type=format&mode=sql';
-			var ajax = new top.EWA_AjaxClass();
-			ajax.AddParameter('code', txt);
-			ajax.PostNew(u, function() {
-				if (ajax.IsRunEnd()) {
-					var rst;
-					eval('rst=' + ajax.GetRst());
-					var txt = rst['text'];
-					editor.setValue(txt, 1);
-					editor.moveCursorToPosition(p);
-					editor.selection.clearSelection();
+	}
+}
+function init_editor_markdown() {
+	var languageOverrides = {
+		js : 'javascript',
+		html : 'xml'
+	};
+	var flow_opt = {
+		'x' : 0,
+		'y' : 0,
+		'line-width' : 2,
+		'line-length' : 50,
+		'text-margin' : 10,
+		'font-size' : 14,
+		'font-color' : 'black',
+		'line-color' : 'black',
+		'element-color' : 'black',
+		'fill' : 'white',
+		'yes-text' : 'yes',
+		'no-text' : 'no',
+		'arrow-end' : 'block',
+		'scale' : 1,
+		// style symbol types
+		'symbols' : {
+			'start' : {
+				'font-color' : 'red',
+				'element-color' : 'green',
+				'fill' : 'yellow'
+			},
+			'end' : {
+				'class' : 'end-element'
+			}
+		},
+		// even flowstate support ;-)
+		'flowstate' : {
+			// 'past' : { 'fill' : '#CCCCCC', 'font-size' : 12},
+			// 'current' : {'fill' : 'yellow', 'font-color' : 'red', 'font-weight' : 'bold'},
+			// 'future' : { 'fill' : '#FFFF99'},
+			'request' : {
+				'fill' : 'blue'
+			}
+		//,
+		// 'invalid': {'fill' : '#444444'},
+		// 'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'APPROVED', 'no-text' : 'n/a' },
+		// 'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'n/a', 'no-text' : 'REJECTED' }
+		}
+	};
+	md = markdownit({
+		html : true,
+		highlight : function(code, lang) {
+			if (languageOverrides[lang])
+				lang = languageOverrides[lang];
+			if (lang && hljs.getLanguage(lang)) {
+				try {
+					return hljs.highlight(lang, code).value;
+				} catch (e) {
 				}
-			});
-		}
-		function checkSQL() {
-			var sql = getText();
-			var ajax = new top.EWA_AjaxClass();
-			var u = '../../EWA_DEFINE/cgi-bin/xml/?type=CHECK_SQL';
-			ajax.AddParameter('sql', sql);
-			ajax.AddParameter('db', parent.parent.parent.$X('PAGE$DataSource$DataSource').value);
-
-			ajax.PostNew(u, function() {
-				if (ajax.IsRunEnd()) {
-					var rst;
-					eval('rst=' + ajax.GetRst());
-					var ok = rst['RST'];
-					if (ok) {
-						alert('ok');
-					} else {
-						alert(rst['ERR']);
+			}
+			if (lang && lang == 'flow') {
+				try {
+					if (map_svg[code]) {
+						return map_svg[code];
 					}
+					var diagram = flowchart.parse(code, flow_opt);
+					var id = 'flow-' + Math.random();
+					obj.id = id;
+					var h = "<div id='" + id + "'></div>";
+					setTimeout(function() {
+						diagram.drawSVG(document.getElementById(id));
+
+						if (parent_textarea_html) {
+							parent_textarea_html.value = document.getElementById('out').innerHTML;
+						}
+						map_svg[code] = document.getElementById(id).outerHTML;
+
+					}, 1);
+					return h;
+				} catch (e) {
+					return e;
 				}
-			});
+			}
+			return '';
 		}
-		function getText() {
-			return editor.getValue();
+	}).use(markdownitFootnote);
+	editor.getSession().on('change', function(e) {
+		updateMarkDown();
+	});
+}
+function updateMarkDown() {
+	if (markType == 'md') {
+		var mdCnt = getText();
+		var html = md.render(mdCnt);
+		window.parent.$("#markdown_html").html(html);
+	}
+}
+function beautify_code() {
+	/* 效果不好 
+	if(!aceBeautify){
+		aceBeautify= ace.require("ace/ext/beautify");
+	}
+	aceBeautify.beautify(editor.session); */
+	var p = editor.getCursorPosition();
+	var s;
+	if (mode == 'ace/mode/javascript' || mode == 'ace/mode/json') {
+		s = js_beautify(getText());
+	} else if (mode == 'ace/mode/html' || mode == 'ace/mode/xml') {
+		s = html_beautify(getText());
+	} else if (mode == 'ace/mode/css') {
+		s = css_beautify(getText());
+	} else if (mode == 'ace/mode/sql') {
+		beautify_code_sql();
+		return;
+	} else {
+		$Tip('不支持类型格式化');
+		return;
+	}
+	editor.setValue(s, 1);
+	editor.moveCursorToPosition(p);
+	editor.selection.clearSelection(); 
+}
+function beautify_code_sql() {
+    let config = {
+        "language": "tsql",
+        "tabWidth": "4",
+        "useTabs": false,
+        "keywordCase": "upper",
+        "dataTypeCase": "preserve",
+        "functionCase": "preserve",
+        "identifierCase": "preserve",
+        "indentStyle": "standard",
+        "logicalOperatorNewline": "before",
+        "expressionWidth": "82",
+        "lineBetweenQueries": "1",
+        "denseOperators": false,
+        "newlineBeforeSemicolon": false
+    };
+    var p = editor.getCursorPosition();
+    var txt = getText();
+    try {
+        let formated = sqlFormatter.format(txt, config);
+        editor.setValue(formated, 1);
+        editor.moveCursorToPosition(p);
+        editor.selection.clearSelection();
+    } catch (e) {
+        alert(e);
+    }
+}
+
+function checkSQL() {
+	var sql = getText();
+	var ajax = new top.EWA_AjaxClass();
+	var u = '../../EWA_DEFINE/cgi-bin/xml/?type=CHECK_SQL';
+	ajax.AddParameter('sql', sql);
+	ajax.AddParameter('db', parent.parent.parent.$X('PAGE$DataSource$DataSource').value);
+
+	ajax.PostNew(u, function() {
+		if (ajax.IsRunEnd()) {
+			var rst;
+			eval('rst=' + ajax.GetRst());
+			var ok = rst['RST'];
+			if (ok) {
+				alert('ok');
+			} else {
+				alert(rst['ERR']);
+			}
 		}
-		function setText(t) {
-			editor.setValue(editor.getValue() + t, 1);
-		}
-		function change_code_theme(obj) {
-			editor.setTheme(obj.value);
-			window.localStorage["EWA_CODE_THENE"] = obj.value;
-		}
-		aa();
+	});
+}
+function getText() {
+	return editor.getValue();
+}
+function setText(t) {
+	editor.setValue(editor.getValue() + t, 1);
+}
+function change_code_theme(obj) {
+	editor.setTheme(obj.value);
+	window.localStorage["EWA_CODE_THENE"] = obj.value;
+}
+aa();
 	</script>
 </body>
 </html>
