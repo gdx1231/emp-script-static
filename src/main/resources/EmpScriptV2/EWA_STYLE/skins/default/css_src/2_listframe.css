@@ -247,6 +247,7 @@
 	width: auto;
 	height: auto;
 	flex-direction: column;
+	z-index: 2;
 }
 
 .ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div input {
