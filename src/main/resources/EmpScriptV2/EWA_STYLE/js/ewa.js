@@ -15197,6 +15197,12 @@ function EWA_FrameClass() {
 			$('.ewa-valid-code-img').parent().parent().find('input').focus().select();
 		}
 	};
+	//重复提交后的提醒（幂等性）
+	this.checkIdempotenceError = function(){
+		var ss = _EWA_EVENT_MSG['IdempotanceError'];
+		$Tip(ss);
+	};
+	
 	this.Init = function(xmlString) {
 		this.Xml = new EWA.C.Xml();
 		this.Xml.LoadXml(xmlString);
