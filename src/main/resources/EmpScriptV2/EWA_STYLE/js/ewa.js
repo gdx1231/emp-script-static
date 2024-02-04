@@ -12277,16 +12277,16 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 	var funcSuccess;
 	var funcFail;
 	var config;
-	var mobile = /iphone|android|ipad/ig.test( navigator.userAgent) || window.EWA_App;
+	var mobile = /iphone|android|ipad/ig.test(navigator.userAgent) || window.EWA_App;
 	function fnDown() {
 		let box = $('.ewa-slider-puzzle-box');
 		let swiper = $('.ewa-slider-puzzle-swiper');
 		let verify = $('.ewa-slider-puzzle-verify');
 		let text = $('.ewa-slider-puzzle-text');
-		
-		let move = mobile?'touchmove':'mousemove';
-		let up = mobile?'touchend':'mouseup';
-		let down = mobile?'touchstart':'mousedown';
+
+		let move = mobile ? 'touchmove' : 'mousemove';
+		let up = mobile ? 'touchend' : 'mouseup';
+		let down = mobile ? 'touchstart' : 'mousedown';
 		// console.log(move,up,down)
 		swiper.bind(down, function(e0) {
 			e0.stopPropagation()
@@ -12295,8 +12295,8 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 			verify.css({
 				display: 'block',
 			});
-			let e = mobile?e0.touches[0]:e0;
-			
+			let e = mobile ? e0.touches[0] : e0;
+
 			// 获取鼠标到按钮的距离
 			var disX = e.clientX - $(this).offset().left,
 				disY = e.clientY - $(this).offset().top
@@ -12305,14 +12305,14 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 			// 防止重复绑定触发多次
 			box.unbind(move)
 			box.unbind(up)
-			
+
 			// 移动
 			console.log(box[0]);
 			box.bind(move, function(e) {
-				let e1 = mobile?e.touches[0]:e;
+				let e1 = mobile ? e.touches[0] : e;
 				fnMove(e1, disX, disY)
 			})
-			 
+
 			// 释放
 			box.bind(up, function(e) {
 				box.unbind(move)
@@ -12337,21 +12337,30 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 						if (funcSuccess) {
 							funcSuccess(rst);
 						}
-					} else {
-						box.addClass('ewa-slider-puzzle-fail');
-						setTimeout(() => {
-							box.removeClass('ewa-slider-puzzle-fail');
-							// 解除绑定，并将滑动模块归位
-
-							swiper.css('left', '0px')
-							verify.css('left', '10px')
-							text.css('opacity', '1')
-
-							if (funcFail) {
-								funcFail(rst);
-							}
-						}, 500);
+						return;
 					}
+					box.addClass('ewa-slider-puzzle-fail');
+					setTimeout(() => {
+						box.removeClass('ewa-slider-puzzle-fail');
+						// 解除绑定，并将滑动模块归位
+
+						swiper.css('left', '0px')
+						verify.css('left', '10px')
+						text.css('opacity', '1')
+
+						if (funcFail) {
+							funcFail(rst);
+						}
+
+						if (rst.newConfig) {
+							rst.newConfig.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
+							rst.newConfig.ewa_trigger_valid = config.ewa_trigger_valid;
+							config = rst.newConfig;
+							refreshImg(config)
+						}
+
+					}, 500);
+
 
 				});
 
@@ -12363,10 +12372,10 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 		let handle = $('.ewa-slider-puzzle-handle')
 		let swiper = $('.ewa-slider-puzzle-swiper');
 		let verify = $('.ewa-slider-puzzle-verify');
-		
+
 		// 这里的e是以鼠标为参考
 		var l = e.clientX - posX - $(handle).offset().left;
-		var	winW = $(handle).width() + 29;
+		var winW = $(handle).width() + 29;
 		// console.log(l,winW)
 		// 限制拖动范围只能在handle中
 		if (l < 0) {
