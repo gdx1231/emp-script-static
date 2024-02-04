@@ -164,5 +164,6 @@
 	font-size: 24px;
 	background: #fff;
 	border-radius: 50%;
+	z-index: 1;
 }
 

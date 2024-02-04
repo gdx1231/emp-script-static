@@ -6,6 +6,8 @@ _EWA_EVENT_MSG['OnTreeNodeDelete'] = "您确认要删除么？ ";
 _EWA_EVENT_MSG['OnTreeNodeDeleteHaveChildren'] = "还有子目录，不能删除。 ";
 _EWA_EVENT_MSG['OnTreeNodeNameRepeat'] = "名称重复，请修改";
 _EWA_EVENT_MSG['IdempotanceError'] = "请勿重复提交";
+_EWA_EVENT_MSG['ValidSildePuzzleError'] = "拼图验证失败";
+
 var _EWA_INFO_MSG = {
 	"EWA.SYS.CHOOSE_ITEM_TITLE": "操作提示",
 	"EWA.SYS.CHOOSE_ITEM": "请选择您要操作的内容",

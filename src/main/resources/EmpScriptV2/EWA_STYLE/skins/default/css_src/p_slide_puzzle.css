@@ -1,0 +1,161 @@
+.ewa-slider-puzzle-box {
+	padding: 10px;
+	background-color: #fff;
+	box-shadow: 2px 2px 8px 0 rgba(0, 0, 0, 0.4);
+	position: relative;
+	box-sizing: content-box;
+}
+
+.ewa-slider-puzzle-successful::before {
+	content: "";
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255, 255, 255, 0);
+	z-index: 102;
+}
+
+.ewa-slider-puzzle-imgbox {
+	position: relative;
+}
+
+.ewa-slider-puzzle-imgbox img {
+	width: 100%;
+	display: block;
+}
+
+@keyframes ewa-shake {
+	0% {
+		transform: translateX(0);
+	}
+
+	25% {
+		transform: translateX(-3px);
+	}
+
+	50% {
+		transform: translateX(3px);
+	}
+
+	75% {
+		transform: translateX(-3px);
+	}
+
+	100% {
+		transform: translateX(3px);
+	}
+}
+
+.ewa-slider-puzzle-fail .ewa-slider-puzzle-imgbox {
+	animation: ewa-shake 0.15s;
+	/* 抖动的持续时间 */
+	animation-iteration-count: 2;
+	/* 动画重复次数 */
+}
+
+.ewa-slider-puzzle-successful .ewa-slider-puzzle-imgbox::after {
+	content: "";
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255, 255, 255, 0.7);
+	z-index: 100;
+}
+
+.ewa-slider-puzzle-successful .ewa-slider-puzzle-imgbox::before {
+	content: "\f058";
+	font-size: 80px;
+	font-family: FontAwesome;
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 100px;
+	height: 100px;
+	line-height: 100px;
+	margin-top: -50px;
+	margin-left: -50px;
+	z-index: 101;
+	text-align: center;
+	color: forestgreen;
+}
+
+
+.ewa-slider-puzzle-handle {
+	display: flex;
+	align-items: center;
+	position: relative;
+	height: 30px;
+	border-radius: 20px;
+	margin: 20px 0;
+	padding: 4px 0 4px 70px;
+	box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2) inset;
+	background: #f5f5f5;
+	user-select: none;
+}
+
+.ewa-slider-puzzle-text {
+	opacity: 1;
+	transition: opacity 0.5s ease-in-out;
+	color: #aaa;
+}
+
+.ewa-slider-puzzle-text::before {
+	content: "拖动滑块完成拼图";
+}
+
+.enus .ewa-slider-puzzle-text::before {
+	content: "Drag the slider to complete the puzzle";
+}
+
+.ewa-slider-puzzle-swiper {
+	position: absolute;
+	top: -10px;
+	left: 0px;
+	width: 58px;
+	height: 58px;
+	border-radius: 50%;
+	background-color: #08c;
+	box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+.ewa-slider-puzzle-verify {
+	position: absolute;
+	left: 10px;
+	width: 50px;
+	height: 50px;
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	filter: drop-shadow(1px 1px 6px rgba(255, 255, 155, 0.91));
+	z-index: 10;
+	border: 0;
+}
+
+.ewa-slider-puzzle-refresh {
+	position: absolute;
+	color: #fff;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	transition: all 0.1s ease-in-out;
+	right: 20px;
+	bottom: 20px;
+}
+
+.ewa-slider-puzzle-refresh::before {
+	content: "\f01e";
+	font-size: 30px;
+	font-family: FontAwesome;
+}
+
+.ewa-slider-puzzle-refresh:hover {
+	color: #ccc;
+}

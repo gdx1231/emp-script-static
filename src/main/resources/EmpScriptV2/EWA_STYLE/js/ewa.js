@@ -12260,7 +12260,182 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 // if ($X('BAS_APP_NATIONAL_ID')) {
 // sfz($X('BAS_APP_NATIONAL_ID'));
 // }
-/**
+//图片滑动验证 2024-02-04
+(function() {
+	var template = [];
+	template.push("<div class=\"ewa-slider-puzzle-box\">");
+	template.push("<div class=\"ewa-slider-puzzle-imgbox\">");
+	template.push("<div class=\"ewa-slider-puzzle-verify\"></div>");
+	template.push("<div class=\"ewa-slider-puzzle-refresh\"></div>");
+	template.push("</div>");
+	template.push("<div class=\"ewa-slider-puzzle-handle\">");
+	template.push("<span class=\"ewa-slider-puzzle-swiper\"></span>");
+	template.push("<span class=\"ewa-slider-puzzle-text\"></span>");
+	template.push("</div>");
+	template.push("</div>");
+
+	var funcSuccess;
+	var funcFail;
+	var config;
+	var mobile = /iphone|android|ipad/ig.test( navigator.userAgent) || window.EWA_App;
+	function fnDown() {
+		let box = $('.ewa-slider-puzzle-box');
+		let swiper = $('.ewa-slider-puzzle-swiper');
+		let verify = $('.ewa-slider-puzzle-verify');
+		let text = $('.ewa-slider-puzzle-text');
+		
+		let move = mobile?'touchmove':'mousemove';
+		let up = mobile?'touchend':'mouseup';
+		let down = mobile?'touchstart':'mousedown';
+		// console.log(move,up,down)
+		swiper.bind(down, function(e0) {
+			e0.stopPropagation()
+
+			// 30为模块宽度
+			verify.css({
+				display: 'block',
+			});
+			let e = mobile?e0.touches[0]:e0;
+			
+			// 获取鼠标到按钮的距离
+			var disX = e.clientX - $(this).offset().left,
+				disY = e.clientY - $(this).offset().top
+			text.css('opacity', '0')
+
+			// 防止重复绑定触发多次
+			box.unbind(move)
+			box.unbind(up)
+			
+			// 移动
+			console.log(box[0]);
+			box.bind(move, function(e) {
+				let e1 = mobile?e.touches[0]:e;
+				fnMove(e1, disX, disY)
+			})
+			 
+			// 释放
+			box.bind(up, function(e) {
+				box.unbind(move)
+				box.unbind(up)
+
+				let u = new EWA_UrlClass();
+				console.log(verify.position());
+				console.log(verify.offset());
+
+				u.AddParameter("left", verify.position().left);
+				u.AddParameter("top", verify.position().top);
+				u.AddParameter("left1", verify.offset().left);
+				u.AddParameter("top1", verify.offset().top);
+
+				u.AddParameter("ewa_trigger_valid_mode", "check");
+				u.AddParameter("ewa_trigger_valid_name", config.ewa_trigger_valid_name);
+				u.AddParameter("ewa_ajax", config.ewa_trigger_valid);
+				$J(u.GetUrl(), function(rst) {
+					console.log(rst);
+					if (rst.RST) {
+						box.addClass('ewa-slider-puzzle-successful');
+						if (funcSuccess) {
+							funcSuccess(rst);
+						}
+					} else {
+						box.addClass('ewa-slider-puzzle-fail');
+						setTimeout(() => {
+							box.removeClass('ewa-slider-puzzle-fail');
+							// 解除绑定，并将滑动模块归位
+
+							swiper.css('left', '0px')
+							verify.css('left', '10px')
+							text.css('opacity', '1')
+
+							if (funcFail) {
+								funcFail(rst);
+							}
+						}, 500);
+					}
+
+				});
+
+			})
+		})
+	}
+
+	function fnMove(e, posX, posY) {
+		let handle = $('.ewa-slider-puzzle-handle')
+		let swiper = $('.ewa-slider-puzzle-swiper');
+		let verify = $('.ewa-slider-puzzle-verify');
+		
+		// 这里的e是以鼠标为参考
+		var l = e.clientX - posX - $(handle).offset().left;
+		var	winW = $(handle).width() + 29;
+		// console.log(l,winW)
+		// 限制拖动范围只能在handle中
+		if (l < 0) {
+			l = 0
+		} else if (l > winW) {
+			l = winW
+		}
+		swiper.css('left', l);
+		verify.css('left', l + 10);
+	}
+
+	function refreshImg(json) {
+		var imgBox = $('.ewa-slider-puzzle-imgbox');
+		var verImg = $('.ewa-slider-puzzle-imgbox img');
+		imgBox.css('width', json.imgBigWidth).css('height', json.imgBigHeight);
+		if (verImg.length) {
+			verImg.attr('src', json.imgBig)
+		} else {
+			imgBox.prepend("<img src='" + json.imgBig + "' />");
+		}
+		let verify = $('.ewa-slider-puzzle-verify');
+		verify.css('background-image', "url('" + json.imgSmall + "')")
+			.css('top', json.imgTop)
+			.css('width', json.imgSmallWidth)
+			.css('height', json.imgSmallHeight);
+	}
+
+
+	/**
+	 * 初始化
+	 * @param json 配置信息，imgBig，imgBigWidth，imgBigHeight<br>
+	 * 	imgSmall, imgSmallWidth, imgSmallHeight<br>
+	 *  imgTop
+	 * @param parent 安装的父体
+	 * @param cbSuccess 验证成功的回调方法
+	 * @param cbFail 验证失败的回调方法
+	 */
+	function init(json, parent, cbSuccess, cbFail) {
+		config = json;
+		funcSuccess = cbSuccess;
+		funcFail = cbFail;
+		$(parent || 'body').append(template.join(""));
+
+		let refresh = $('.ewa-slider-puzzle-refresh');
+		let box = $('.ewa-slider-puzzle-box');
+		box.css('width', json.imgBigWidth);
+		refreshImg(json)
+		refresh.click(function(e) {
+			e.stopPropagation();
+			var u = new EWA_UrlClass();
+			u.AddParameter("ewa_trigger_valid_mode", "refresh");
+			u.AddParameter("ewa_trigger_valid_name", config.ewa_trigger_valid_name);
+			u.AddParameter("ewa_ajax", config.ewa_trigger_valid);
+			u.AddParameter("ewa_trigger_valid_width", document.documentElement.clientWidth);
+			$J(u, function(rst) {
+				if (!rst.RST) {
+					alert(rst.ERR);
+					return;
+				}
+				rst.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
+				rst.ewa_trigger_valid = config.ewa_trigger_valid;
+				config = rst;
+				refreshImg(config)
+			});
+		});
+		fnDown();
+	}
+	EWA.UI.SlidePuzzle = init;
+})();/**
  * 
  * @include "EWA.js"
  * @include "EWA_UI.js"
@@ -15198,11 +15373,16 @@ function EWA_FrameClass() {
 		}
 	};
 	//重复提交后的提醒（幂等性）
-	this.checkIdempotenceError = function(){
+	this.checkIdempotenceError = function() {
 		var ss = _EWA_EVENT_MSG['IdempotanceError'];
 		$Tip(ss);
 	};
-	
+	//拼图验证失败
+	this.checkValidSildePuzzleError = function() {
+		var ss = _EWA_EVENT_MSG['ValidSildePuzzleError'];
+		$Tip(ss);
+	};
+
 	this.Init = function(xmlString) {
 		this.Xml = new EWA.C.Xml();
 		this.Xml.LoadXml(xmlString);
@@ -15222,6 +15402,90 @@ function EWA_FrameClass() {
 		this._InitMustInputs();
 
 		this._InitEncyptions();
+
+		this._InitTriggerValids();
+	};
+	/**
+	 * 触发验证，例如拼图验证
+	 */
+	this._InitTriggerValids = function() {
+		var tb = $('#EWA_FRAME_' + this._Id);
+		var js = "EWA.F.FOS['" + this._Id + "'].callTriggerValid(this)";
+		this.triggerValids = {};
+		for (var name in this.ItemList.Items) {
+			var node = this.ItemList.Items[name];
+			var name1 = this.ItemList.GetItemValue(node, "Name", "Name");
+
+			var triggerValid = $(node).find('DataItem Set[TriggerValid]').attr("TriggerValid");
+			if (!triggerValid) {
+				continue;
+			}
+			this.triggerValids[name1] = null;
+			var jqitem = '#' + name1;
+			// 在对象上
+			var item = tb.find(jqitem);
+			if (item.length == 0) {
+				contine;
+			}
+			item.attr('ewa_trigger_valid', triggerValid);
+
+			if ("submit" == item[0].type) {
+				//通过form onsubmit触发
+				return;
+			}
+
+			let oldclick = item.attr('onclick');
+			if (oldclick) {
+				item.attr('_onclick', oldclick);
+			}
+			item.attr('onclick', js);
+
+		}
+	};
+	this.callTriggerValid = function(obj) {
+		let objId = $(obj).attr("id");
+		let url = this.getUrlClass();
+		let triggerValid = $(obj).attr('ewa_trigger_valid');
+		url.AddParameter("ewa_ajax", triggerValid);
+		url.AddParameter("ewa_trigger_valid_name", objId);
+		url.AddParameter("ewa_trigger_valid_mode", "create");
+		url.AddParameter("ewa_trigger_valid_width", document.documentElement.clientWidth);
+		let c = this;
+
+		let tempid = EWA_Utils.tempId();
+		$(obj).attr('_trigger_valid_id', tempid);
+
+		$J(url.GetUrl(), function(rst) {
+			if (!rst.RST) {
+				alert(rst.ERR);
+				return;
+			}
+			//显示拼图窗口
+			let title = EWA.Lang == 'enus' ? "Silde puzzle" : "拼图验证";
+			let dia = $DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
+			rst.ewa_trigger_valid_name = objId;
+			rst.ewa_trigger_valid = triggerValid;
+
+			EWA.UI.SlidePuzzle(rst, $('#' + tempid), function(result) {
+				$(obj).removeAttr('onclick');
+				let click = false;
+				if ($(obj).attr('_onclick')) {
+					$(obj).attr('onclick', $(obj).attr('_onclick'));
+					click = true;
+				}
+				setTimeout(function() {
+					$(dia.getMain()).animate({ opacity: 0 }, 500);
+				}, 500);
+				setTimeout(function() {
+					c.triggerValids[objId] = result.VALID;
+					if (click) {
+						obj.click();
+					}
+					dia.Close();
+				}, 1000);
+			});
+			setTimeout(() => { dia.AutoSize(); }, 100);
+		});
 	};
 	/**
 	 * 添加必须输入的样式
@@ -15720,6 +15984,12 @@ function EWA_FrameClass() {
 				ajax.AddParameter(n, this.PostAddData[n]);
 			}
 		}
+		if (this.triggerValids) {
+			for (let n in this.triggerValids) {
+				let name = n + "_TRIGGER_VALID_RESULT";
+				ajax.AddParameter(name, this.triggerValids[n]);
+			}
+		}
 		return ajax;
 	};
 	/**
@@ -15833,10 +16103,49 @@ function EWA_FrameClass() {
 		this.uploadProcess = true;
 		return true;
 	};
+	this._checkTriggerValids = function() {
+		if (!this.triggerValids) {
+			return true;
+		}
+		var tb = $('#EWA_FRAME_' + this._Id);
+		for (let n in this.triggerValids) {
+			if (!this.triggerValids[n]) {
+				let obj = tb.find('#' + n);
+				if (obj.length > 0 && "submit" == obj[0].type) {
+					let inc = obj.attr('_trigger_valid_inc') ? obj.attr('_trigger_valid_inc') * 1 : 0;
+					if (inc == 0) {
+						this.callTriggerValid(obj);
+					} else {
+						let id = obj.attr('_trigger_valid_id');
+						
+						if($('#'+id).length == 0){
+							//窗口不见了，取消提交等待
+							this._cancelPostWait = true;
+							obj.removeAttr('_trigger_valid_inc');
+							obj.removeAttr('_trigger_valid_id');
+							return false;
+						}
+					}
+					inc++;
+					obj.attr('_trigger_valid_inc', inc);
+				}
+				// console.log('等待验证triggerValid: ' + n);
+				return false;
+			}
+		}
+		return true;
+	};
 	this.DoPost = function(objForm, url, isSkipDoPostBefore) {
 		if (this.posting) {
 			return false;
 		}
+		if (this._cancelPostWait) {
+			console.log('取消提交')
+			this._cancelPostWait = null;
+			return false;
+		}
+		var c = this;
+
 		if (!isSkipDoPostBefore) {
 			var rst = this.DoPostBefore();
 			if (rst instanceof Array) {
@@ -15898,7 +16207,6 @@ function EWA_FrameClass() {
 			}
 		}
 		var incUploadings = 0;
-		var c = this;
 		for (var i = 0; i < html5uploads.length > 0; i++) {
 			var ipt = html5uploads[i];
 			var uploadingCheckResult = this._uploadingFileCheck(ipt);
@@ -15967,6 +16275,14 @@ function EWA_FrameClass() {
 			return false;
 		}
 
+		//检查拼图验证等
+		if (!this._checkTriggerValids()) {
+			setTimeout(function() {
+				c.DoPost(objForm, url, isSkipDoPostBefore);
+			}, 500);
+			return;
+		}
+
 		if (url == null) {
 			url = this.Url;
 		}
@@ -16029,8 +16345,8 @@ function EWA_FrameClass() {
 					} else if (that.ReloadAfter) {
 						console.log('请用：doPostAfter');
 						that.ReloadAfter(ret);
-					} 
-					
+					}
+
 					eval(ret);
 				} catch (e) {
 					console.log(ret);
@@ -16077,7 +16393,7 @@ function EWA_FrameClass() {
 			}
 		});
 	};
-	
+
 	/**
 	 * 检查所有对象合法性
 	 * 
@@ -16088,7 +16404,6 @@ function EWA_FrameClass() {
 	this.CheckValidAll = function(objForm) {
 		var isOk = true;
 
-		var nodeList = this.ItemList;
 		var firstObj = null;
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];

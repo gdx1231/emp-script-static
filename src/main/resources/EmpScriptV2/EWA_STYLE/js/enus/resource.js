@@ -6,6 +6,7 @@ _EWA_EVENT_MSG['OnTreeNodeDelete'] = "Are you sure?";
 _EWA_EVENT_MSG['OnTreeNodeDeleteHaveChildren'] = "Don't delete!";
 _EWA_EVENT_MSG['OnTreeNodeNameRepeat'] = "Name duplicated, pls change it!";
 _EWA_EVENT_MSG['IdempotanceError'] = "Please do not resubmit";
+_EWA_EVENT_MSG['ValidSildePuzzleError'] = "Puzzle verification failed";
 var _EWA_INFO_MSG = {
 	"EWA.SYS.CHOOSE_ITEM_TITLE": "Tips",
 	"EWA.SYS.CHOOSE_ITEM": "Please select a record first",
