@@ -12318,7 +12318,7 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 				box.unbind(move)
 				box.unbind(up)
 
-				let u = new EWA_UrlClass();
+				let u = new EWA_UrlClass(config.ewa_url);
 				console.log(verify.position());
 				console.log(verify.offset());
 
@@ -12355,6 +12355,7 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 						if (rst.newConfig) {
 							rst.newConfig.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
 							rst.newConfig.ewa_trigger_valid = config.ewa_trigger_valid;
+							rst.newConfig.ewa_url  = config.ewa_url;
 							config = rst.newConfig;
 							refreshImg(config)
 						}
@@ -12425,7 +12426,7 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 		refreshImg(json)
 		refresh.click(function(e) {
 			e.stopPropagation();
-			var u = new EWA_UrlClass();
+			var u = new EWA_UrlClass(config.ewa_url);
 			u.AddParameter("ewa_trigger_valid_mode", "refresh");
 			u.AddParameter("ewa_trigger_valid_name", config.ewa_trigger_valid_name);
 			u.AddParameter("ewa_ajax", config.ewa_trigger_valid);
@@ -12437,6 +12438,7 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 				}
 				rst.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
 				rst.ewa_trigger_valid = config.ewa_trigger_valid;
+				rst.ewa_url  = config.ewa_url;
 				config = rst;
 				refreshImg(config)
 			});
@@ -15438,9 +15440,28 @@ function EWA_FrameClass() {
 			}
 			item.attr('ewa_trigger_valid', triggerValid);
 
-			if ("submit" == item[0].type) {
+			var tag = $(node).find('Tag Set').attr('Tag');
+			console.log(tag)
+			if ("submit" == tag) {
 				//通过form onsubmit触发
 				return;
+			}
+
+			if ("smsValid" == tag) {
+				var button = tb.find('.ewa-row-' + name1 + ' .ewa-sms-valid-code-button');
+				let butId = button.attr('id');
+				if (!butId) {
+					butId = EWA_Utils.tempId();
+					button.attr('id', butId);
+				}
+				// 通过一个覆盖层
+				let html = $("<a style='position:absolute;left:0;top:0;right:0;bottom:0'></a>");
+				html.attr('ewa_trigger_valid', triggerValid);
+				html.attr('ewa_trigger_valid_rid', name1);
+				html.attr('ewa_trigger_valid_click_id', butId);
+				button.parent().css('position', 'relative').append(html);
+
+				item = html;
 			}
 
 			let oldclick = item.attr('onclick');
@@ -15451,8 +15472,24 @@ function EWA_FrameClass() {
 
 		}
 	};
+	/**
+	 * 调用触发前判断（例如滑动拼图），检查是否符合执行调用的要求
+	 */
+	this.callTriggerValidBefore = function(obj){
+		return true;
+	};
+	/**
+	 * 调用触发验证，例如滑动拼图
+	 */
 	this.callTriggerValid = function(obj) {
+		if(!this.callTriggerValidBefore(obj)){
+			return;
+		}
+		var tb = $('#EWA_FRAME_' + this._Id);
 		let objId = $(obj).attr("id");
+		if (!objId) {
+			objId = $(obj).attr("ewa_trigger_valid_rid");
+		}
 		let url = this.getUrlClass();
 		let triggerValid = $(obj).attr('ewa_trigger_valid');
 		url.AddParameter("ewa_ajax", triggerValid);
@@ -15474,7 +15511,8 @@ function EWA_FrameClass() {
 			let dia = $DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
 			rst.ewa_trigger_valid_name = objId;
 			rst.ewa_trigger_valid = triggerValid;
-
+			rst.ewa_url = url.GetUrl();
+			
 			EWA.UI.SlidePuzzle(rst, $('#' + tempid), function(result) {
 				$(obj).removeAttr('onclick');
 				let click = false;
@@ -15487,7 +15525,11 @@ function EWA_FrameClass() {
 				}, 500);
 				setTimeout(function() {
 					c.triggerValids[objId] = result.VALID;
-					if (click) {
+					let butId = $(obj).attr('ewa_trigger_valid_click_id');
+					if (butId) {//通过一个覆盖层
+						$(obj).remove();
+						tb.find('#' + butId).click();
+					} else if (click) {
 						obj.click();
 					}
 					dia.Close();
@@ -15501,7 +15543,6 @@ function EWA_FrameClass() {
 	 */
 	this._InitMustInputs = function() {
 		var tb = $('#EWA_FRAME_' + this._Id);
-		var nodeList = this.ItemList;
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
 			var name1 = this.ItemList.GetItemValue(node, "Name", "Name");
@@ -15924,6 +15965,24 @@ function EWA_FrameClass() {
 			}
 		}
 		var ajax = new EWA.C.Ajax();
+		var data = this.CreatePostData();
+		for (var n in data) {
+			ajax.AddParameter(n, data[n]);
+		}
+
+		return ajax;
+	};
+	this.createAjax = this.CreateAjax;
+	/**
+	 * 获取提交的数据 
+	 * 
+	 * @param objForm
+	 *            objForm
+	 * @returns data
+	 */
+	this.CreatePostData = function(objForm) {
+		var objForm = objForm || $('#f_' + this._Id)[0];
+		var data = {};
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
 			var id = this.ItemList.GetItemValue(node, "Name", "Name");
@@ -15957,65 +16016,10 @@ function EWA_FrameClass() {
 					val = "";
 				}
 				// 签名数据是否变化
-				ajax.AddParameter(id + "_CHANGED", changed);
+				data[id + "_CHANGED"] = changed;
 			} else {
 				val = this._GetObjectValue(o1);
 			}
-			if (val != null) {
-				ajax.AddParameter(id, val);
-			}
-			if (o1.tagName.toUpperCase() == "DIV" && o1.getAttribute('EWA_DHTML') == "1") {// dhtml
-				// 传递上传的图片的unid，用于调用SQL的更新用
-				var upImgsUuid = $X('UP_IMG_' + id).value;
-				ajax.AddParameter(id + '_imgs_split', upImgsUuid);
-			}
-
-			if ('swffile' == ewa_tag || 'IMG_UPLOAD' == ewa_tag) {
-				var s = o1.getAttribute("UP_PARAS");
-				if (s != null && s.length > 0) {
-					var s1 = s.split(',');
-					for (var i = 0; i < s1.length; i++) {
-						var n = s1[i];
-						ajax.AddParameter(n, o1.getAttribute(n));
-					}
-				} else {
-					ajax.AddParameter('UP_URL', o1.value);
-				}
-			} else if ('markdown' == ewa_tag) {
-				var texts = o1.parentNode.getElementsByTagName('textarea');
-				if (texts.length > 1) {
-					ajax.AddParameter(texts[1].id, texts[1].value);
-				}
-			}
-		}
-		if (this.PostAddData) {
-			for (var n in this.PostAddData) {
-				ajax.AddParameter(n, this.PostAddData[n]);
-			}
-		}
-		if (this.triggerValids) {
-			for (let n in this.triggerValids) {
-				let name = n + "_TRIGGER_VALID_RESULT";
-				ajax.AddParameter(name, this.triggerValids[n]);
-			}
-		}
-		return ajax;
-	};
-	/**
-	 * 获取提交的数据（json）
-	 */
-	this.CreatePostData = function() {
-		var objForm = $('#f_' + this._Id)[0];
-		var data = {};
-		for (var name in this.ItemList.Items) {
-			var node = this.ItemList.Items[name];
-			var id = this.ItemList.GetItemValue(node, "Name", "Name");
-
-			var o1 = this.GetObject(id, objForm);
-			if (o1 == null) {
-				continue;
-			}
-			var val = this._GetObjectValue(o1);
 			if (val != null) {
 				data[id] = val;
 			}
@@ -16024,7 +16028,7 @@ function EWA_FrameClass() {
 				var upImgsUuid = $X('UP_IMG_' + id).value;
 				data[id + '_imgs_split'] = upImgsUuid;
 			}
-			var ewa_tag = o1.getAttribute('ewa_tag');
+
 			if ('swffile' == ewa_tag || 'IMG_UPLOAD' == ewa_tag) {
 				var s = o1.getAttribute("UP_PARAS");
 				if (s != null && s.length > 0) {
@@ -16036,18 +16040,28 @@ function EWA_FrameClass() {
 				} else {
 					data['UP_URL'] = o1.value;
 				}
-			}
-			if ('markdown' == ewa_tag) {
+			} else if ('markdown' == ewa_tag) {
 				var texts = o1.parentNode.getElementsByTagName('textarea');
 				if (texts.length > 1) {
 					data[texts[1].id] = texts[1].value;
 				}
 			}
 		}
+		if (this.PostAddData) {
+			for (var n in this.PostAddData) {
+				data[n] = this.PostAddData[n];
+			}
+		}
+		if (this.triggerValids) {
+			for (let n in this.triggerValids) {
+				let name = n + "_TRIGGER_VALID_RESULT";
+				data[name] = this.triggerValids[n];
+			}
+		}
 
 		return data;
 	};
-
+	this.createPostData = this.CreatePostData;
 	// 提交前检查，返回true or false;
 	this.DoPostBefore = function() {
 		return true;
@@ -16126,8 +16140,8 @@ function EWA_FrameClass() {
 						this.callTriggerValid(obj);
 					} else {
 						let id = obj.attr('_trigger_valid_id');
-						
-						if($('#'+id).length == 0){
+
+						if ($('#' + id).length == 0) {
 							//窗口不见了，取消提交等待
 							this._cancelPostWait = true;
 							obj.removeAttr('_trigger_valid_inc');

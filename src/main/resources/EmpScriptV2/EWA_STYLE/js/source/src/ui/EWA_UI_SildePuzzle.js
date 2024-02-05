@@ -56,7 +56,7 @@
 				box.unbind(move)
 				box.unbind(up)
 
-				let u = new EWA_UrlClass();
+				let u = new EWA_UrlClass(config.ewa_url);
 				console.log(verify.position());
 				console.log(verify.offset());
 
@@ -93,6 +93,7 @@
 						if (rst.newConfig) {
 							rst.newConfig.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
 							rst.newConfig.ewa_trigger_valid = config.ewa_trigger_valid;
+							rst.newConfig.ewa_url  = config.ewa_url;
 							config = rst.newConfig;
 							refreshImg(config)
 						}
@@ -163,7 +164,7 @@
 		refreshImg(json)
 		refresh.click(function(e) {
 			e.stopPropagation();
-			var u = new EWA_UrlClass();
+			var u = new EWA_UrlClass(config.ewa_url);
 			u.AddParameter("ewa_trigger_valid_mode", "refresh");
 			u.AddParameter("ewa_trigger_valid_name", config.ewa_trigger_valid_name);
 			u.AddParameter("ewa_ajax", config.ewa_trigger_valid);
@@ -175,6 +176,7 @@
 				}
 				rst.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
 				rst.ewa_trigger_valid = config.ewa_trigger_valid;
+				rst.ewa_url  = config.ewa_url;
 				config = rst;
 				refreshImg(config)
 			});
