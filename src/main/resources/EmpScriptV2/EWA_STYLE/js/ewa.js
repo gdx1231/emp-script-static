@@ -14440,8 +14440,9 @@ function EWA_FrameClass() {
 							ph = memo;
 						} else {
 							// memo信息放到对象的下部
-							var memoStr = "<div class='ewa-item-memo'>" + memo + "</div>";
-							o.parentsUntil('tr').last().append(memoStr); // td
+							//var memoStr = "<div class='ewa-item-memo'>" + memo + "</div>";
+							//o.parentsUntil('tr').last().append(memoStr); // td
+							ph+=", "+memo;
 						}
 					}
 				}
@@ -16568,6 +16569,14 @@ function EWA_FrameShowAlert(obj, errorInfo) {
 		if (obj.tagName != 'SELECT') {
 			obj.focus();
 		}
+		
+		let tr = $(obj).parentsUntil('tbody').last();
+		if(tr.prev().hasClass('ewa-row-'+obj.id)){
+			// C11
+			o1 = tr.prev()[0];
+		}
+	}
+	if (!o1) {
 		return;
 	}
 	if (o1.cells.length == 1 || o1.parentNode.parentNode.getAttribute("error_show_type") == "1") {
@@ -16576,6 +16585,7 @@ function EWA_FrameShowAlert(obj, errorInfo) {
 		if (!errTr.attr('error')) {
 			var tr = o1.parentNode.insertRow(o1.rowIndex + 1);
 			tr.setAttribute('error', 1);
+			tr.setAttribute('rid', obj.id);
 			var td = tr.insertCell(-1);
 			td.colSpan = o1.cells.length;
 			td.className = 'ewa-tip-error';
@@ -16636,10 +16646,18 @@ function EWA_FrameRemoveAlert(obj) {
 	if (!o1) {
 		var o = $(obj);
 		o.css('background-color', o.attr('ori_bc'));
+		
+		let tr = $(obj).parentsUntil('tbody').last();
+		if(tr.prev().prev().hasClass('ewa-row-'+obj.id)){
+			// C11
+			o1 = tr.prev().prev()[0];
+		}
+	}
+	if (!o1) {
 		return;
 	}
-
 	o1.style.backgroundColor = '';
+	console.log(o1);
 	if (o1.cells.length == 1 || o1.parentNode.parentNode.getAttribute("error_show_type") == "1") {
 		var curTr = $(o1);
 		curTr.find('td').removeClass('ewa-tip-error');
