@@ -17461,6 +17461,8 @@ function EWA_ListFrameClass() {
 	this.IsNotMDownAutoChecked = false; // 自动选择checkbox radio;
 	// 2022-05-26
 	this.REPLACE_HISTORY_STATE = false; // 列表查询更换网页的url
+	
+	this._IsSearchGroup = true; //2024-02-27 查询分组标记，默认分组
 	/**
 	* 合并文字搜索到第一个input中
 	 */
@@ -19167,9 +19169,14 @@ function EWA_ListFrameClass() {
 	/**
 	 * 在页面上将Search显示出来
 	 * @param composeTexts 是否合并文字搜索框
+	 * @param denySearchGroup 取消固定搜索分组，完全按照字段顺序来
 	 */
-	this.ShowSearch = function(composeTexts) {
+	this.ShowSearch = function(composeTexts, denySearchGroup) {
 		var id = 'EWA_SEARCH_ITEM_' + this.Id;
+		if(denySearchGroup){
+			//取消固定搜索分组，完全按照字段顺序来
+			this._IsSearchGroup = false; 
+		}
 		if (!$X(id)) {
 			this._SearchCreateItm();
 			if (composeTexts) {
@@ -19457,7 +19464,7 @@ function EWA_ListFrameClass() {
 				tmp.push(ttt);
 			}
 			tmp.push("</td></tr></table>");
-			if (search == "fix") {
+			if (search == "fix" && this._IsSearchGroup) { //固定查询和分组标记
 				ssFix.push(tmp.join(''));
 			} else {
 				ssOth.push(tmp.join(''));
@@ -19466,16 +19473,15 @@ function EWA_ListFrameClass() {
 		if ((ssOth.length + ssFix.length) == 0) {
 			return;
 		}
-		var title = _EWA_INFO_MSG["EWA.SYS.DATASEARCH"];
-		ss.push('<table class="ewa-lf-search-main" id="' + id + '" cellspacing="0" cellpadding="0" style="width:100%">');
+		// var title = _EWA_INFO_MSG["EWA.SYS.DATASEARCH"];
+		ss.push('<table class="ewa-lf-search-main" id="' + id + '" cellspacing="0" cellpadding="0">');
 		ss.push("<tr><td class='ewa-lf-search-des'></td><td>");
 		if (ssOth.length > 0) {
 			ss.push(" " + ssOth.join('') + " ");
 		}
-		if (ssFix.length > 0) {
-			for (var i = 0; i < ssFix.length; i++) {
-				ss.push(" " + ssFix[i] + " ");
-			}
+		// 固定查询
+		for (var i = 0; i < ssFix.length; i++) {
+			ss.push(" " + ssFix[i] + " ");
 		}
 		ss.push("</td></tr></table>")
 
@@ -19517,7 +19523,6 @@ function EWA_ListFrameClass() {
 			if (c._is_search_composition) {
 				return;
 			}
-
 			try { // 避免窗口关闭出现的异常
 				if (!$X(id)) {
 					window.clearInterval(c._TIMER_SEARCH);
