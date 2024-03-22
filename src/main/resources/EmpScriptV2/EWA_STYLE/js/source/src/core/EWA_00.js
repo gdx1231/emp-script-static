@@ -2,10 +2,10 @@
  * Easy Web Application js lib
  * guolei 
  * https://gdxsoft.com/
+ * https://github.com/gdx1231/emp-script-static
  */
-
 window.EWA = window.EWA || {
-	VERSION: 2.6,
+	VERSION: '1.1.8',
 	/** 版本 */
 	LANG: 'zhcn',
 	/** 当前语言代码 */
@@ -250,9 +250,11 @@ EWA_Utils.JsRegister = function(js) {
  * 后加载背景图
  */
 EWA_Utils.LazyBackgroundLoad = function(objs, checkHeight) {
-	var h = checkHeight
-		|| ((document.compatMode == "CSS1Compat" ? document.documentElement.clientHeight + document.documentElement.scrollTop : document.body.clientHeight
-			+ document.body.scrollTop) + 50);
+	//var h = checkHeight
+	//	|| ((document.compatMode == "CSS1Compat" ? document.documentElement.clientHeight + document.documentElement.scrollTop : document.body.clientHeight
+	//		+ document.body.scrollTop) + 50);
+	
+	var h = checkHeight || $(window).height() + $(window).scrollTop() + 50;
 	var objs1 = objs || $('.EWA_GRID_BG_IMG[is_lazy_load=true]');
 	objs1.each(function() {
 		var o = $(this);
