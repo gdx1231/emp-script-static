@@ -17463,7 +17463,7 @@ function EWA_ListFrameClass() {
 	this.IsNotMDownAutoChecked = false; // 自动选择checkbox radio;
 	// 2022-05-26
 	this.REPLACE_HISTORY_STATE = false; // 列表查询更换网页的url
-	
+
 	this._IsSearchGroup = true; //2024-02-27 查询分组标记，默认分组
 	/**
 	* 合并文字搜索到第一个input中
@@ -17580,7 +17580,7 @@ function EWA_ListFrameClass() {
 		});
 	};
 	this.Merges = function(cfgs) {
-		if(cfgs == null || cfgs.length == 0){
+		if (cfgs == null || cfgs.length == 0) {
 			console.log("cfg.from, cfg.to, cfg.str, cfg.func, cfg.header");
 			return;
 		}
@@ -17619,8 +17619,8 @@ function EWA_ListFrameClass() {
 			fromobjParent.hide();
 
 			// 分割字符
-			toParent.append(mergeStr); 
-			 
+			toParent.append(mergeStr);
+
 			toParent.append(fromobj);
 			if (funcEachRow) {
 				funcEachRow(toParent, this); // td, tr
@@ -17699,11 +17699,14 @@ function EWA_ListFrameClass() {
 				return;
 			}
 			// td
-			var p = $(this).find('[id="' + toParent + '"]').parent();
-			if (p.attr('ewa-merged') == 'yes') {// 已经合并
+			var p = $(this).hasClass('ewa-lf-sub-tr') ?
+				$(this).find('[id="ADD_ROW_' + toParent + '"]') : //统计合并
+				$(this).find('.ewa-col-' + toParent);
+
+			if ('yes' == p.attr('ewa-merged')) {// 已经合并
 				return;
 			}
-			p.attr('ewa-merged', 'yes');
+			
 
 			var o1 = $('<div style="display:none"></div>');
 			o1.html(tmp_html);
@@ -17733,6 +17736,8 @@ function EWA_ListFrameClass() {
 			if (funcEachRow) {
 				funcEachRow(p, this); // td, tr
 			}
+			
+			p.attr('ewa-merged', 'yes');
 		});
 	};
 	this.MeargeExp = function(toParent, meargeExp, isAddMemo, func) {
@@ -17759,7 +17764,7 @@ function EWA_ListFrameClass() {
 		} else {
 			r.find('td').text("");
 		}
-		
+
 		for (let i in this.SubBottomsArray) {
 			let id = this.SubBottomsArray[i];
 			let total = 0;
@@ -17767,17 +17772,17 @@ function EWA_ListFrameClass() {
 			let fm_length = 0;
 			$(exp).each(function() {
 				let v;
-				if(this.hasAttribute('value')){
+				if (this.hasAttribute('value')) {
 					v = this.value;
-				} else if(this.hasAttribute('title')){
+				} else if (this.hasAttribute('title')) {
 					v = this.title;
 				} else {
 					v = this.innerText;
 				}
-				if(v == null || v.length===0){
+				if (v == null || v.length === 0) {
 					return;
 				}
-				v = v.replace(/,/ig, '') ;
+				v = v.replace(/,/ig, '');
 				if (isNaN(v)) {
 					return;
 				}
@@ -17786,7 +17791,7 @@ function EWA_ListFrameClass() {
 					fm_length = 2;
 				}
 			});
-			let html = "<span id='"+id+"' name='"+id+"' class='ewa-lf-sub'>" + total.fm(fm_length) + "</span>";
+			let html = "<span id='" + id + "' name='" + id + "' class='ewa-lf-sub'>" + total.fm(fm_length) + "</span>";
 			r.find('td[id=ADD_ROW_' + id + "]").html(html);
 		}
 	};
@@ -19175,9 +19180,9 @@ function EWA_ListFrameClass() {
 	 */
 	this.ShowSearch = function(composeTexts, denySearchGroup) {
 		var id = 'EWA_SEARCH_ITEM_' + this.Id;
-		if(denySearchGroup){
+		if (denySearchGroup) {
 			//取消固定搜索分组，完全按照字段顺序来
-			this._IsSearchGroup = false; 
+			this._IsSearchGroup = false;
 		}
 		if (!$X(id)) {
 			this._SearchCreateItm();
