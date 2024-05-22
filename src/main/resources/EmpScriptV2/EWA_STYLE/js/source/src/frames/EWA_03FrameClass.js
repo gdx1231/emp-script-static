@@ -1868,7 +1868,7 @@ function EWA_FrameClass() {
 				return;
 			}
 			//显示拼图窗口
-			let title = EWA.Lang == 'enus' ? "Silde puzzle" : "拼图验证";
+			let title = EWA.LANG == 'enus' ? "Silde puzzle" : "拼图验证";
 			let dia = $DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
 			rst.ewa_trigger_valid_name = objId;
 			rst.ewa_trigger_valid = triggerValid;

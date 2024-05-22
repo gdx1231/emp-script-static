@@ -3026,8 +3026,9 @@ function EWA_ListFrameClass() {
 			var idx = startCellIndex + i;
 			for (var m = 0; m < tb.rows.length; m++) {
 				var td = tb.rows[m].insertCell(idx);
+				td.title =  d[colMemo];
 				if (m == 0) {
-					td.className = "EWA_TD_H";
+					td.className = "EWA_TD_H ewa-add-column ewa-col-"+ d[colId];
 					td.innerHTML = '<nobr cellIdx="' + (idx) + '" id="' + d[colId] + '">' + d[colText] + '</nobr>';
 					td.title = d[colMemo];
 					td.width = 100;
@@ -3035,9 +3036,9 @@ function EWA_ListFrameClass() {
 
 				} else {
 					var rowId = tb.rows[m].getAttribute('EWA_KEY');
-					td.className = "EWA_TD_M";
+					td.className = "EWA_TD_M ewa-add-column ewa-col-"+ d[colId];
 					var id = rowId + '_' + d[colId];
-					var h = this._GetAddControl(d[colType]);
+					var h = this._GetAddControl(d[colType], d[colText], d[colMemo]);
 					if (h == null) {
 						h = colHtml;
 					} else {
@@ -3055,19 +3056,21 @@ function EWA_ListFrameClass() {
 			}
 		}
 	};
-	this._GetAddControl = function(type) {
+	this._GetAddControl = function(type, des, title) {
 		if (type == null)
 			return null;
 
 		var t = type.toUpperCase().trim();
+		let des1 = des ? des.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;'):"";
+		let title1 =title?title.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;'):"";
 		if (t == 'SELECT') {
-			return '<select !!></select>';
+			return '<select des="'+ des1 +'"  title="'+title1+'" !!></select>';
 		} else if (t == 'DATE') {
-			return '<input type=text class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,false);" readonly !!>';
+			return '<input type=text des="'+ des1 +'" title="'+title1+'" class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,false);" readonly !!>';
 		} else if (t == 'TIME') {
-			return '<input type=text class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,true);" readonly !!>';
+			return '<input type=text des="'+ des1 +'" title="'+title1+'"  class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,true);" readonly !!>';
 		} else if (t == 'STRING' || t == 'NUMBER') {
-			return '<input type=text class=EWA_INPUT !!>';
+			return '<input type=text des="'+ des1 +'"  title="'+title1+'" class=EWA_INPUT !!>';
 		}
 		return null;
 	};
