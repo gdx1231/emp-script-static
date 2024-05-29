@@ -802,7 +802,7 @@ function EWA_FrameClass() {
 							// memo信息放到对象的下部
 							//var memoStr = "<div class='ewa-item-memo'>" + memo + "</div>";
 							//o.parentsUntil('tr').last().append(memoStr); // td
-							ph+=", "+memo;
+							ph += ", " + memo;
 						}
 					}
 				}
@@ -1640,6 +1640,9 @@ function EWA_FrameClass() {
 		if (vxMode.toLowerCase().trim() == "action") {
 			this._DoValidExAction(obj, vxAction, this.Resources[vxOk].GetInfo(), this.Resources[vxFail].GetInfo());
 		} else {// 脚本验证
+			if (vxJs.indexOf('&quot;') >= 0) {
+				vxJs = vxJs.replace(/\&quot\;/ig, '"');
+			}
 			var a = eval(vxJs); // 调用脚本，返回true or false
 			if (a) {
 				EWA_FrameShowAlert(obj, this._ValidExOk.GetInfo());
@@ -1836,14 +1839,14 @@ function EWA_FrameClass() {
 	/**
 	 * 调用触发前判断（例如滑动拼图），检查是否符合执行调用的要求
 	 */
-	this.callTriggerValidBefore = function(obj){
+	this.callTriggerValidBefore = function(obj) {
 		return true;
 	};
 	/**
 	 * 调用触发验证，例如滑动拼图
 	 */
 	this.callTriggerValid = function(obj) {
-		if(!this.callTriggerValidBefore(obj)){
+		if (!this.callTriggerValidBefore(obj)) {
 			return;
 		}
 		var tb = $('#EWA_FRAME_' + this._Id);
@@ -1873,7 +1876,7 @@ function EWA_FrameClass() {
 			rst.ewa_trigger_valid_name = objId;
 			rst.ewa_trigger_valid = triggerValid;
 			rst.ewa_url = url.GetUrl();
-			
+
 			EWA.UI.SlidePuzzle(rst, $('#' + tempid), function(result) {
 				$(obj).removeAttr('onclick');
 				let click = false;
@@ -2929,9 +2932,9 @@ function EWA_FrameShowAlert(obj, errorInfo) {
 		if (obj.tagName != 'SELECT') {
 			obj.focus();
 		}
-		
+
 		let tr = $(obj).parentsUntil('tbody').last();
-		if(tr.prev().hasClass('ewa-row-'+obj.id)){
+		if (tr.prev().hasClass('ewa-row-' + obj.id)) {
 			// C11
 			o1 = tr.prev()[0];
 		}
@@ -3006,9 +3009,9 @@ function EWA_FrameRemoveAlert(obj) {
 	if (!o1) {
 		var o = $(obj);
 		o.css('background-color', o.attr('ori_bc'));
-		
+
 		let tr = $(obj).parentsUntil('tbody').last();
-		if(tr.prev().prev().hasClass('ewa-row-'+obj.id)){
+		if (tr.prev().prev().hasClass('ewa-row-' + obj.id)) {
 			// C11
 			o1 = tr.prev().prev()[0];
 		}
