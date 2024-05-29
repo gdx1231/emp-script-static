@@ -273,7 +273,7 @@ function EWA_ListFrameClass() {
 			if ('yes' == p.attr('ewa-merged')) {// 已经合并
 				return;
 			}
-			
+
 
 			var o1 = $('<div style="display:none"></div>');
 			o1.html(tmp_html);
@@ -303,7 +303,7 @@ function EWA_ListFrameClass() {
 			if (funcEachRow) {
 				funcEachRow(p, this); // td, tr
 			}
-			
+
 			p.attr('ewa-merged', 'yes');
 		});
 	};
@@ -2279,6 +2279,36 @@ function EWA_ListFrameClass() {
 		ss.push("</table></div>");
 		this._SearchHtml = ss.join('');
 	};
+
+	/**
+	 * 创建用于替换的正则表达式
+	 * @param text 要替换的文字
+	 */
+	this.createRegExp = function(text) {
+		if (!text) {
+			return null;
+		}
+		text = String(text).trim();
+		if (text.length === 0) {
+			return null;
+		}
+		var ss = [];
+		for (var i1 = 0; i1 < text.length; i1++) {
+			var c = text[i1];
+			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
+				ss.push(c);
+			} else {
+				ss.push('\\' + c); // 字符转义，避免正则表达式出错
+			}
+		}
+		try {
+			return new RegExp('(' + ss.join('') + ')');
+		} catch (e) {
+			console.warn('new RegExp', text, e);
+			return null;
+		}
+
+	};
 	/**
 	 * 检索关键字标红
 	 */
@@ -2309,17 +2339,8 @@ function EWA_ListFrameClass() {
 					});
 				}
 				// console.log(s2);
-				var ss = [];
-				for (var i1 = 0; i1 < exp.length; i1++) {
-					var c = exp[i1];
-					if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
-						ss.push(c);
-					} else {
-						ss.push('\\' + c); // 字符转义，避免正则表达式出错
-					}
-				}
-				exp = ss.join('');
-				exp = eval('/(' + exp + ')/ig');
+				 
+				let regExp = this.createRegExp(exp);
 				// console.log(exp);
 				let ids = s2[0].split(','); // 有可能为组合的id,composeTextSearch
 				for (let index in ids) {
@@ -2333,7 +2354,7 @@ function EWA_ListFrameClass() {
 					try {
 						td.find('*').each(function() {
 							if (this.children.length == 0) {
-								this.innerHTML = this.innerHTML.replace(exp, '<font color=red><b>$1</b></font>');
+								this.innerHTML = this.innerHTML.replace(regExp, '<font color=red><b>$1</b></font>');
 							}
 						});
 					} catch (e) {
@@ -3026,9 +3047,9 @@ function EWA_ListFrameClass() {
 			var idx = startCellIndex + i;
 			for (var m = 0; m < tb.rows.length; m++) {
 				var td = tb.rows[m].insertCell(idx);
-				td.title =  d[colMemo];
+				td.title = d[colMemo];
 				if (m == 0) {
-					td.className = "EWA_TD_H ewa-add-column ewa-col-"+ d[colId];
+					td.className = "EWA_TD_H ewa-add-column ewa-col-" + d[colId];
 					td.innerHTML = '<nobr cellIdx="' + (idx) + '" id="' + d[colId] + '">' + d[colText] + '</nobr>';
 					td.title = d[colMemo];
 					td.width = 100;
@@ -3036,7 +3057,7 @@ function EWA_ListFrameClass() {
 
 				} else {
 					var rowId = tb.rows[m].getAttribute('EWA_KEY');
-					td.className = "EWA_TD_M ewa-add-column ewa-col-"+ d[colId];
+					td.className = "EWA_TD_M ewa-add-column ewa-col-" + d[colId];
 					var id = rowId + '_' + d[colId];
 					var h = this._GetAddControl(d[colType], d[colText], d[colMemo]);
 					if (h == null) {
@@ -3061,16 +3082,16 @@ function EWA_ListFrameClass() {
 			return null;
 
 		var t = type.toUpperCase().trim();
-		let des1 = des ? des.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;'):"";
-		let title1 =title?title.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;'):"";
+		let des1 = des ? des.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;') : "";
+		let title1 = title ? title.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;') : "";
 		if (t == 'SELECT') {
-			return '<select des="'+ des1 +'"  title="'+title1+'" !!></select>';
+			return '<select des="' + des1 + '"  title="' + title1 + '" !!></select>';
 		} else if (t == 'DATE') {
-			return '<input type=text des="'+ des1 +'" title="'+title1+'" class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,false);" readonly !!>';
+			return '<input type=text des="' + des1 + '" title="' + title1 + '" class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,false);" readonly !!>';
 		} else if (t == 'TIME') {
-			return '<input type=text des="'+ des1 +'" title="'+title1+'"  class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,true);" readonly !!>';
+			return '<input type=text des="' + des1 + '" title="' + title1 + '"  class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,true);" readonly !!>';
 		} else if (t == 'STRING' || t == 'NUMBER') {
-			return '<input type=text des="'+ des1 +'"  title="'+title1+'" class=EWA_INPUT !!>';
+			return '<input type=text des="' + des1 + '"  title="' + title1 + '" class=EWA_INPUT !!>';
 		}
 		return null;
 	};

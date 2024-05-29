@@ -923,8 +923,11 @@ function EWA_AjaxClass(isAsync) {
 			console.log('ajax url not null');
 			return;
 		}
-
-		if (url.href) {
+		if (url.GetUrl) {
+			url = url.GetUrl();
+		} else if (url.getUrl) {
+			url = url.getUrl();
+		} else if (url.href) {
 			url = url.href;
 		}
 		if (url.indexOf('|') >= 0) {
@@ -999,7 +1002,7 @@ function EWA_AjaxClass(isAsync) {
 	 */
 	this.Install = function(url, parameters, parentId, afterJs, notShowWaitting) {
 		var _ajax_gdx = this;
-		var obj = (typeof parentId == 'string') ? $X(parentId) : parentId;
+		var obj = (typeof parentId == 'string') ? document.getElementById(parentId) : parentId;
 		if (obj == null) {
 			alert('Object [' + parentId + '] not found');
 			return;
@@ -1231,7 +1234,6 @@ function $J1(url, func) {
  */
 function $J2(url, func) {
 	"use strict";
-	var ajax = new EWA_AjaxClass();
 	var cmds = []; // 附加的参数
 	for (var i = 2; i < arguments.length; i++) {
 		cmds.push(arguments[i]);
@@ -1247,7 +1249,6 @@ function $J2(url, func) {
  */
 function $J3(url, func) {
 	"use strict";
-	var ajax = new EWA_AjaxClass();
 	var cmds = []; // 附加的参数
 	for (var i = 2; i < arguments.length; i++) {
 		cmds.push(arguments[i]);
@@ -1353,15 +1354,18 @@ function _$J_HandleRst(ajax, func, cmds, isJson) {
 	if (ajax.IsError()) {
 		if (window.EWA_AjaxErr) {
 			window.EWA_AjaxErr(ajax.GetRst());
+		} else {
+			console.error(ajax.GetRst());
 		}
 		return;
 	}
 	var z = ajax.GetRst();
 	if (isJson) {
 		try {
-			z = eval('var _zz=' + z + '; _zz');
+			//z = eval('var _zz=' + z + '; _zz');
+			z = JSON.parse(z);
 		} catch (e) {
-			console.log("_$J_HandleRst-JSON" + e);
+			console.error("_$J_HandleRst-JSON" + e);
 			return;
 		}
 	}
@@ -1436,10 +1440,10 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 	}
 
 	function getText(d, textName) {
-		if(!textName){
+		if (!textName) {
 			return "not defined textName";
 		}
-		if(textName instanceof Function){
+		if (textName instanceof Function) {
 			return textName[d];
 		}
 		if (textName.indexOf("@@") == -1) {
@@ -1542,15 +1546,22 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 		funcCallBack(obj);
 	}
 };
-$Install = function(u, pid, func, notShowWaitting) {
-	"use strict";
+$Install = function(url, pid, func, notShowWaitting) {
+	if (url.GetUrl) {
+		url = url.GetUrl();
+	} else if (url.getUrl) {
+		url = url.getUrl();
+	} else if (url.href) {
+		url = url.href;
+	}
 	var u1 = new EWA_UrlClass();
-	u1.SetUrl(u);
+	u1.SetUrl(url);
+
 	if (!u1.GetParameter("EWA_AJAX")) {
-		u = u1.AddParameter("EWA_AJAX", "INSTALL");
+		u1.AddParameter("EWA_AJAX", "INSTALL");
 	}
 	var ajax = new EWA_AjaxClass();
-	ajax.Install(u, "", pid, func, notShowWaitting);
+	ajax.Install(u1.GetUrl(), "", pid, func, notShowWaitting);
 };function EWA_JSONXmlClass() {
 	this._JSon = new EWA_JSONClass();
 	this.toJSON = function(xmlNode) {

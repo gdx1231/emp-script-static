@@ -923,8 +923,11 @@ function EWA_AjaxClass(isAsync) {
 			console.log('ajax url not null');
 			return;
 		}
-
-		if (url.href) {
+		if (url.GetUrl) {
+			url = url.GetUrl();
+		} else if (url.getUrl) {
+			url = url.getUrl();
+		} else if (url.href) {
 			url = url.href;
 		}
 		if (url.indexOf('|') >= 0) {
@@ -999,7 +1002,7 @@ function EWA_AjaxClass(isAsync) {
 	 */
 	this.Install = function(url, parameters, parentId, afterJs, notShowWaitting) {
 		var _ajax_gdx = this;
-		var obj = (typeof parentId == 'string') ? $X(parentId) : parentId;
+		var obj = (typeof parentId == 'string') ? document.getElementById(parentId) : parentId;
 		if (obj == null) {
 			alert('Object [' + parentId + '] not found');
 			return;
@@ -1231,7 +1234,6 @@ function $J1(url, func) {
  */
 function $J2(url, func) {
 	"use strict";
-	var ajax = new EWA_AjaxClass();
 	var cmds = []; // 附加的参数
 	for (var i = 2; i < arguments.length; i++) {
 		cmds.push(arguments[i]);
@@ -1247,7 +1249,6 @@ function $J2(url, func) {
  */
 function $J3(url, func) {
 	"use strict";
-	var ajax = new EWA_AjaxClass();
 	var cmds = []; // 附加的参数
 	for (var i = 2; i < arguments.length; i++) {
 		cmds.push(arguments[i]);
@@ -1353,15 +1354,18 @@ function _$J_HandleRst(ajax, func, cmds, isJson) {
 	if (ajax.IsError()) {
 		if (window.EWA_AjaxErr) {
 			window.EWA_AjaxErr(ajax.GetRst());
+		} else {
+			console.error(ajax.GetRst());
 		}
 		return;
 	}
 	var z = ajax.GetRst();
 	if (isJson) {
 		try {
-			z = eval('var _zz=' + z + '; _zz');
+			//z = eval('var _zz=' + z + '; _zz');
+			z = JSON.parse(z);
 		} catch (e) {
-			console.log("_$J_HandleRst-JSON" + e);
+			console.error("_$J_HandleRst-JSON" + e);
 			return;
 		}
 	}
@@ -1436,10 +1440,10 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 	}
 
 	function getText(d, textName) {
-		if(!textName){
+		if (!textName) {
 			return "not defined textName";
 		}
-		if(textName instanceof Function){
+		if (textName instanceof Function) {
 			return textName[d];
 		}
 		if (textName.indexOf("@@") == -1) {
@@ -1542,15 +1546,22 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 		funcCallBack(obj);
 	}
 };
-$Install = function(u, pid, func, notShowWaitting) {
-	"use strict";
+$Install = function(url, pid, func, notShowWaitting) {
+	if (url.GetUrl) {
+		url = url.GetUrl();
+	} else if (url.getUrl) {
+		url = url.getUrl();
+	} else if (url.href) {
+		url = url.href;
+	}
 	var u1 = new EWA_UrlClass();
-	u1.SetUrl(u);
+	u1.SetUrl(url);
+
 	if (!u1.GetParameter("EWA_AJAX")) {
-		u = u1.AddParameter("EWA_AJAX", "INSTALL");
+		u1.AddParameter("EWA_AJAX", "INSTALL");
 	}
 	var ajax = new EWA_AjaxClass();
-	ajax.Install(u, "", pid, func, notShowWaitting);
+	ajax.Install(u1.GetUrl(), "", pid, func, notShowWaitting);
 };function EWA_JSONXmlClass() {
 	this._JSon = new EWA_JSONClass();
 	this.toJSON = function(xmlNode) {
@@ -17826,7 +17837,7 @@ function EWA_ListFrameClass() {
 			if ('yes' == p.attr('ewa-merged')) {// 已经合并
 				return;
 			}
-			
+
 
 			var o1 = $('<div style="display:none"></div>');
 			o1.html(tmp_html);
@@ -17856,7 +17867,7 @@ function EWA_ListFrameClass() {
 			if (funcEachRow) {
 				funcEachRow(p, this); // td, tr
 			}
-			
+
 			p.attr('ewa-merged', 'yes');
 		});
 	};
@@ -19832,6 +19843,36 @@ function EWA_ListFrameClass() {
 		ss.push("</table></div>");
 		this._SearchHtml = ss.join('');
 	};
+
+	/**
+	 * 创建用于替换的正则表达式
+	 * @param text 要替换的文字
+	 */
+	this.createRegExp = function(text) {
+		if (!text) {
+			return null;
+		}
+		text = String(text).trim();
+		if (text.length === 0) {
+			return null;
+		}
+		var ss = [];
+		for (var i1 = 0; i1 < text.length; i1++) {
+			var c = text[i1];
+			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
+				ss.push(c);
+			} else {
+				ss.push('\\' + c); // 字符转义，避免正则表达式出错
+			}
+		}
+		try {
+			return new RegExp('(' + ss.join('') + ')');
+		} catch (e) {
+			console.warn('new RegExp', text, e);
+			return null;
+		}
+
+	};
 	/**
 	 * 检索关键字标红
 	 */
@@ -19862,17 +19903,8 @@ function EWA_ListFrameClass() {
 					});
 				}
 				// console.log(s2);
-				var ss = [];
-				for (var i1 = 0; i1 < exp.length; i1++) {
-					var c = exp[i1];
-					if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
-						ss.push(c);
-					} else {
-						ss.push('\\' + c); // 字符转义，避免正则表达式出错
-					}
-				}
-				exp = ss.join('');
-				exp = eval('/(' + exp + ')/ig');
+				 
+				let regExp = this.createRegExp(exp);
 				// console.log(exp);
 				let ids = s2[0].split(','); // 有可能为组合的id,composeTextSearch
 				for (let index in ids) {
@@ -19886,7 +19918,7 @@ function EWA_ListFrameClass() {
 					try {
 						td.find('*').each(function() {
 							if (this.children.length == 0) {
-								this.innerHTML = this.innerHTML.replace(exp, '<font color=red><b>$1</b></font>');
+								this.innerHTML = this.innerHTML.replace(regExp, '<font color=red><b>$1</b></font>');
 							}
 						});
 					} catch (e) {
@@ -20579,9 +20611,9 @@ function EWA_ListFrameClass() {
 			var idx = startCellIndex + i;
 			for (var m = 0; m < tb.rows.length; m++) {
 				var td = tb.rows[m].insertCell(idx);
-				td.title =  d[colMemo];
+				td.title = d[colMemo];
 				if (m == 0) {
-					td.className = "EWA_TD_H ewa-add-column ewa-col-"+ d[colId];
+					td.className = "EWA_TD_H ewa-add-column ewa-col-" + d[colId];
 					td.innerHTML = '<nobr cellIdx="' + (idx) + '" id="' + d[colId] + '">' + d[colText] + '</nobr>';
 					td.title = d[colMemo];
 					td.width = 100;
@@ -20589,7 +20621,7 @@ function EWA_ListFrameClass() {
 
 				} else {
 					var rowId = tb.rows[m].getAttribute('EWA_KEY');
-					td.className = "EWA_TD_M ewa-add-column ewa-col-"+ d[colId];
+					td.className = "EWA_TD_M ewa-add-column ewa-col-" + d[colId];
 					var id = rowId + '_' + d[colId];
 					var h = this._GetAddControl(d[colType], d[colText], d[colMemo]);
 					if (h == null) {
@@ -20614,16 +20646,16 @@ function EWA_ListFrameClass() {
 			return null;
 
 		var t = type.toUpperCase().trim();
-		let des1 = des ? des.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;'):"";
-		let title1 =title?title.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;'):"";
+		let des1 = des ? des.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;') : "";
+		let title1 = title ? title.replace(/</ig, '&lt;').replace(/>/ig, '&gt;').replace(/"/ig, '&quot;') : "";
 		if (t == 'SELECT') {
-			return '<select des="'+ des1 +'"  title="'+title1+'" !!></select>';
+			return '<select des="' + des1 + '"  title="' + title1 + '" !!></select>';
 		} else if (t == 'DATE') {
-			return '<input type=text des="'+ des1 +'" title="'+title1+'" class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,false);" readonly !!>';
+			return '<input type=text des="' + des1 + '" title="' + title1 + '" class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,false);" readonly !!>';
 		} else if (t == 'TIME') {
-			return '<input type=text des="'+ des1 +'" title="'+title1+'"  class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,true);" readonly !!>';
+			return '<input type=text des="' + des1 + '" title="' + title1 + '"  class=EWA_INPUT onclick="EWA.UI.Calendar.Pop(this,true);" readonly !!>';
 		} else if (t == 'STRING' || t == 'NUMBER') {
-			return '<input type=text des="'+ des1 +'"  title="'+title1+'" class=EWA_INPUT !!>';
+			return '<input type=text des="' + des1 + '"  title="' + title1 + '" class=EWA_INPUT !!>';
 		}
 		return null;
 	};
