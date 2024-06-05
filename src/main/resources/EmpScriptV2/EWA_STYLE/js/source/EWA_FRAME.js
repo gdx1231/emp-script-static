@@ -2991,7 +2991,7 @@ function EWA_FrameClass() {
 			var jqitem = '#' + name1;
 			// 在对象上
 			var item = tb.find(jqitem);
-			if (item.length == 0) {
+			if (item.length === 0) {
 				contine;
 			}
 			item.attr('ewa_trigger_valid', triggerValid);
@@ -3361,29 +3361,47 @@ function EWA_FrameClass() {
 			this._checkSelectOptionsChange();
 		}
 	};
-	this._GetDropListValue1 = function(obj, obj1) {
-		if (obj1.value == '') {
-			obj1.setAttribute('setvalue', 1);
+	 
+	this.refreshDropList = function(id, value) {
+		let target = this.getObj('input[id="' + id + '"]');
+		if (target.length == 0) {
+			console.warn('Can not found id=' + id);
+			return;
+		}
+		let obj1 = target.prev();
+		if (obj1.length == 0) {
+			console.warn('Can not found  id=' + id + " prev");
+			return;
+		}
+		if (obj1.attr('ewa_class') == 'droplist') {
+			target.val(value);
+			this._GetDropListValue1(obj1[0], target[0]);
+		} else {
+			console.warn('Not droplist id=' + id + " prev");
+		}
+	};
+	
+	
+	this._GetDropListValue1 = function(textInput, valueInput) {
+		if (valueInput.value == '') {
+			valueInput.setAttribute('setvalue', 1);
 			return;
 		}
 
-		var exp = obj1.getAttribute('DlsShow');
+		var exp = valueInput.getAttribute('DlsShow');
 		if (exp == null || exp == "") {
-			obj1.setAttribute('canopen', 0);
-			obj.value = obj1.value;
-			obj1.setAttribute('canopen', 1);
+			valueInput.setAttribute('canopen', 0);
+			textInput.value = obj1.value;
+			valueInput.setAttribute('canopen', 1);
 			return;
 		}
 
-		var ajax = new EWA_AjaxClass();
-		var xmlName = obj1.getAttribute("xmlName");
-		var itemName = obj1.getAttribute("itemName");
-		var paraname = obj1.getAttribute("paraName");
-		var action = obj1.getAttribute('DlsAction');
+		var xmlName = valueInput.getAttribute("xmlName");
+		var itemName = valueInput.getAttribute("itemName");
+		var paraname = valueInput.getAttribute("paraName");
+		var action = valueInput.getAttribute('DlsAction');
 
-		var ajax = new EWA.C.Ajax();
-		var val = obj1.value;
-		// var url = EWA.CP + "/EWA_STYLE/cgi-bin/";
+		var val = valueInput.value;
 		var url;
 		if (this.EWA_CGI) {
 			url = this.EWA_CGI; // EWA.F.FOS的自定义路径优先级最高
@@ -3399,27 +3417,13 @@ function EWA_FrameClass() {
 		url = url.replace('//', '/');
 		url = url.replace('//', '/');
 
-		ajax.AddParameter(paraname, val);
+		let data = {};
+		data[paraname] = val;
 		if (action != null && action.trim().length > 0) {
-			ajax.AddParameter("EWA_ACTION", action);
-			ajax.AddParameter(obj1.id, obj1.value);
+			data["EWA_ACTION"] = action;
+			data[valueInput.id] = valueInput.value;
 		}
-
-		ajax.PostNew(url, function() {
-			if (!ajax.IsRunEnd()) {
-				return;
-			}
-			var ret = ajax.GetRst();
-			var json_id = '__json' + Math.random();
-			try {
-				eval('window["' + json_id + '"]=' + ret);
-			} catch (e) {
-				obj1.setAttribute('canopen', 0);
-				obj.value = e;
-				obj1.setAttribute('canopen', 1);
-				return;
-			}
-			var s = window[json_id];
+		$JP(url, data, function(s){
 			if (s.length == 0) {
 				return;
 			}
@@ -3430,7 +3434,7 @@ function EWA_FrameClass() {
 				s1.push(o[n]);
 				s2['@' + n.toUpperCase()] = o[n];
 				if (o[n]) {
-					obj1.setAttribute("para_" + n.toLowerCase(), o[n]);
+					valueInput.setAttribute("para_" + n.toLowerCase(), o[n]);
 				}
 			}
 			var rst;
@@ -3446,19 +3450,20 @@ function EWA_FrameClass() {
 				}
 				rst = exp;
 			}
-			obj1.setAttribute('canopen', 0);
-			obj.value = rst;
+			valueInput.setAttribute('canopen', 0);
+			textInput.value = rst;
 
-			obj1.id = obj1.id == null || obj1.id == "" ? Math.random() : obj1.id;
-			if (obj1.getAttribute("isdlseventload") == "yes") {
-				EWA.F.FOS[obj1.id] = new EWA_FrameItemClass();
-				EWA.F.FOS[obj1.id].DropList(obj);
+			valueInput.id = valueInput.id == null || valueInput.id == "" ? Math.random() : valueInput.id;
+			if (valueInput.getAttribute("isdlseventload") == "yes") {
+				EWA.F.FOS[valueInput.id] = new EWA_FrameItemClass();
+				EWA.F.FOS[valueInput.id].DropList(obj);
 				// 执行调用
-				EWA.F.FOS[obj1.id].CallAfterEvent();
+				EWA.F.FOS[valueInput.id].CallAfterEvent();
 			}
-			obj1.setAttribute('canopen', 1);
-			obj1.setAttribute('setvalue', 1);
+			valueInput.setAttribute('canopen', 1);
+			valueInput.setAttribute('setvalue', 1);
 		});
+		 
 	};
 	/**
 	 * 用于外部调用
@@ -5997,9 +6002,9 @@ function EWA_ListFrameClass() {
 		}
 
 		css = "";
-		if (isFrame) {
+		//if (isFrame) {
 			// css = "width:100%;height:100%;overflow:auto;position: absolute";
-		}
+		//}
 
 		var gridTable = $X('EWA_LF_' + this._Id);
 

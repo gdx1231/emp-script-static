@@ -2875,11 +2875,11 @@ function EWA_OdtDocWordClass() {
             endPop = true;
         } else if (t == 'SCRIPT') {
             return;
-        } else if (t == 'BODY' || t == 'OL' || t == 'UL') {
+        }// else if (t == 'BODY' || t == 'OL' || t == 'UL') {
 
-        } else {
+       // } else {
 
-        }
+       // }
         for (var i = 0; i < obj.childNodes.length; i++) {
             var ochild = obj.childNodes[i];
             this.walker1(ochild);

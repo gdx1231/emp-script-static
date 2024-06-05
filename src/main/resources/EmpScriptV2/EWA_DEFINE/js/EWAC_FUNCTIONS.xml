@@ -8,14 +8,14 @@
 EWA.F.FOS["@sys_frame_unid"].ReloadAfter = function(httpReferer) {
 	/*
 	if(httpReferer) {
-		var uref = new EWA_UrlClass(httpReferer);
-		var mtype   = uref.GetParameter("EWA_MTYPE");
-		var refXml  = uref.GetParameter("XMLNAME");
-		var refItem = uref.GetParameter("ITEMNAME");
+		let uref = new EWA_UrlClass(httpReferer);
+		let mtype   = uref.GetParameter("EWA_MTYPE");
+		let refXml  = uref.GetParameter("XMLNAME");
+		let refItem = uref.GetParameter("ITEMNAME");
 	}
 	*/
 	// this.Merge('fromId','toId'); //合并单元格
-	// var exp="@@aa <h1>@@bb</h1> <div>@@cc</div>";
+	// let exp="@@aa <h1>@@bb</h1> <div>@@cc</div>";
 	// this.MergeExp('toId', exp); //合并多个单元格
 }	
 // 初始化执行一次
@@ -27,7 +27,7 @@ EWA.F.FOS["@sys_frame_unid"].ReloadAfter = function(httpReferer) {
 EWA.F.FOS["@sys_frame_unid"].Merge('fromId','toId');  
 
 //多个单元格合并的表达式，@@NAME的NAME是列的 ID
-var exp="@@NAME <h1>@@NAME_EN</h1> <div>@@DESCRIPTION</div>";
+let exp="@@NAME <h1>@@NAME_EN</h1> <div>@@DESCRIPTION</div>";
 EWA.F.FOS["@sys_frame_unid"].MergeExp('toId', exp);  
 		]]>
 	</func>
@@ -53,29 +53,28 @@ EWA.F.FOS["@sys_frame_unid"].BindButton('来源ID','butModify');
  * @param evt
  *            event事件
  */
-EWA.F.FOS["@sys_frame_unid"].AddPreRow(
-	function(frameUnid, tr, key, newTr, evt) {
-		var cnt_td = newTr.cells[0]; //新行的td
-
-		var u1 = new EWA_UrlClass(EWA.F.FOS["@SYS_FRAME_UNID"].Url);
+EWA.F.FOS["@sys_frame_unid"].AddPreRow(function(frameUnid, tr, key, newTr, evt) {
+		let cntTd = newTr.cells[0]; //新行的td
+		// $(newTr).addClass('add-pre-row');
+		// $(cntTd).addClass('add-pre-row-td');
+		
+		let u1 = new EWA_UrlClass(this.Url);
     	// u1.AddParameter("ITEMNAME", itemName);
     	// u1.AddParameter("key", key);
 
 		// 通过ajax加载内容
-		var ajax_url = u1.GetUrl();
-		$Install(ajax_url, cnt_td, function() {
+		let ajaxUrl = u1.GetUrl();
+		$Install(ajaxUrl, cntTd, function() {
 			console.log('install ok');
 		});
 		
 		/*
 		 // 用Iframe加载，需要指定高度
-		 var iframe_url = "......";
-		 var html = '<iframe src=' +
-		 iframe_url + ' width=100% height=465 frameborder=0 scroll=no></iframe>';
-		 cnt_td.innerHTML = html;
+		 let iframeUrl = "......";
+		 let html = '<iframe src="' + iframeUrl + '" width="100%" height="465" frameborder="0" scroll="no"></iframe>';
+		 cntTd.innerHTML = html;
 		 */
 	
-		 // cnt_td.innerHTML = "<h1>自定义内容</h1>";
 	}
 );
 	]]>
@@ -96,30 +95,27 @@ EWA.F.FOS["@sys_frame_unid"].AddPreRow(
  * @param evt
  *            event事件
  */
-EWA.F.FOS["@sys_frame_unid"].AddPreRow(
-	function(frameUnid, tr, key, newTr, evt) {
-		var cnt_td = newTr.cells[0]; //新行的td
-		$(cnt_td).addClass('add-pre-row');
-		// 安全创建 Url 类
-    	var u1 = new EWA_UrlClass(EWA.F.FOS["@SYS_FRAME_UNID"].Url);
-    	u1.AddParameter("EWA_AJAX","INSTALL");
-    	u1.AddParameter("key", key);
-		// 通过ajax加载内容
-		var ajax_url = u1.GetUrl();
-		$Install(ajax_url, cnt_td.id, function() {
-			// console.log('install ok');
-		});
-		
-		/*
-		 // 用Iframe加载，需要指定高度
-		 var iframe_url = "......";
-		 var html = '<iframe src="' +
-		 	iframe_url + '" width="100%" height="465" frameborder="0" scroll="no"></iframe>';
-		 cnt_td.innerHTML = html;
-		 */
+EWA.F.FOS["@sys_frame_unid"].AddPreRow(function(frameUnid, tr, key, newTr, evt) {
+	let cntTd = newTr.cells[0]; //新行的td
+	// $(newTr).addClass('add-pre-row');
+	// $(cntTd).addClass('add-pre-row-td');
 	
-		 // cnt_td.innerHTML = "<h1>自定义内容</h1>";
-	}
+	let u1 = new EWA_UrlClass(this.Url);
+	// u1.AddParameter("ITEMNAME", itemName);
+	// u1.AddParameter("key", key);
+	
+	// 通过ajax加载内容
+	let ajaxUrl = u1.GetUrl();
+	$Install(ajaxUrl, cntTd, function() {
+		console.log('install ok');
+	});
+	
+	/*
+	 // 用Iframe加载，需要指定高度
+	 let iframeUrl = "......";
+	 let html = '<iframe src="' + iframeUrl + '" width="100%" height="465" frameborder="0" scroll="no"></iframe>';
+	 cntTd.innerHTML = html;
+	 */
 );
 /**
  * （不需要可删除）
@@ -184,7 +180,7 @@ EWA.F.FOS["@sys_frame_unid"].AddPreRowCloseEvent = function(frameUnid, tr, key, 
 **/
 EWA.F.FOS["@sys_frame_unid"].DoPostBefore = function() {
 	/* 附加数据处理
-	var add_data = {};
+	let add_data = {};
 	add_data["para1"] = "123";
 	add_data["para2"] = $("#id").val();
 	add_data["para3"] = $("#id").html();
@@ -203,13 +199,32 @@ EWA.F.FOS["@sys_frame_unid"].DoPostBefore = function() {
 }		
 		]]>
 	</func>
+	<func name="EWA.OW" limits="Frame" des="窗口获取当前Dialog对象和父窗体对象"><![CDATA[
+/**
+*  窗口获取当前Dialog对象和父窗体对象
+**/
+function() demo {
+	 EWA.OW.Load();
+	 // 父窗体对象
+	 // let parentWindow = EWA.OW.PWin;
+	 // 父窗体ListFrame刷新列表 
+	 // parentWindow.EWA.F.FOS["@EWA_PARENT_FRAME"].Reload();
+	 
+	 // 当前 Dialog
+	 // let dialog = EWA.OW.Dia;
+	 // 关闭窗口  
+	 // dialog.CloseWindow(); 
+	 
+}		
+		]]>
+	</func>
 	<func name="LoadJson" nameRequire="true" des="用于调用JSON"><![CDATA[
 /**
 * 调用本配置文件的JSON
 **/
 function loadJson{NAME} () {
-	var url = EWA.F.FOS["@SYS_FRAME_UNID"].Url;
-    var u1 = new EWA_UrlClass();
+	let url = EWA.F.FOS["@SYS_FRAME_UNID"].Url;
+    let u1 = new EWA_UrlClass();
     u1.SetUrl(url);
     
     // 指定调用的Action名称
@@ -219,12 +234,12 @@ function loadJson{NAME} () {
     // 返回json字段大小写参数 lower or upper
     // u1.AddParameter("ewa_ajax_field_case","lower"); 
     
-    var u=u1.GetUrl();
+    let u=u1.GetUrl();
     $J(u, function(rst){
-    	for(var n in rst){
-    		var d = rst[n]; //数据行
-    		// var id=d.ID; 
-    		// var name=d.NAME;
+    	for(let n in rst){
+    		let d = rst[n]; //数据行
+    		// let id=d.ID; 
+    		// let name=d.NAME;
     	}
     });
 }		
@@ -237,7 +252,7 @@ function loadJson{NAME} () {
 function loadActionJson_{NAME} () {
 	//调用Frame Action的方法
 	/* 
-	var paras = [];
+	let paras = [];
 	paras[0] = {
 		Name : 'pname',
 		Value : 'pval'
@@ -246,7 +261,7 @@ function loadActionJson_{NAME} () {
 	*/
 	
 	// 安全创建 Url 类
-    var u1 = new EWA_UrlClass(EWA.F.FOS["@SYS_FRAME_UNID"].Url);
+    let u1 = new EWA_UrlClass(EWA.F.FOS["@SYS_FRAME_UNID"].Url);
     
     // 指定调用的Action名称
     u1.AddParameter("ewa_action","{NAME}");
@@ -255,12 +270,12 @@ function loadActionJson_{NAME} () {
     // 返回json字段大小写参数 lower or upper
     // u1.AddParameter("EWA_JSON_FIELD_CASE","lower"); 
     
-    var u = u1.GetUrl();
+    let u = u1.GetUrl();
     $J(u, function(rst) {
-    	for(var n in rst){
-    		var d = rst[n]; //数据行
-    		// var id=d.ID; 
-    		// var name=d.NAME;
+    	for(let n in rst){
+    		let d = rst[n]; //数据行
+    		// let id=d.ID; 
+    		// let name=d.NAME;
     	}
     });
 }		
@@ -274,11 +289,11 @@ function loadActionJson_{NAME} () {
 // $('.ewa-row-{NAME} .EWA_TD_L').append(' <a href="javascript:translate_{NAME}(true)">翻译</a>');
 
 function translate_{NAME} (isforce) {
-	var toObj = $X('{NAME}_EN'); //英文对象
+	let toObj = $X('{NAME}_EN'); //英文对象
 	if(isforce === true || toObj.value == ''){ //如果没有值的话就翻译
-		var trans = new EWA_TransClass();
+		let trans = new EWA_TransClass();
 		// trans._Trans = 'youdao'; //默认用bing
-		var fromStr = $X('{NAME}').value; //中文对象字符串
+		let fromStr = $X('{NAME}').value; //中文对象字符串
 		trans.TransToEn(fromStr,toObj); //中文到英文
 		//trans.TransToCn(fromStr,toObj); //英文到中文
 	}

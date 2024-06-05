@@ -1011,9 +1011,9 @@ function EWA_ListFrameClass() {
 		}
 
 		css = "";
-		if (isFrame) {
+		//if (isFrame) {
 			// css = "width:100%;height:100%;overflow:auto;position: absolute";
-		}
+		//}
 
 		var gridTable = $X('EWA_LF_' + this._Id);
 
