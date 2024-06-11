@@ -16037,7 +16037,8 @@ function EWA_FrameClass() {
 			valueInput.id = valueInput.id == null || valueInput.id == "" ? Math.random() : valueInput.id;
 			if (valueInput.getAttribute("isdlseventload") == "yes") {
 				EWA.F.FOS[valueInput.id] = new EWA_FrameItemClass();
-				EWA.F.FOS[valueInput.id].DropList(obj);
+				//console.log(EWA.F.FOS[valueInput.id].DropList)
+				EWA.F.FOS[valueInput.id].DropList(textInput);
 				// 执行调用
 				EWA.F.FOS[valueInput.id].CallAfterEvent();
 			}
