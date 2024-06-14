@@ -4031,6 +4031,7 @@ function createDDL(from) {
 	}, 500);
 }
 function ddlKeyPress(o) {
+	EWA.F.I.DropList(o);
 	setTimeout(function() {
 		o.setAttribute("have", o.value)
 	}, 11);
