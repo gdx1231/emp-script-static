@@ -144,7 +144,7 @@ public class Resources {
 		} else if (path.indexOf("/jquery/jquery-1.") > 0) {
 			path = "/third-party/jquery/jquery-1.12.4.min.js";
 		} else if (path.indexOf("/jquery/jquery-3.") > 0) {
-			path = "/third-party/jquery/jquery-3.6.0.min.js";
+			path = "/third-party/jquery/jquery-3.7.1.min.js";
 		} else if (path.indexOf("/thrid-party/") == 0) {
 			path = path.replace("/thrid-party/", "/third-party/");
 		} else if (path.indexOf("/js_jquery/") >= 0 && path.indexOf("EWA_ALL") < 0) {
