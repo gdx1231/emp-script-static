@@ -693,11 +693,12 @@ tr[error] .ewa-tip-error:after {
 .ewa-in-dialog .EWA_TD_B {
 	position: fixed;
 	bottom: 0px;
-	height: 48px;
+	height: 45px;
 	display: block;
 	width: 100%;
 	left: 0;
 	background-color: aliceblue;
+	padding: 0;
 }
 
 .ewa-in-dialog .EWA_TD_B input {
