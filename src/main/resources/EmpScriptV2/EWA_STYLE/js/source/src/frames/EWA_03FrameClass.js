@@ -528,7 +528,7 @@ function EWA_FrameClass() {
 		}, 311);
 	};
 	this._selectOptionsChangeed = function(o) {
-		console.log('changed')
+		//console.log('changed')
 		var target = this.getObj("select#" + o.id);
 
 		var id1 = "initSelectFilter" + this._Id + "-" + o.id + "-filter";
@@ -1805,7 +1805,7 @@ function EWA_FrameClass() {
 			item.attr('ewa_trigger_valid', triggerValid);
 
 			var tag = $(node).find('Tag Set').attr('Tag');
-			console.log(tag)
+			//console.log(tag)
 			if ("submit" == tag) {
 				//通过form onsubmit触发
 				return;
@@ -1849,13 +1849,14 @@ function EWA_FrameClass() {
 		if (!this.callTriggerValidBefore(obj)) {
 			return;
 		}
-		var tb = $('#EWA_FRAME_' + this._Id);
-		let objId = $(obj).attr("id");
+		let tb = $('#EWA_FRAME_' + this._Id);
+		let obj1 = $(obj)
+		let objId = obj1.attr("id");
 		if (!objId) {
-			objId = $(obj).attr("ewa_trigger_valid_rid");
+			objId = obj1.attr("ewa_trigger_valid_rid");
 		}
 		let url = this.getUrlClass();
-		let triggerValid = $(obj).attr('ewa_trigger_valid');
+		let triggerValid = obj1.attr('ewa_trigger_valid');
 		url.AddParameter("ewa_ajax", triggerValid);
 		url.AddParameter("ewa_trigger_valid_name", objId);
 		url.AddParameter("ewa_trigger_valid_mode", "create");
@@ -1863,38 +1864,53 @@ function EWA_FrameClass() {
 		let c = this;
 
 		let tempid = EWA_Utils.tempId();
-		$(obj).attr('_trigger_valid_id', tempid);
-
+		
+		
 		$J(url.GetUrl(), function(rst) {
 			if (!rst.RST) {
 				alert(rst.ERR);
 				return;
 			}
+			// 设置id，用于_checkTriggerValids判断窗口是否创建
+			obj1.attr('_trigger_valid_id', tempid);
+			
 			//显示拼图窗口
 			let title = EWA.LANG == 'enus' ? "Silde puzzle" : "拼图验证";
-			let dia = $DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
+			let dia = top.$DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
 			rst.ewa_trigger_valid_name = objId;
 			rst.ewa_trigger_valid = triggerValid;
 			rst.ewa_url = url.GetUrl();
 
-			EWA.UI.SlidePuzzle(rst, $('#' + tempid), function(result) {
-				$(obj).removeAttr('onclick');
+			EWA.UI.SlidePuzzle(rst, top.$('#' + tempid), function(result) {
+				console.log('2. puzzle cb true');
+
+				// obj1.removeAttr('onclick');
 				let click = false;
-				if ($(obj).attr('_onclick')) {
-					$(obj).attr('onclick', $(obj).attr('_onclick'));
+				if (obj1.attr('_onclick')) {
+					obj1.attr('onclick', $(obj).attr('_onclick'));
 					click = true;
 				}
 				setTimeout(function() {
 					$(dia.getMain()).animate({ opacity: 0 }, 500);
 				}, 500);
 				setTimeout(function() {
+					let type = obj1.attr('type');
+					// let tagName = obj1[0].tagName;
+
 					c.triggerValids[objId] = result.VALID;
 					let butId = $(obj).attr('ewa_trigger_valid_click_id');
+
+					// console.log(butId, click, type, tagName, obj);
 					if (butId) {//通过一个覆盖层
-						$(obj).remove();
+						obj1.remove();
+						console.log(butId + '.click');
 						tb.find('#' + butId).click();
 					} else if (click) {
-						obj.click();
+						console.log('3. puzzle click');
+						obj1.click();
+					} else if ("submit" == type) {
+						// 由DoPost调用判断
+						console.log('3. puzzle submit');
 					}
 					dia.Close();
 				}, 1000);
@@ -2169,7 +2185,7 @@ function EWA_FrameClass() {
 			this._checkSelectOptionsChange();
 		}
 	};
-	 
+
 	this.refreshDropList = function(id, value) {
 		let target = this.getObj('input[id="' + id + '"]');
 		if (target.length == 0) {
@@ -2188,8 +2204,8 @@ function EWA_FrameClass() {
 			console.warn('Not droplist id=' + id + " prev");
 		}
 	};
-	
-	
+
+
 	this._GetDropListValue1 = function(textInput, valueInput) {
 		if (valueInput.value == '') {
 			valueInput.setAttribute('setvalue', 1);
@@ -2231,7 +2247,7 @@ function EWA_FrameClass() {
 			data["EWA_ACTION"] = action;
 			data[valueInput.id] = valueInput.value;
 		}
-		$JP(url, data, function(s){
+		$JP(url, data, function(s) {
 			if (s.length == 0) {
 				return;
 			}
@@ -2272,7 +2288,7 @@ function EWA_FrameClass() {
 			valueInput.setAttribute('canopen', 1);
 			valueInput.setAttribute('setvalue', 1);
 		});
-		 
+
 	};
 	/**
 	 * 用于外部调用
@@ -2502,29 +2518,39 @@ function EWA_FrameClass() {
 		}
 		var tb = $('#EWA_FRAME_' + this._Id);
 		for (let n in this.triggerValids) {
-			if (!this.triggerValids[n]) {
-				let obj = tb.find('#' + n);
-				if (obj.length > 0 && "submit" == obj[0].type) {
-					let inc = obj.attr('_trigger_valid_inc') ? obj.attr('_trigger_valid_inc') * 1 : 0;
-					if (inc == 0) {
-						this.callTriggerValid(obj);
-					} else {
-						let id = obj.attr('_trigger_valid_id');
-
-						if ($('#' + id).length == 0) {
-							//窗口不见了，取消提交等待
-							this._cancelPostWait = true;
-							obj.removeAttr('_trigger_valid_inc');
-							obj.removeAttr('_trigger_valid_id');
-							return false;
-						}
-					}
-					inc++;
-					obj.attr('_trigger_valid_inc', inc);
-				}
-				// console.log('等待验证triggerValid: ' + n);
-				return false;
+			if (this.triggerValids[n]) {
+				// 已经验证成功了
+				continue;
 			}
+
+			let obj = tb.find('#' + n);
+			if (obj.length > 0 && "submit" == obj[0].type) {
+				let inc = obj.attr('_trigger_valid_inc') ? obj.attr('_trigger_valid_inc') * 1 : 0;
+				if (inc == 0) {
+					//console.log('1. Puzzle wait valid: ' + n + "(" + inc + ")");
+					this.callTriggerValid(obj);
+				} else {
+					let id = obj.attr('_trigger_valid_id');
+					if(!id){
+						 //puzzle 窗口还未创建
+						return false;
+					}
+					if (top.$('#' + id).length == 0) {//窗口不见了，用户关闭窗口
+						//取消提交等待
+						this._cancelPostWait = true;
+						obj.removeAttr('_trigger_valid_inc');
+						obj.removeAttr('_trigger_valid_id');
+						console.log('窗口不见了，取消提交等待');
+						return false;
+					}
+				}
+				inc++;
+				obj.attr('_trigger_valid_inc', inc);
+				//console.log('3. Puzzle wait valid: ' + n + "(" + inc + ")");
+			} else {
+				//console.log('等待验证triggerValid: ' + n);
+			}
+			return false;
 		}
 		return true;
 	};
@@ -3026,7 +3052,7 @@ function EWA_FrameRemoveAlert(obj) {
 		return;
 	}
 	o1.style.backgroundColor = '';
-	console.log(o1);
+	// 	console.log(o1);
 	if (o1.cells.length == 1 || o1.parentNode.parentNode.getAttribute("error_show_type") == "1") {
 		var curTr = $(o1);
 		curTr.find('td').removeClass('ewa-tip-error');

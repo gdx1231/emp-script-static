@@ -12411,11 +12411,12 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 	var funcFail;
 	var config;
 	var mobile = /iphone|android|ipad/ig.test(navigator.userAgent) || window.EWA_App;
+	var win;
 	function fnDown() {
-		let box = $('.ewa-slider-puzzle-box');
-		let swiper = $('.ewa-slider-puzzle-swiper');
-		let verify = $('.ewa-slider-puzzle-verify');
-		let text = $('.ewa-slider-puzzle-text');
+		let box = win.$('.ewa-slider-puzzle-box');
+		let swiper = win.$('.ewa-slider-puzzle-swiper');
+		let verify = win.$('.ewa-slider-puzzle-verify');
+		let text = win.$('.ewa-slider-puzzle-text');
 
 		let move = mobile ? 'touchmove' : 'mousemove';
 		let up = mobile ? 'touchend' : 'mouseup';
@@ -12440,7 +12441,7 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 			box.unbind(up)
 
 			// 移动
-			console.log(box[0]);
+			//console.log(box[0]);
 			box.bind(move, function(e) {
 				let e1 = mobile ? e.touches[0] : e;
 				fnMove(e1, disX, disY)
@@ -12452,20 +12453,22 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 				box.unbind(up)
 
 				let u = new EWA_UrlClass(config.ewa_url);
-				console.log(verify.position());
-				console.log(verify.offset());
+				//console.log(verify.position());
+				//console.log(verify.offset());
+				let data = {};
+				data["left"] = verify.position().left;
+				data["top"] = verify.position().top;
+				data["left1"] = verify.offset().left;
+				data["top1"] = verify.offset().top;
 
-				u.AddParameter("left", verify.position().left);
-				u.AddParameter("top", verify.position().top);
-				u.AddParameter("left1", verify.offset().left);
-				u.AddParameter("top1", verify.offset().top);
-
-				u.AddParameter("ewa_trigger_valid_mode", "check");
-				u.AddParameter("ewa_trigger_valid_name", config.ewa_trigger_valid_name);
-				u.AddParameter("ewa_ajax", config.ewa_trigger_valid);
-				$J(u.GetUrl(), function(rst) {
-					console.log(rst);
+				data["ewa_trigger_valid_mode"] = "check";
+				data["ewa_trigger_valid_name"] = config.ewa_trigger_valid_name;
+				data["ewa_ajax"] = config.ewa_trigger_valid;
+				console.log('0. Puzzle post check');
+				$JP(u.GetUrl(), data, function(rst) {
+					//console.log(rst);
 					if (rst.RST) {
+						console.log('1. puzzle valid ok');
 						box.addClass('ewa-slider-puzzle-successful');
 						if (funcSuccess) {
 							funcSuccess(rst);
@@ -12488,7 +12491,7 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 						if (rst.newConfig) {
 							rst.newConfig.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
 							rst.newConfig.ewa_trigger_valid = config.ewa_trigger_valid;
-							rst.newConfig.ewa_url  = config.ewa_url;
+							rst.newConfig.ewa_url = config.ewa_url;
 							config = rst.newConfig;
 							refreshImg(config)
 						}
@@ -12503,9 +12506,9 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 	}
 
 	function fnMove(e, posX, posY) {
-		let handle = $('.ewa-slider-puzzle-handle')
-		let swiper = $('.ewa-slider-puzzle-swiper');
-		let verify = $('.ewa-slider-puzzle-verify');
+		let handle = win.$('.ewa-slider-puzzle-handle')
+		let swiper = win.$('.ewa-slider-puzzle-swiper');
+		let verify = win.$('.ewa-slider-puzzle-verify');
 
 		// 这里的e是以鼠标为参考
 		var l = e.clientX - posX - $(handle).offset().left;
@@ -12522,15 +12525,15 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 	}
 
 	function refreshImg(json) {
-		var imgBox = $('.ewa-slider-puzzle-imgbox');
-		var verImg = $('.ewa-slider-puzzle-imgbox img');
+		var imgBox = win.$('.ewa-slider-puzzle-imgbox');
+		var verImg = win.$('.ewa-slider-puzzle-imgbox img');
 		imgBox.css('width', json.imgBigWidth).css('height', json.imgBigHeight);
 		if (verImg.length) {
 			verImg.attr('src', json.imgBig)
 		} else {
 			imgBox.prepend("<img src='" + json.imgBig + "' />");
 		}
-		let verify = $('.ewa-slider-puzzle-verify');
+		let verify = win.$('.ewa-slider-puzzle-verify');
 		verify.css('background-image', "url('" + json.imgSmall + "')")
 			.css('top', json.imgTop)
 			.css('width', json.imgSmallWidth)
@@ -12551,10 +12554,13 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 		config = json;
 		funcSuccess = cbSuccess;
 		funcFail = cbFail;
-		$(parent || 'body').append(template.join(""));
+		let target = $(parent || 'body');
+		target.append(template.join(""));
 
-		let refresh = $('.ewa-slider-puzzle-refresh');
-		let box = $('.ewa-slider-puzzle-box');
+		win = target[0].ownerDocument.defaultView;
+
+		let refresh = win.$('.ewa-slider-puzzle-refresh');
+		let box = win.$('.ewa-slider-puzzle-box');
 		box.css('width', json.imgBigWidth);
 		refreshImg(json)
 		refresh.click(function(e) {
@@ -12571,7 +12577,7 @@ EWA.UI.Ext.IdCard2 = function(obj) {
 				}
 				rst.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
 				rst.ewa_trigger_valid = config.ewa_trigger_valid;
-				rst.ewa_url  = config.ewa_url;
+				rst.ewa_url = config.ewa_url;
 				config = rst;
 				refreshImg(config)
 			});
@@ -14301,7 +14307,7 @@ function EWA_FrameClass() {
 		}, 311);
 	};
 	this._selectOptionsChangeed = function(o) {
-		console.log('changed')
+		//console.log('changed')
 		var target = this.getObj("select#" + o.id);
 
 		var id1 = "initSelectFilter" + this._Id + "-" + o.id + "-filter";
@@ -15578,7 +15584,7 @@ function EWA_FrameClass() {
 			item.attr('ewa_trigger_valid', triggerValid);
 
 			var tag = $(node).find('Tag Set').attr('Tag');
-			console.log(tag)
+			//console.log(tag)
 			if ("submit" == tag) {
 				//通过form onsubmit触发
 				return;
@@ -15622,13 +15628,14 @@ function EWA_FrameClass() {
 		if (!this.callTriggerValidBefore(obj)) {
 			return;
 		}
-		var tb = $('#EWA_FRAME_' + this._Id);
-		let objId = $(obj).attr("id");
+		let tb = $('#EWA_FRAME_' + this._Id);
+		let obj1 = $(obj)
+		let objId = obj1.attr("id");
 		if (!objId) {
-			objId = $(obj).attr("ewa_trigger_valid_rid");
+			objId = obj1.attr("ewa_trigger_valid_rid");
 		}
 		let url = this.getUrlClass();
-		let triggerValid = $(obj).attr('ewa_trigger_valid');
+		let triggerValid = obj1.attr('ewa_trigger_valid');
 		url.AddParameter("ewa_ajax", triggerValid);
 		url.AddParameter("ewa_trigger_valid_name", objId);
 		url.AddParameter("ewa_trigger_valid_mode", "create");
@@ -15636,38 +15643,53 @@ function EWA_FrameClass() {
 		let c = this;
 
 		let tempid = EWA_Utils.tempId();
-		$(obj).attr('_trigger_valid_id', tempid);
-
+		
+		
 		$J(url.GetUrl(), function(rst) {
 			if (!rst.RST) {
 				alert(rst.ERR);
 				return;
 			}
+			// 设置id，用于_checkTriggerValids判断窗口是否创建
+			obj1.attr('_trigger_valid_id', tempid);
+			
 			//显示拼图窗口
 			let title = EWA.LANG == 'enus' ? "Silde puzzle" : "拼图验证";
-			let dia = $DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
+			let dia = top.$DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
 			rst.ewa_trigger_valid_name = objId;
 			rst.ewa_trigger_valid = triggerValid;
 			rst.ewa_url = url.GetUrl();
 
-			EWA.UI.SlidePuzzle(rst, $('#' + tempid), function(result) {
-				$(obj).removeAttr('onclick');
+			EWA.UI.SlidePuzzle(rst, top.$('#' + tempid), function(result) {
+				console.log('2. puzzle cb true');
+
+				// obj1.removeAttr('onclick');
 				let click = false;
-				if ($(obj).attr('_onclick')) {
-					$(obj).attr('onclick', $(obj).attr('_onclick'));
+				if (obj1.attr('_onclick')) {
+					obj1.attr('onclick', $(obj).attr('_onclick'));
 					click = true;
 				}
 				setTimeout(function() {
 					$(dia.getMain()).animate({ opacity: 0 }, 500);
 				}, 500);
 				setTimeout(function() {
+					let type = obj1.attr('type');
+					// let tagName = obj1[0].tagName;
+
 					c.triggerValids[objId] = result.VALID;
 					let butId = $(obj).attr('ewa_trigger_valid_click_id');
+
+					// console.log(butId, click, type, tagName, obj);
 					if (butId) {//通过一个覆盖层
-						$(obj).remove();
+						obj1.remove();
+						console.log(butId + '.click');
 						tb.find('#' + butId).click();
 					} else if (click) {
-						obj.click();
+						console.log('3. puzzle click');
+						obj1.click();
+					} else if ("submit" == type) {
+						// 由DoPost调用判断
+						console.log('3. puzzle submit');
 					}
 					dia.Close();
 				}, 1000);
@@ -15942,7 +15964,7 @@ function EWA_FrameClass() {
 			this._checkSelectOptionsChange();
 		}
 	};
-	 
+
 	this.refreshDropList = function(id, value) {
 		let target = this.getObj('input[id="' + id + '"]');
 		if (target.length == 0) {
@@ -15961,8 +15983,8 @@ function EWA_FrameClass() {
 			console.warn('Not droplist id=' + id + " prev");
 		}
 	};
-	
-	
+
+
 	this._GetDropListValue1 = function(textInput, valueInput) {
 		if (valueInput.value == '') {
 			valueInput.setAttribute('setvalue', 1);
@@ -16004,7 +16026,7 @@ function EWA_FrameClass() {
 			data["EWA_ACTION"] = action;
 			data[valueInput.id] = valueInput.value;
 		}
-		$JP(url, data, function(s){
+		$JP(url, data, function(s) {
 			if (s.length == 0) {
 				return;
 			}
@@ -16045,7 +16067,7 @@ function EWA_FrameClass() {
 			valueInput.setAttribute('canopen', 1);
 			valueInput.setAttribute('setvalue', 1);
 		});
-		 
+
 	};
 	/**
 	 * 用于外部调用
@@ -16275,29 +16297,39 @@ function EWA_FrameClass() {
 		}
 		var tb = $('#EWA_FRAME_' + this._Id);
 		for (let n in this.triggerValids) {
-			if (!this.triggerValids[n]) {
-				let obj = tb.find('#' + n);
-				if (obj.length > 0 && "submit" == obj[0].type) {
-					let inc = obj.attr('_trigger_valid_inc') ? obj.attr('_trigger_valid_inc') * 1 : 0;
-					if (inc == 0) {
-						this.callTriggerValid(obj);
-					} else {
-						let id = obj.attr('_trigger_valid_id');
-
-						if ($('#' + id).length == 0) {
-							//窗口不见了，取消提交等待
-							this._cancelPostWait = true;
-							obj.removeAttr('_trigger_valid_inc');
-							obj.removeAttr('_trigger_valid_id');
-							return false;
-						}
-					}
-					inc++;
-					obj.attr('_trigger_valid_inc', inc);
-				}
-				// console.log('等待验证triggerValid: ' + n);
-				return false;
+			if (this.triggerValids[n]) {
+				// 已经验证成功了
+				continue;
 			}
+
+			let obj = tb.find('#' + n);
+			if (obj.length > 0 && "submit" == obj[0].type) {
+				let inc = obj.attr('_trigger_valid_inc') ? obj.attr('_trigger_valid_inc') * 1 : 0;
+				if (inc == 0) {
+					//console.log('1. Puzzle wait valid: ' + n + "(" + inc + ")");
+					this.callTriggerValid(obj);
+				} else {
+					let id = obj.attr('_trigger_valid_id');
+					if(!id){
+						 //puzzle 窗口还未创建
+						return false;
+					}
+					if (top.$('#' + id).length == 0) {//窗口不见了，用户关闭窗口
+						//取消提交等待
+						this._cancelPostWait = true;
+						obj.removeAttr('_trigger_valid_inc');
+						obj.removeAttr('_trigger_valid_id');
+						console.log('窗口不见了，取消提交等待');
+						return false;
+					}
+				}
+				inc++;
+				obj.attr('_trigger_valid_inc', inc);
+				//console.log('3. Puzzle wait valid: ' + n + "(" + inc + ")");
+			} else {
+				//console.log('等待验证triggerValid: ' + n);
+			}
+			return false;
 		}
 		return true;
 	};
@@ -16799,7 +16831,7 @@ function EWA_FrameRemoveAlert(obj) {
 		return;
 	}
 	o1.style.backgroundColor = '';
-	console.log(o1);
+	// 	console.log(o1);
 	if (o1.cells.length == 1 || o1.parentNode.parentNode.getAttribute("error_show_type") == "1") {
 		var curTr = $(o1);
 		curTr.find('td').removeClass('ewa-tip-error');

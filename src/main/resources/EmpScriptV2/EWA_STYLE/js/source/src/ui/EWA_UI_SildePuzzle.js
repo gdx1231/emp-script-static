@@ -16,11 +16,12 @@
 	var funcFail;
 	var config;
 	var mobile = /iphone|android|ipad/ig.test(navigator.userAgent) || window.EWA_App;
+	var win;
 	function fnDown() {
-		let box = $('.ewa-slider-puzzle-box');
-		let swiper = $('.ewa-slider-puzzle-swiper');
-		let verify = $('.ewa-slider-puzzle-verify');
-		let text = $('.ewa-slider-puzzle-text');
+		let box = win.$('.ewa-slider-puzzle-box');
+		let swiper = win.$('.ewa-slider-puzzle-swiper');
+		let verify = win.$('.ewa-slider-puzzle-verify');
+		let text = win.$('.ewa-slider-puzzle-text');
 
 		let move = mobile ? 'touchmove' : 'mousemove';
 		let up = mobile ? 'touchend' : 'mouseup';
@@ -45,7 +46,7 @@
 			box.unbind(up)
 
 			// 移动
-			console.log(box[0]);
+			//console.log(box[0]);
 			box.bind(move, function(e) {
 				let e1 = mobile ? e.touches[0] : e;
 				fnMove(e1, disX, disY)
@@ -57,20 +58,22 @@
 				box.unbind(up)
 
 				let u = new EWA_UrlClass(config.ewa_url);
-				console.log(verify.position());
-				console.log(verify.offset());
+				//console.log(verify.position());
+				//console.log(verify.offset());
+				let data = {};
+				data["left"] = verify.position().left;
+				data["top"] = verify.position().top;
+				data["left1"] = verify.offset().left;
+				data["top1"] = verify.offset().top;
 
-				u.AddParameter("left", verify.position().left);
-				u.AddParameter("top", verify.position().top);
-				u.AddParameter("left1", verify.offset().left);
-				u.AddParameter("top1", verify.offset().top);
-
-				u.AddParameter("ewa_trigger_valid_mode", "check");
-				u.AddParameter("ewa_trigger_valid_name", config.ewa_trigger_valid_name);
-				u.AddParameter("ewa_ajax", config.ewa_trigger_valid);
-				$J(u.GetUrl(), function(rst) {
-					console.log(rst);
+				data["ewa_trigger_valid_mode"] = "check";
+				data["ewa_trigger_valid_name"] = config.ewa_trigger_valid_name;
+				data["ewa_ajax"] = config.ewa_trigger_valid;
+				console.log('0. Puzzle post check');
+				$JP(u.GetUrl(), data, function(rst) {
+					//console.log(rst);
 					if (rst.RST) {
+						console.log('1. puzzle valid ok');
 						box.addClass('ewa-slider-puzzle-successful');
 						if (funcSuccess) {
 							funcSuccess(rst);
@@ -93,7 +96,7 @@
 						if (rst.newConfig) {
 							rst.newConfig.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
 							rst.newConfig.ewa_trigger_valid = config.ewa_trigger_valid;
-							rst.newConfig.ewa_url  = config.ewa_url;
+							rst.newConfig.ewa_url = config.ewa_url;
 							config = rst.newConfig;
 							refreshImg(config)
 						}
@@ -108,9 +111,9 @@
 	}
 
 	function fnMove(e, posX, posY) {
-		let handle = $('.ewa-slider-puzzle-handle')
-		let swiper = $('.ewa-slider-puzzle-swiper');
-		let verify = $('.ewa-slider-puzzle-verify');
+		let handle = win.$('.ewa-slider-puzzle-handle')
+		let swiper = win.$('.ewa-slider-puzzle-swiper');
+		let verify = win.$('.ewa-slider-puzzle-verify');
 
 		// 这里的e是以鼠标为参考
 		var l = e.clientX - posX - $(handle).offset().left;
@@ -127,15 +130,15 @@
 	}
 
 	function refreshImg(json) {
-		var imgBox = $('.ewa-slider-puzzle-imgbox');
-		var verImg = $('.ewa-slider-puzzle-imgbox img');
+		var imgBox = win.$('.ewa-slider-puzzle-imgbox');
+		var verImg = win.$('.ewa-slider-puzzle-imgbox img');
 		imgBox.css('width', json.imgBigWidth).css('height', json.imgBigHeight);
 		if (verImg.length) {
 			verImg.attr('src', json.imgBig)
 		} else {
 			imgBox.prepend("<img src='" + json.imgBig + "' />");
 		}
-		let verify = $('.ewa-slider-puzzle-verify');
+		let verify = win.$('.ewa-slider-puzzle-verify');
 		verify.css('background-image', "url('" + json.imgSmall + "')")
 			.css('top', json.imgTop)
 			.css('width', json.imgSmallWidth)
@@ -156,10 +159,13 @@
 		config = json;
 		funcSuccess = cbSuccess;
 		funcFail = cbFail;
-		$(parent || 'body').append(template.join(""));
+		let target = $(parent || 'body');
+		target.append(template.join(""));
 
-		let refresh = $('.ewa-slider-puzzle-refresh');
-		let box = $('.ewa-slider-puzzle-box');
+		win = target[0].ownerDocument.defaultView;
+
+		let refresh = win.$('.ewa-slider-puzzle-refresh');
+		let box = win.$('.ewa-slider-puzzle-box');
 		box.css('width', json.imgBigWidth);
 		refreshImg(json)
 		refresh.click(function(e) {
@@ -176,7 +182,7 @@
 				}
 				rst.ewa_trigger_valid_name = config.ewa_trigger_valid_name;
 				rst.ewa_trigger_valid = config.ewa_trigger_valid;
-				rst.ewa_url  = config.ewa_url;
+				rst.ewa_url = config.ewa_url;
 				config = rst;
 				refreshImg(config)
 			});
