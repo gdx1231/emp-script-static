@@ -17119,12 +17119,7 @@ function EWA_FrameItemClass() {
 		}
 		var func = eval('window.' + funcName);
 		if (typeof func == "function") {
-			try {
-				// val,text, input(hidden), input(text)
-				func(this._Object1.value, this._Object.value, this._Object1, this._Object);
-			} catch (e) {
-				alert('定义的Js ' + funcName + "执行错误：" + e);
-			}
+			func(this._Object1.value, this._Object.value, this._Object1, this._Object);
 		} else {
 			alert('定义的Js ' + funcName + "不存在, 对象为" + typeof func);
 		}
@@ -17163,7 +17158,7 @@ function EWA_FrameItemClass() {
 
 			this._Dialog.Create();
 			var s1 = "<div style='position:absolute;width:" + w + ";height:" + h
-					+ ";overflow-y:scroll;overflow-x:hidden;border:1px solid #ccc;cursor:pointer'";
+				+ ";overflow-y:scroll;overflow-x:hidden;border:1px solid #ccc;cursor:pointer'";
 			if (EWA.B.PAD) {
 				s1 += " onclick='_EWA_FRAME_ITEM.MouseDown(event)' ></div>";
 			} else {
@@ -17220,8 +17215,8 @@ function EWA_FrameItemClass() {
 };
 if (!EWA.F.F) {
 	EWA.F.F = {
-		CUR : null,
-		FI : EWA_FrameItemClass
+		CUR: null,
+		FI: EWA_FrameItemClass
 	};
 } else {
 	EWA.F.F.FI = EWA_FrameItemClass;
