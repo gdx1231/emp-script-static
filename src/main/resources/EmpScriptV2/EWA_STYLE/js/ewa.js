@@ -18253,6 +18253,33 @@ function EWA_ListFrameClass() {
 		}
 		return null;
 	};
+	/**
+	 * 在当前行新增一个新行, 2024-07-24
+	 * @param tr 当前行
+	 */
+	this.newRowOneTd = function(currentTr) {
+		if (currentTr == null) {
+			return null
+		}
+		currentTr = $(currentTr)[0];
+		let nextTr = currentTr.parentNode.rows[currentTr.rowIndex + 1];
+		if (nextTr != null && nextTr.getAttribute('add_pre_row') == "1") {
+			return nextTr;
+		}
+		let o = currentTr.parentNode.parentNode; // tb
+		let colspan = o.rows[0].cells.length;
+
+		nextTr = o.insertRow(currentTr.rowIndex + 1);
+		nextTr.setAttribute('add_pre_row', 1);
+		let td = nextTr.insertCell(-1);
+		td.colSpan = colspan;
+		td.className = 'ewa-lf-add-pre-cell';
+		nextTr.style.display = 'none';
+		td.id = EWA_Utils.tempId('EWA_LF_NR_' + this._Id);
+		$(nextTr).addClass('ewa-lf-add-pre-row');
+ 
+		return nextTr;
+	};
 	this.MDown = function(tr, evt) {
 		if (!this.IsTrSelect)
 			return;
@@ -18331,20 +18358,7 @@ function EWA_ListFrameClass() {
 				// 检查触发对象，用户改写，默认为true
 				return;
 			}
-			var nextTr = tr.parentNode.rows[tr.rowIndex + 1];
-			if (nextTr == null || nextTr.getAttribute('add_pre_row') != 1) {
-				var o = tr.parentNode.parentNode; // tb
-				var colspan = o.rows[0].cells.length;
-
-				nextTr = o.insertRow(tr.rowIndex + 1);
-				nextTr.setAttribute('add_pre_row', 1);
-				var td = nextTr.insertCell(-1);
-				td.colSpan = colspan;
-				td.className = 'ewa-lf-add-pre-cell';
-				nextTr.style.display = 'none';
-				td.id = EWA_Utils.tempId('EWA_LF_NR_' + this._Id);
-				$(nextTr).addClass('ewa-lf-add-pre-row');
-			}
+			var nextTr = this.newRowOneTd(tr);
 
 			if (this.prevTr) {
 				if (this.AddPreRowCloseBeforeEvent) {
@@ -18612,7 +18626,7 @@ function EWA_ListFrameClass() {
 
 		css = "";
 		//if (isFrame) {
-			// css = "width:100%;height:100%;overflow:auto;position: absolute";
+		// css = "width:100%;height:100%;overflow:auto;position: absolute";
 		//}
 
 		var gridTable = $X('EWA_LF_' + this._Id);
@@ -19939,7 +19953,7 @@ function EWA_ListFrameClass() {
 					});
 				}
 				// console.log(s2);
-				 
+
 				let regExp = this.createRegExp(exp);
 				// console.log(exp);
 				let ids = s2[0].split(','); // 有可能为组合的id,composeTextSearch
