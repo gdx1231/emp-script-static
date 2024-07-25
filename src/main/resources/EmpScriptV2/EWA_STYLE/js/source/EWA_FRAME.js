@@ -3056,8 +3056,8 @@ function EWA_FrameClass() {
 		let c = this;
 
 		let tempid = EWA_Utils.tempId();
-		
-		
+
+
 		$J(url.GetUrl(), function(rst) {
 			if (!rst.RST) {
 				alert(rst.ERR);
@@ -3065,7 +3065,7 @@ function EWA_FrameClass() {
 			}
 			// 设置id，用于_checkTriggerValids判断窗口是否创建
 			obj1.attr('_trigger_valid_id', tempid);
-			
+
 			//显示拼图窗口
 			let title = EWA.LANG == 'enus' ? "Silde puzzle" : "拼图验证";
 			let dia = top.$DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
@@ -3723,8 +3723,8 @@ function EWA_FrameClass() {
 					this.callTriggerValid(obj);
 				} else {
 					let id = obj.attr('_trigger_valid_id');
-					if(!id){
-						 //puzzle 窗口还未创建
+					if (!id) {
+						//puzzle 窗口还未创建
 						return false;
 					}
 					if (top.$('#' + id).length == 0) {//窗口不见了，用户关闭窗口
@@ -3983,24 +3983,35 @@ function EWA_FrameClass() {
 	 * 重新加载Frame,guolei 2020-05-26
 	 */
 	this.ReloadFrame = function(func) {
-		var frame_table = $('#EWA_FRAME_' + this._Id);
+		var frame_table = $('#f_' + this._Id); //form
 		if (frame_table.length == 0) {
 			return;
 		}
-		var ewa_frame_main = frame_table.parentsUntil('#EWA_FRAME_MAIN').last().parent();
-		if (ewa_frame_main.length == 0) {
-			return;
+		var u1 = new EWA_UrlClass(this.Url);
+		var ewa_frame_main = null;
+		var tmp_id = this._last_reload_frame_id;
+		
+		if (tmp_id) {
+			ewa_frame_main = $('#' + this._last_reload_frame_id);
+		} else {
+			tmp_id = EWA_Utils.tempId("ewa_frame_relaod");
+			ewa_frame_main = frame_table.parentsUntil('#EWA_FRAME_MAIN').last().parent();
+			if (ewa_frame_main[0].id != 'EWA_FRAME_MAIN') {
+				// EWA_SKIP_TEST1不存在 #EWA_FRAME_MAIN
+				// 创建新父元素
+				ewa_frame_main = $("<div class='ewa-reload-frame'></div>");
+				ewa_frame_main.insertBefore(frame_table);
+				ewa_frame_main.append(frame_table);
+			}
+			this._last_reload_frame_id = tmp_id;
+			ewa_frame_main.attr('id', tmp_id);
 		}
-		var tmp_id = EWA_Utils.tempId("ewa_frame_relaod");
-		var p = ewa_frame_main;
-		p.attr('id', tmp_id);
-
 		var u1 = new EWA_UrlClass(this.Url);
 		u1.AddParameter("ewa_ajax", "install");
 		var url = u1.GetUrl();
 		$Install(url, tmp_id, function() {
 			if (func) {
-				func(p, this);
+				func(ewa_frame_main, this);
 			}
 		});
 	};
