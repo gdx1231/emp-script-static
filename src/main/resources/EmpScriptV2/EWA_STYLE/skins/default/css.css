@@ -2038,7 +2038,15 @@ td.ewa-lf-edit {
 	background: aliceblue;
 	cursor: move;
 }
-
+.ewa-ui-dialog-title .ewa_lf_func_dact{
+	color: #111;
+}
+.ewa-ui-dialog-title .ewa_lf_func_dact{
+	color: #111;
+}
+.ewa-ui-dialog-title .ewa_lf_func_dact:hover {
+    color: red;
+}
 .ewa-ui-dialog-title>a {
 	float: right;
 	width: 30px;
@@ -2065,17 +2073,17 @@ td.ewa-lf-edit {
 
 /* 消息 */
 .MSG_INFO {
-	width: 100%;
+	width: 300px;
 	height: 100%;
-	background-color: #ccc;
+	background-color: #eee;
 }
 
 /* 消息 提示图标*/
 .MSG_INFO .MSG_ICON {
-	width: 128px;
-	height: 128px;
+	width: 64px;
+	height: 64px;
 	background-repeat: no-repeat;
-	line-height: 128px;
+	line-height: 64px;
 	text-align: center;
 	background: #08c;
 	border-radius: 100%;
@@ -2092,9 +2100,9 @@ td.ewa-lf-edit {
 
 /* 消息 错误图标*/
 .MSG_INFO .ERR_ICON {
-	width: 128px;
-	height: 128px;
-	line-height: 128px;
+	width: 64px;
+	height: 64px;
+	line-height: 64px;
 	text-align: center;
 	background: rgba(214, 58, 58, 0.7);
 	border-radius: 100%;
@@ -2104,15 +2112,15 @@ td.ewa-lf-edit {
 .ERR_ICON:after {
 	content: '\f256';
 	font-family: FontAwesome;
-	font-size: 50px;
+	font-size: 41px;
 	color: #fff;
 }
 
 /* 消息 询问图标*/
 .MSG_INFO .QUS_ICON {
-	width: 128px;
-	height: 128px;
-	line-height: 128px;
+	width: 64px;
+	height: 64px;
+	line-height: 64px;
 	text-align: center;
 	background: #08c;
 	border-radius: 100%;
@@ -2122,15 +2130,16 @@ td.ewa-lf-edit {
 .QUS_ICON:after {
 	content: '\f128';
 	font-family: FontAwesome;
-	font-size: 70px;
+	font-size: 41px;
 	color: #fff;
 }
 /* 消息 文字部分*/
 .MSG_INFO .MSG_TEXT {
 	font-size: 14px;
 	height: 100px;
-	white-space: nowrap;
 	padding-right: 15px;
+	width: 300px;
+	word-break: break-all;
 }
 
 /* 消息 按钮*/

@@ -142,7 +142,15 @@
 	background: aliceblue;
 	cursor: move;
 }
-
+.ewa-ui-dialog-title .ewa_lf_func_dact{
+	color: #111;
+}
+.ewa-ui-dialog-title .ewa_lf_func_dact{
+	color: #111;
+}
+.ewa-ui-dialog-title .ewa_lf_func_dact:hover {
+    color: red;
+}
 .ewa-ui-dialog-title>a {
 	float: right;
 	width: 30px;
