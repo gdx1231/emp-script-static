@@ -214,11 +214,11 @@
 		this.$tablet = $("#" + this.id);
 		this.$canvas = this.$tablet.find("canvas").eq(0);
 		this.canvas = this.$canvas[0];
-		this.ctx = this.canvas.getContext("2d");
+		this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
 		this.$canvasBack = this.$tablet.find(".backup-canvas");
 		this.$canvasBack.hide();
 		this.canvasBack = this.$canvasBack[0];
-		this.ctxBack = this.canvasBack.getContext("2d");
+		this.ctxBack = this.canvasBack.getContext("2d", { willReadFrequently: true });
 		// 用于记录当前绘制的坐标
 		this.point = { x: 0, y: 0 };
 		this.lines = []; // 线条记录
@@ -863,15 +863,15 @@
 	Tablet.prototype.getImageColors = function() {
 		// 获取像素数据
 		let data = this.getImageData();
-		function toHex(a){
+		function toHex(a) {
 			let hex = a.toString(16);
-			if(hex.length == 1){
-				return "0"+hex;
+			if (hex.length == 1) {
+				return "0" + hex;
 			} else {
 				return hex;
 			}
 		};
-		function toColor(r,g,b,a){
+		function toColor(r, g, b, a) {
 			let s = [];
 			s.push(toHex(r));
 			s.push(toHex(g));
@@ -879,17 +879,17 @@
 			s.push(toHex(a));
 			return s.join('');
 		}
-		let map={};
+		let map = {};
 		for (let i = 0; i < data.length / 4; i += 4) {
 			let r = data[i];
-			let g = data[i+1];
-			let b = data[i+2];
-			let a = data[i+3];
-			let c =  toColor(r,g,b,a);
-			if(map[c]){
+			let g = data[i + 1];
+			let b = data[i + 2];
+			let a = data[i + 3];
+			let c = toColor(r, g, b, a);
+			if (map[c]) {
 				map[c]++;
 			} else {
-				map[c]=1;
+				map[c] = 1;
 			}
 		}
 		return map;
