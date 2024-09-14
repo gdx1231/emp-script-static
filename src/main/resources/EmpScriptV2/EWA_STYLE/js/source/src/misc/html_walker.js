@@ -139,10 +139,14 @@ function EWA_DocWordClass() {
         }
     }
     this.walkerTxt = function(obj) {
-        if (obj.nodeValue.trimEx() == "") {
+		let zwkg = '　'; // 中文全角空格 &#12288;
+        // 如果节点值为空或者不包含中文全角空格，则不做处理
+        if (obj.nodeValue.trimEx() == "" && obj.nodeValue.indexOf(zwkg) == -1) {
             this.lastWR = null;
             return;
-        }
+        } 
+
+         
         var eleTxt = this.createText(obj);
         var p = this.getDock();
         if (p.tagName != 'w:p') { // td
@@ -201,14 +205,31 @@ function EWA_DocWordClass() {
         return rts;
     }
     this.createText = function(obj) {
-        if (obj.nodeValue.trim() == "") {
+		let zwkg = '　'; // 中文全角空格 &#12288;
+		        // 如果节点值为空或者不包含中文全角空格，则不做处理
+        if (obj.nodeValue.trim() == "" && obj.nodeValue.indexOf(zwkg) == -1) {
             return;
+        }
+		let v = obj.nodeValue;
+		let zwkgTh = '【zwer中，wer,文_全`角=空格werwe】'; // 用于替换中文全角空格的临时字符串
+        // 检查节点值中是否包含中文全角空格
+        let hasZwkg = obj.nodeValue.indexOf(zwkg) >= 0;
+        // 如果包含中文全角空格，则进行替换处理
+        if (hasZwkg) {
+            let exp1 = eval('/' + zwkg + '/g');
+            v = v.replace(exp1, zwkgTh);
+        }
+        v = v.trim();
+        // 将临时替换字符串还原为中文全角空格
+        if (hasZwkg) {
+            let exp = eval('/' + zwkgTh + '/g');
+            v = v.replace(exp, zwkg);
         }
         var t = this.createEle("w:t");
         if (EWA.B.IE) {
-            t.text = obj.nodeValue;
+            t.text = v;
         } else {
-            t.textContent = obj.nodeValue;
+            t.textContent = v;
         }
         return t;
     };
