@@ -20077,7 +20077,13 @@ function EWA_ListFrameClass() {
 			return "";
 		}
 		var ids = [];
-		var objs = $F(obj, 'input', 'type', 'radio,checkbox');
+		//var objs = $F(obj, 'input', 'type', 'radio,checkbox');
+		let objs=[];
+		$("#EWA_LF_" + this._Id+">tbody>tr.ewa-lf-data-row").find("input[type='radio'],input[type='checkbox']").each(function(){
+			if(this.parentNode.className.indexOf('ewa-switch') == -1){
+				objs.push(this);
+			}
+		});
 		if (objs.length > 0) {
 			for (var i = 0; i < objs.length; i++) {
 				if (objs[i].checked) {
@@ -29892,9 +29898,9 @@ function EWA_OdtDocWordClass() {
             return;
         }// else if (t == 'BODY' || t == 'OL' || t == 'UL') {
 
-       // } else {
+        // } else {
 
-       // }
+        // }
         for (var i = 0; i < obj.childNodes.length; i++) {
             var ochild = obj.childNodes[i];
             this.walker1(ochild);
@@ -29904,32 +29910,64 @@ function EWA_OdtDocWordClass() {
             this.lastWR = null;
         }
     };
+    /**
+     * 遍历文本节点并处理其中的中文全角空格
+     * @param {Object} obj - 文本节点对象
+     */
     this.walkerTxt = function (obj) {
-        if (obj.nodeValue.trimEx() == "") {
+        // 如果节点值为空或者不包含中文全角空格，则不做处理
+        if (obj.nodeValue.trimEx() == "" && obj.nodeValue.indexOf(zwkg) == -1) {
             this.lastWR = null;
             return;
         }
+
+        // 创建一个span元素用于包裹处理后的文本
         var eleTxt = this.createSpan(obj.parentNode);
+        // 将节点值中的普通空格替换为标准空格
         var v = obj.nodeValue.replace(/ /ig, ' ');
+
+        // 如果父节点是TD或P标签，则去除文本首尾的空格
         if (obj.parentNode.tagName == 'TD' || obj.parentNode.tagName == 'P') {
+            let zwkg = '　'; // 中文全角空格 &#12288;
+            let zwkgTh = '【zwer中，wer,文_全`角=空格werwe】'; // 用于替换中文全角空格的临时字符串
+
+            // 检查节点值中是否包含中文全角空格
+            let hasZwkg = obj.nodeValue.indexOf(zwkg) >= 0;
+            // 如果包含中文全角空格，则进行替换处理
+            if (hasZwkg) {
+                let exp1 = eval('/' + zwkg + '/g');
+                v = v.replace(exp1, zwkgTh);
+            }
             v = v.trim();
+            // 将临时替换字符串还原为中文全角空格
+            if (hasZwkg) {
+                let exp = eval('/' + zwkgTh + '/g');
+                v = v.replace(exp, zwkg);
+            }
         }
+
+        // 根据浏览器类型设置文本内容
         if (EWA.B.IE) {
             eleTxt.text = v;
         } else {
             eleTxt.textContent = v;
         }
+
+        // 获取当前节点的父级P元素
         var p = this.getDock();
-        if (p.tagName != 'text:p') { // td
+
+        // 如果父级不是P元素，则创建一个新的P元素并添加到文档中
+        if (p.tagName != 'text:p') {
             var p0 = this.createP(obj.parentNode);
             p0.appendChild(eleTxt);
             p.appendChild(p0);
             this.docks.push(p0);
         } else {
+            // 如果父级已经是P元素，则直接添加到文档中
             p.appendChild(eleTxt);
         }
-
     };
+
     this.fixTable = function () {
         var objs = $('td[colspan]').toArray();
         for (var m = 0; m < objs.length; m++) {

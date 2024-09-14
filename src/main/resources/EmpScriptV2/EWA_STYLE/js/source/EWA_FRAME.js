@@ -7490,7 +7490,13 @@ function EWA_ListFrameClass() {
 			return "";
 		}
 		var ids = [];
-		var objs = $F(obj, 'input', 'type', 'radio,checkbox');
+		//var objs = $F(obj, 'input', 'type', 'radio,checkbox');
+		let objs=[];
+		$("#EWA_LF_" + this._Id+">tbody>tr.ewa-lf-data-row").find("input[type='radio'],input[type='checkbox']").each(function(){
+			if(this.parentNode.className.indexOf('ewa-switch') == -1){
+				objs.push(this);
+			}
+		});
 		if (objs.length > 0) {
 			for (var i = 0; i < objs.length; i++) {
 				if (objs[i].checked) {
