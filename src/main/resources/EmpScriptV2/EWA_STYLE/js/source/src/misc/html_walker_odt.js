@@ -137,11 +137,12 @@ function EWA_OdtDocWordClass() {
      * @param {Object} obj - 文本节点对象
      */
     this.walkerTxt = function (obj) {
+        let zwkg = '　'; // 中文全角空格 &#12288;
         // 如果节点值为空或者不包含中文全角空格，则不做处理
         if (obj.nodeValue.trimEx() == "" && obj.nodeValue.indexOf(zwkg) == -1) {
             this.lastWR = null;
             return;
-        }
+        } 
 
         // 创建一个span元素用于包裹处理后的文本
         var eleTxt = this.createSpan(obj.parentNode);
@@ -150,13 +151,12 @@ function EWA_OdtDocWordClass() {
 
         // 如果父节点是TD或P标签，则去除文本首尾的空格
         if (obj.parentNode.tagName == 'TD' || obj.parentNode.tagName == 'P') {
-            let zwkg = '　'; // 中文全角空格 &#12288;
             let zwkgTh = '【zwer中，wer,文_全`角=空格werwe】'; // 用于替换中文全角空格的临时字符串
-
             // 检查节点值中是否包含中文全角空格
             let hasZwkg = obj.nodeValue.indexOf(zwkg) >= 0;
             // 如果包含中文全角空格，则进行替换处理
             if (hasZwkg) {
+
                 let exp1 = eval('/' + zwkg + '/g');
                 v = v.replace(exp1, zwkgTh);
             }
