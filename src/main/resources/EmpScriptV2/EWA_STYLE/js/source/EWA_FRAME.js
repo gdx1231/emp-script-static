@@ -7492,7 +7492,7 @@ function EWA_ListFrameClass() {
 		var ids = [];
 		//var objs = $F(obj, 'input', 'type', 'radio,checkbox');
 		let objs=[];
-		$("#EWA_LF_" + this._Id+">tbody>tr.ewa-lf-data-row").find("input[type='radio'],input[type='checkbox']").each(function(){
+		$("#EWA_LF_" + this._Id+">tbody>tr").find("input[type='radio'],input[type='checkbox']").each(function(){
 			if(this.parentNode.className.indexOf('ewa-switch') == -1){
 				objs.push(this);
 			}
