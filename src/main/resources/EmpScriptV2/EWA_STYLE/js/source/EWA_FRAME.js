@@ -6353,6 +6353,7 @@ function EWA_ListFrameClass() {
 		}
 		setTimeout(function() {
 			chd.focus();
+			chd.select();
 		}, 10);
 	};
 	this.EditReset = function(obj) {
