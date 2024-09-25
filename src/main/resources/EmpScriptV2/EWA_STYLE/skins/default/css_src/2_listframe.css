@@ -493,6 +493,12 @@ td.ewa-lf-edit {
 	font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro,
 		monospace;
 }
+.ewa-lf-fm-money input,
+.ewa-lf-fm-leastmoney input,
+.ewa-lf-fm-percent input {
+    text-align: right;
+    font-family: inherit;
+}
 
 .ewa-lf-fm-datetime {
 	text-align: center;
