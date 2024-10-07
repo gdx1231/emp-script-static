@@ -3950,14 +3950,22 @@ function EWA_FrameClass() {
 			var ret = ajax._Http.responseText;
 			if (EWA.F.CheckCallBack(ret)) {
 				that.ValidCodeError(true); // 重新刷新验证码
-				try {
-					if (that.doPostAfter) {
-						that.doPostAfter(ret);
-					} else if (that.ReloadAfter) {
-						console.log('请用：doPostAfter');
-						that.ReloadAfter(ret);
-					}
 
+				let afterCall = null;
+				if (that.doPostAfter) {
+					afterCall = that.doPostAfter;
+				} else if (that.ReloadAfter) {
+					console.warn('请用：doPostAfter');
+					afterCall = that.ReloadAfter;
+				}
+
+				try {
+					if (afterCall) {
+						let r = afterCall(ret);
+						if (r) {// 不执行后面的eval 2024-10-07 郭磊
+							return;
+						}
+					}
 					eval(ret);
 				} catch (e) {
 					console.log(ret);
@@ -3990,7 +3998,7 @@ function EWA_FrameClass() {
 		var u1 = new EWA_UrlClass(this.Url);
 		var ewa_frame_main = null;
 		var tmp_id = this._last_reload_frame_id;
-		
+
 		if (tmp_id) {
 			ewa_frame_main = $('#' + this._last_reload_frame_id);
 		} else {
