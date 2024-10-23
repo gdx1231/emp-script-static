@@ -7678,7 +7678,7 @@ function EWA_ListFrameClass() {
 		}
 		this._ReShowSearchQuick();
 		if (this._IsDblClick != null) {
-			this.DblClick(c._IsDblClick);
+			this.DblClick(this._IsDblClick);
 		}
 
 		if (this.SubBottomsArray) {
@@ -8032,9 +8032,13 @@ function EWA_ListFrameClass() {
 			this.EditAfterEvent();
 		}
 	};
-	// 编辑框输入后自定义触发事件
+	// 编辑框输入后自定义触发事件，用户可以覆盖此方法
 	this.EditAfterEvent = function() {
-		return;
+		let u1 = this.getUrlClass();
+		// 当有行签名时，默认编辑后刷新页面事件 2024-10-23
+		if(u1.GetParameter("EWA_ROW_SIGN") ){
+			this.refreshPage();
+		}
 	};
 	this._GetItem = function(name) {
 		var nodeList = this.ItemList;
