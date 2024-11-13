@@ -81,9 +81,11 @@
 .MSG_INFO .MSG_BUTS button {
 	margin-left: 10px;
 }
-.MSG_INFO .MSG_BUTS button:hover{
+
+.MSG_INFO .MSG_BUTS button:hover {
 	color: red;
 }
+
 .ewa_msg_box {
 	background-color: #fff;
 	height: 30px;
@@ -113,4 +115,13 @@
 
 .ewa_msg_err {
 	color: red;
+}
+
+.ewa-err-out {
+	min-width: 390px;
+	min-height: 150px;
+}
+
+.ewa-err-out .MSG_INFO {
+	width: 100%;
 }
