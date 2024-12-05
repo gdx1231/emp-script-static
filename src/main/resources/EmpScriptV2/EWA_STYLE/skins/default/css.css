@@ -2087,6 +2087,9 @@ td.ewa-lf-edit {
 	height: 100%;
 	background-color: #eee;
 }
+.ewa-err-out .MSG_INFO {
+	width: 100%;
+}
 
 /* 消息 提示图标*/
 .MSG_INFO .MSG_ICON {
