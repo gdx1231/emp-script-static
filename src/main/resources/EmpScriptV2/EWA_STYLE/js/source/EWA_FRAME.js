@@ -2399,7 +2399,8 @@ function EWA_FrameClass() {
 			}
 		};
 		// 上层表添加一行放向导按钮
-		var row2 = tb.parentNode.parentNode.parentNode.parentNode.insertRow(-1);
+		let parentTable = tb.parentNode.parentNode.parentNode.parentNode.parentNode;
+		var row2 = parentTable.insertRow(-1);
 		var td = row2.insertCell(-1);
 
 		td.appendChild(ipt0);
@@ -2407,7 +2408,7 @@ function EWA_FrameClass() {
 		td.className = "EWA_FRAME_GROUP_BUTTONS";
 
 		// 上层表添加一行 提示行
-		var rowTitle = tb.parentNode.parentNode.parentNode.parentNode.insertRow(0);
+		var rowTitle = parentTable.insertRow(0);
 		tdTitle = rowTitle.insertCell(-1);
 		var id1 = 'ewa_title_' + Math.random();
 		var titles = [];
@@ -2464,11 +2465,12 @@ function EWA_FrameClass() {
 			var node = this.ItemList.Items[name];
 			var name1 = this.ItemList.GetItemValue(node, "Name", "Name");
 
-			var obj = $X(name1);
-			if (obj == null) {
-				alert(name1 + ' not exists');
+			var obj = this.getObj("#" + name1);
+			if (obj.length == 0) {
+				//alert(name1 + ' not exists');
 				continue;
 			}
+			obj = obj[0];
 			var tr = this._GetTr(obj);
 			if (tr == null) {
 				continue;
