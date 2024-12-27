@@ -162,6 +162,13 @@ a:hover, .ewa-map-button:hover {
 	margin: 0 4px;
 }
 
+/* 必填项显示 */
+.ewa-frame .ewa-row-must .EWA_TD_L::after {
+	content: "*";
+	color: orangered;
+	margin-left: 2px;
+}
+
 /* 手写签名 */
 .ewa-sign-box {
 	border: 1px solid #eee;
@@ -319,6 +326,7 @@ a:hover, .ewa-map-button:hover {
 .ewa-switch input[type=checkbox]:disabled {
 	background-color: #eee;
 }
+
 .ewa-switch input[type=checkbox]:disabled::before {
 	background-color: #eee;
 }
@@ -494,9 +502,11 @@ a:hover, .ewa-map-button:hover {
 .EWA_TEXTAREA {
 	height: 100px;
 }
+
 .ewa-textarea-auto-size {
 	display: block;
 }
+
 .ewa-with-icon {
 	position: relative;
 }
@@ -668,8 +678,8 @@ input[type=button]:hover, button:hover {
 	background: #eee;
 }
 
-select:disabled, textarea:disabled, input:disabled, .ewa-ipt-droplist:disabled, .ewa-ipt-date:disabled, button:disabled
-	{
+select:disabled, textarea:disabled, input:disabled, .ewa-ipt-droplist:disabled,
+	.ewa-ipt-date:disabled, button:disabled {
 	background: #eee;
 	pointer-events: none;
 	color: #111;
