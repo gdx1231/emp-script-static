@@ -1590,9 +1590,8 @@ function EWA_FrameClass() {
 	 * 隐含没有内容的行
 	 */
 	this.hiddenNoContentRow = function() {
-		var tb = $('#EWA_FRAME_' + this._Id);
 		var names = 'img,a,input[type=text],input[type=button],textarea';
-		tb.find('.EWA_TD_M').each(function() {
+		this.getObj('.EWA_TD_M').each(function() {
 			if ($(this).text() == '') {
 				if ($(this).find(names).length == 0) {
 					$(this).parent().hide();
@@ -1794,7 +1793,7 @@ function EWA_FrameClass() {
 		// console.log(obj_id, filterType, filterFrom);
 
 		// 要做筛选的select
-		var target = $('#EWA_FRAME_' + this._Id + " select#" + obj_id);
+		var target = this.getObj("select#" + obj_id);
 		// 筛选的select 所在的 TD
 		var td = target.parent();
 
@@ -1917,7 +1916,7 @@ function EWA_FrameClass() {
 	};
 
 	this.RedrawCreateSpans = function() {
-		var trs = $('#EWA_FRAME_' + this._Id + ' tr');
+		var trs = this.getObj('tr');
 		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
 			if (tr.style.display == 'none') {
@@ -1945,7 +1944,7 @@ function EWA_FrameClass() {
 		// 改写脚本
 		EWA_FrameShowAlert = EWA_FrameShowAlert1;
 		EWA_FrameRemoveAlert = EWA_FrameRemoveAlert1;
-		$('#EWA_FRAME_' + this._Id + ' .ewa_d1').each(function() {
+		this.getObj('.ewa_d1').each(function() {
 			this.title = this.innerHTML;
 		});
 
@@ -1953,8 +1952,8 @@ function EWA_FrameClass() {
 			var dess = this.GetItemDescription(name);
 			var memo = dess.Memo;
 			if (memo != null && memo.trim().length > 0) {
-				$('#' + name).attr('placeHolder', memo);
-				$('#' + name).attr('title', memo);
+				this.getObj('#' + name).attr('placeHolder', memo);
+				this.getObj('#' + name).attr('title', memo);
 			}
 		}
 
@@ -1968,7 +1967,7 @@ function EWA_FrameClass() {
 		return this.ItemList.GetDescription(itemName);
 	};
 	this.ShowPlaceHolder = function(colSpan) {
-		var tb = $('#EWA_FRAME_' + this._Id);
+		var tb = this.getObj ();
 		tb.addClass('ewa-frame-cols-' + colSpan);
 		for (var name in this.ItemList.Items) {
 			// name 是大写，所以取真实id
@@ -2026,7 +2025,7 @@ function EWA_FrameClass() {
 	};
 	// 调整宽度
 	this.RedrawChangWidth = function() {
-		let tb = $('#EWA_FRAME_' + this._Id);
+		let tb = this.getObj ();
 		let tb_width = tb.width();
 		let cols = tb.find('.ewa_msg_box')[0].colSpan / 2;
 		let info_width = 90;
@@ -2052,7 +2051,7 @@ function EWA_FrameClass() {
 		if (!fromId && !toId) {
 			return;
 		}
-		var p = $('#EWA_FRAME_' + this._Id);
+		var p = this.getObj ();
 		var from = p.find('#' + fromId);
 		var to = p.find('#' + toId);
 		if (from.length == 0) {
@@ -2170,7 +2169,7 @@ function EWA_FrameClass() {
 		var paras = [];
 		var tmp_html = mergeExp;
 		var memos = {};
-		var tb = $('#EWA_FRAME_' + this._Id);
+		var tb = this.getObj ();
 		for (var i = 0; i < m1.length; i++) {
 			var key = m1[i];
 			paras.push(key);
@@ -2682,7 +2681,7 @@ function EWA_FrameClass() {
 	 * @return 影响的Tr数组
 	 */
 	this.RewriteInfo = function(infoJson, idName, infoName, memoName, cb) {
-		var tb = $('#EWA_FRAME_' + this._Id);
+		var tb = $('this.getObj()_' + this._Id);
 		var arr = [];
 		idName = idName || "id";
 		infoName = infoName || "info";
@@ -2978,7 +2977,7 @@ function EWA_FrameClass() {
 	 * 触发验证，例如拼图验证
 	 */
 	this._InitTriggerValids = function() {
-		var tb = $('#EWA_FRAME_' + this._Id);
+		var tb = this.getObj();
 		var js = "EWA.F.FOS['" + this._Id + "'].callTriggerValid(this)";
 		this.triggerValids = {};
 		for (var name in this.ItemList.Items) {
@@ -3043,7 +3042,7 @@ function EWA_FrameClass() {
 		if (!this.callTriggerValidBefore(obj)) {
 			return;
 		}
-		let tb = $('#EWA_FRAME_' + this._Id);
+		let tb = this.getObj();
 		let obj1 = $(obj)
 		let objId = obj1.attr("id");
 		if (!objId) {
@@ -3116,7 +3115,7 @@ function EWA_FrameClass() {
 	 * 添加必须输入的样式
 	 */
 	this._InitMustInputs = function() {
-		var tb = $('#EWA_FRAME_' + this._Id);
+		var tb = this.getObj();
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
 			var name1 = this.ItemList.GetItemValue(node, "Name", "Name");
@@ -3141,7 +3140,7 @@ function EWA_FrameClass() {
 	 * 添加加密的样式
 	 */
 	this._InitEncyptions = function() {
-		var tb = $('#EWA_FRAME_' + this._Id);
+		var tb = this.getObj();
 		var nodeList = this.ItemList;
 		var c = this;
 		for (var name in this.ItemList.Items) {
@@ -3710,7 +3709,7 @@ function EWA_FrameClass() {
 		if (!this.triggerValids) {
 			return true;
 		}
-		var tb = $('#EWA_FRAME_' + this._Id);
+		var tb = this.getObj();
 		for (let n in this.triggerValids) {
 			if (this.triggerValids[n]) {
 				// 已经验证成功了
@@ -3923,6 +3922,16 @@ function EWA_FrameClass() {
 
 		this.posting = true;
 		let that = this;
+
+		if (this.triggerValids) {
+			for (let n in this.triggerValids) {
+				//提交后，清除trigger_valid标记
+				this.triggerValids[n] = null;
+				this.getObj('#' + n).removeAttr('_trigger_valid').removeAttr('_trigger_valid_inc');
+			}
+		}
+
+
 		this._Ajax.PostNew(url, function() {
 			that._CallBack();
 		});
@@ -3932,7 +3941,7 @@ function EWA_FrameClass() {
 			this._Ajax.HiddenWaitting();
 		}
 
-		$('#EWA_FRAME_' + this._Id + ' input[type=submit]').attr('disabled', 'disabled');
+		this.getObj('input[type=submit]').attr('disabled', 'disabled');
 
 		return true;
 	};
@@ -3942,7 +3951,7 @@ function EWA_FrameClass() {
 		if (!ajax.IsRunEnd()) {
 			return;
 		}
-		$('#EWA_FRAME_' + that._Id + ' input[type=submit]').attr('disabled', null);
+		that.getObj('input[type=submit]').attr('disabled', null);
 		that.posting = false;
 		// 外部指定的 DoPostEnd，用于显示或提示写东西
 		if (that.DoPostEnd) {
@@ -4067,13 +4076,12 @@ function EWA_FrameClass() {
 	this.H5Type = function() {
 		var nodeList = this.ItemList;
 		var firstObj = null;
-		var tb = $('#EWA_FRAME_' + this._Id);
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
 			// name 是大写，name1是真正id
 			var name1 = this.ItemList.GetItemValue(node, "Name", "Name");
 
-			var obj = tb.find('[id="' + name1 + '"]');
+			var obj = this.getObj('[id="' + name1 + '"]');
 			if (obj.length == 0) {
 				continue;
 			}
