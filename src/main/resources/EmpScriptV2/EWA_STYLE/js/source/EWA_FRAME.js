@@ -8006,6 +8006,7 @@ function EWA_ListFrameClass() {
 						// app中定义
 						c.ReloadAfterApp(httpReferer);
 					}
+					c._IsCheckedAll = true; // 重置全选按钮
 				}
 			}
 		} else {
