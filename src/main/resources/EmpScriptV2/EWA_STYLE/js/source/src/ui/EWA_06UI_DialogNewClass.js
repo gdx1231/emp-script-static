@@ -25,7 +25,7 @@ function EWA_UI_DiaNewClass() {
 		var index = this._GetIndex();
 		this.index = index;
 
-		this.Id = ('_EWA_UI_DIA_' + Math.random()).replace('.', '');
+		this.Id = this.Id || ('_EWA_UI_DIA_' + Math.random()).replace('.', '');
 		var ss = ["<div id='" + this.Id + "' class='ewa-ui-dialog'>"];
 		// cover
 		ss.push("<div id='" + this.Id + "_cover'  class='ewa-ui-dialog-cover' style='position: fixed;z-index: " + index
