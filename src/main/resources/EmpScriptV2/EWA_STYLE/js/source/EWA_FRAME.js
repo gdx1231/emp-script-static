@@ -1591,6 +1591,7 @@ function EWA_FrameClass() {
 	 */
 	this.hiddenNoContentRow = function() {
 		var names = 'img,a,input[type=text],input[type=button],textarea';
+		let tb = this.getObj();
 		this.getObj('.EWA_TD_M').each(function() {
 			if ($(this).text() == '') {
 				if ($(this).find(names).length == 0) {
