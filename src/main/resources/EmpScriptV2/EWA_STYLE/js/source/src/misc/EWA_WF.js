@@ -1101,7 +1101,13 @@ function loadWfShow(units, cnns, sts, logics, pid, admId, deptId, postId, curUni
     } else if (unit.WF_UNIT_ADM == 'WF_ADM_START') { // 启动人
         if (startUnit == unit || admId == startUnit.ADM_ID) {
             canOpr = true;
-        }
+        } else {
+			var map2 = $J2MAP1(top.org, 'ADM_ID');
+			var adms = map2[startUnit.ADM_ID];
+            for (var m in adms) {
+                ss.push(adms[m].ADM_NAME);
+            }
+		}
     } else if (unit.WF_UNIT_ADM == 'WF_ADM_MANAGER') { // 管理者
         var startAdmId = startUnit.ADM_ID;
         if (!top && !top.ORG) {
