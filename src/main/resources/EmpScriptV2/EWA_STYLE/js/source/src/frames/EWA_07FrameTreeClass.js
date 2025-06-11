@@ -766,12 +766,16 @@ function EWA_TreeClass(parentObject, className, url) {
 		this._PostChange(cmd);
 	};
 	// 删除指定ID的节点，无论是否有子节点，不提交后台
-	this.DeleteNoConfirmById = function(id) {
+	this.DeleteNoConfirmById = function(id, evt) {
+		if(evt){
+			evt.cancelBubble = true;
+			evt.stopPropagation();
+		}
 		var node = this.GetNodeById(id);
 		if (node == null || node.Key == 'EWA_TREE_ROOT') {
 			return;
 		}
-		this._LastFocus = node;
+		this._LastFocus = node.GetObject();
 		this.DeleteAfter();
 	};
 	this.DeleteAfter = function() {
