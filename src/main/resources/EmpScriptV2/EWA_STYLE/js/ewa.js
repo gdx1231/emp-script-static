@@ -12616,13 +12616,13 @@ EWA.F = {
 	 */
 	getSubEwas: function(parent) {
 		var ewas = [];
-		var tb = $(parent).find('.EWA_TABLE');
+		var tb = $(parent||document.body).find('.EWA_TABLE, .ewa-tree');
 		tb.each(function() {
 			var id = $(this).attr('id');
 			if (!id) {
 				return;
 			}
-			id = id.replace('EWA_FRAME_', '').replace('EWA_LF_', '');
+			id = id.replace('EWA_FRAME_', '').replace('EWA_LF_', '').replace('EWA_TREE_','');
 			var ewa = EWA.F.FOS[id];
 			if (ewa) {
 				ewas.push(ewa);
@@ -21747,7 +21747,7 @@ function EWA_TreeNodeClass() {
 		var obj = this.GetObject();
 		for (var i = 0; i < this.AddParas.length; i += 1) {
 			obj.rows[0].cells[2].childNodes[0].setAttribute('EWA_P' + i,
-					this.AddParas[i].trim());
+				this.AddParas[i].trim());
 		}
 	}
 	this.SetMenuGroup = function(menuGroup) {
@@ -21803,7 +21803,7 @@ function EWA_TreeNodeClass() {
 		}
 
 		var css = td.className.split(' ');
-		var css1 = [ this._GetClassNameNoTag(td) + tag ];
+		var css1 = [this._GetClassNameNoTag(td) + tag];
 		for (var i = 1; i < css.length; i++) {
 			css1.push(css[i]);
 		}
@@ -21843,7 +21843,7 @@ function EWA_TreeNodeClass() {
 			tag = isOpen ? "B" : "A";
 		}
 		var css = td.className.split(' ');
-		var css1 = [ this._GetClassNameNoTag(td) + tag ];
+		var css1 = [this._GetClassNameNoTag(td) + tag];
 		for (var i = 1; i < css.length; i++) {
 			css1.push(css[i]);
 		}
@@ -21936,21 +21936,21 @@ function EWA_TreeClass(parentObject, className, url) {
 	this._MoveNode = document.createElement('DIV');
 	// 主模板
 	this._HtmlTemplate1 = "<div oncontextmenu='"
-			+ this.ClassName
-			+ ".ShowMenu(event);return false;' onclick='"
-			+ this.ClassName
-			+ ".Click(event)'><table border=0 cellspacing=0 [ID] cellpadding=0 width=100% style='table-layout:fiexed'>";
+		+ this.ClassName
+		+ ".ShowMenu(event);return false;' onclick='"
+		+ this.ClassName
+		+ ".Click(event)'><table border=0 cellspacing=0 [ID] cellpadding=0 width=100% style='table-layout:fiexed'>";
 	this._HtmlTemplate1 += "<tr><TD></TD><td class=CAPTION>&nbsp;&nbsp;&nbsp;</td><td width=99%><SPAN style='padding-left:4px'>[B]</SPAN></td></tr>";
 	this._HtmlTemplate1 += "<tr><td></td><td colspan=2></td></tr></table></div>";
 	this._HtmlTemplate1 += "<div style='display:none'><input style='margin:0px' type=text onblur='"
-			+ this.ClassName + ".RenameBlur(this)'></div>";
+		+ this.ClassName + ".RenameBlur(this)'></div>";
 
 	// 节点模板
 	this._HtmlTemplate = "<table class='ewa-tree-node ewa-tree-lvl-[LVL]' border=0 EWA_MG=\"[EWA_MENU_GROUP]\" EWA_T=1 [EWA_MORE_CHILDREN] cellspacing=0 [ID] cellpadding=0 width=100%>";
 	this._HtmlTemplate += "<tr class='ewa-node-row-0'><td nowrap class='[A] ewa-node-open-close'><div>&nbsp;</div></td>"
-			+ "<td nowrap class='[B] ewa-node-icon'><div>&nbsp;</div></td>"
-			+ "<td class='ewa-node-caption'><SPAN EWA_CMD=1 [TMP_ADD_PARAS]>[C]</SPAN></td>"
-			+ "[TEMP_NODE_ADD_FIELDS]" // 附加字段替换;
+		+ "<td nowrap class='[B] ewa-node-icon'><div>&nbsp;</div></td>"
+		+ "<td class='ewa-node-caption'><SPAN EWA_CMD=1 [TMP_ADD_PARAS]>[C]</SPAN></td>"
+		+ "[TEMP_NODE_ADD_FIELDS]" // 附加字段替换;
 	this._HtmlTemplate += "</tr><tr class='ewa-node-row-1' style='display:none'><td class='[A1]'></td><td colspan=13></td></tr></table>";
 
 	/**
@@ -21977,7 +21977,7 @@ function EWA_TreeClass(parentObject, className, url) {
 		var c = this;
 		p.find(className).each(function() {
 			var fackevt = {
-				srcElement : this
+				srcElement: this
 			};
 			c.Click(fackevt);
 		});
@@ -22023,7 +22023,7 @@ function EWA_TreeClass(parentObject, className, url) {
 		if (parasArray != null && parasArray.length > 0) { // 附加的参数
 			for (var i = 0; i < parasArray.length; i += 1) {
 				this._Ajax
-						.AddParameter(parasArray[i].Name, parasArray[i].Value);
+					.AddParameter(parasArray[i].Name, parasArray[i].Value);
 			}
 		}
 		var url = new EWA.C.Url();
@@ -22088,7 +22088,7 @@ function EWA_TreeClass(parentObject, className, url) {
 				firstNode = treeNode;
 			} else {
 				var key = treeNode.ParentKey == "" ? "EWA_TREE_ROOT"
-						: treeNode.ParentKey;
+					: treeNode.ParentKey;
 				var treeNodeParent = oNodes[key];
 				if (treeNodeParent != null) {
 					treeNodeParent.AddChild(treeNode);
@@ -22141,7 +22141,7 @@ function EWA_TreeClass(parentObject, className, url) {
 			cmd.EWA_AJAX = "XML";
 			cmd.EWA_TREE_MORE = "1"; // 更多的节点
 		}
-		for ( var a in cmd) {
+		for (var a in cmd) {
 			this._Ajax.AddParameter(a, cmd[a]);
 		}
 		this._Ajax.PostNew(this._Url, EWA.CurUI._PostChangeCallback);
@@ -22282,11 +22282,11 @@ function EWA_TreeClass(parentObject, className, url) {
 		treeNode.ParentKey = xml.GetElementAttribute(node, "ParentKey");
 		treeNode.Text = xml.GetElementAttribute(node, "Text");
 		treeNode.IsMoreChildren = xml.GetElementAttribute(node,
-				"IsMoreChildren") == "1" ? true : false;
+			"IsMoreChildren") == "1" ? true : false;
 		treeNode.MenuGroup = xml.GetElementAttribute(node, "MenuGroup");
 		for (var i = 0; i < 3; i += 1) {
 			treeNode.AddParas[treeNode.AddParas.length] = xml
-					.GetElementAttribute(node, "AddPara" + i);
+				.GetElementAttribute(node, "AddPara" + i);
 		}
 		return treeNode;
 	};
@@ -22354,12 +22354,12 @@ function EWA_TreeClass(parentObject, className, url) {
 	this.RenameBlur = function(obj) {
 		let t0 = this._RenameBlurT0 || 0;
 		let t1 = (new Date()).getTime();
-		if(t1 - t0 < 100){ 
+		if (t1 - t0 < 100) {
 			// 阻止多重调用
 			return;
 		}
 		this._RenameBlurT0 = t1;
-		
+
 		var oldVal = obj.getAttribute("EWA_OLD_VAL");
 		var node = this._RenameNode;
 		var pNode = this.GetNode(node.GetObject().parentNode);
@@ -22395,7 +22395,7 @@ function EWA_TreeClass(parentObject, className, url) {
 			if (cmd.EWA_AFTER_EVENT == "") {
 				// 执行完后在页面执行的脚本, 修改Id,addpara,menu_group等
 				cmd.EWA_AFTER_EVENT = 'EWA.F.FOS["' + this._Id
-						+ '"].NewNodeAfter;';
+					+ '"].NewNodeAfter;';
 			}
 			var nodeParent = this.GetNode(node.GetObject().parentNode);
 			cmd.EWA_TREE_PARENT_KEY = nodeParent.Key;
@@ -22454,12 +22454,20 @@ function EWA_TreeClass(parentObject, className, url) {
 		}
 		if (cmd.EWA_AFTER_EVENT == "") {
 			cmd.EWA_AFTER_EVENT = 'EWA.F.FOS["' + this._Id
-					+ '"].DeleteAfter();';
+				+ '"].DeleteAfter();';
 		}
 		cmd.EWA_TREE_KEY = node.Key;
 		this._PostChange(cmd);
 	};
-
+	// 删除指定ID的节点，无论是否有子节点，不提交后台
+	this.DeleteNoConfirmById = function(id) {
+		var node = this.GetNodeById(id);
+		if (node == null || node.Key == 'EWA_TREE_ROOT') {
+			return;
+		}
+		this._LastFocus = node;
+		this.DeleteAfter();
+	};
 	this.DeleteAfter = function() {
 		var node = this.GetNode(this._LastFocus);
 		var tbNode = node.GetObject();
@@ -22468,7 +22476,7 @@ function EWA_TreeClass(parentObject, className, url) {
 		var nodeParent = this.GetNode(tbParent);
 		if (nodeParent.Children.length == 0) {
 			var nodeParentParent = this
-					.GetNode(nodeParent.GetObject().parentNode);
+				.GetNode(nodeParent.GetObject().parentNode);
 			if (nodeParentParent.ChildLast.Key == nodeParent.Key) {
 				nodeParent.NodeCrossEnd(true);
 			} else {
@@ -22496,10 +22504,10 @@ function EWA_TreeClass(parentObject, className, url) {
 			return;
 		}
 		this._NewNodeTemp = {
-			TEXT : nodeText,
-			CMD : actionCommand,
-			REGEX : nodeRegex,
-			INFO : infoName
+			TEXT: nodeText,
+			CMD: actionCommand,
+			REGEX: nodeRegex,
+			INFO: infoName
 		};
 
 		var nodeParent = this.GetNode(this._LastFocus);
@@ -22573,8 +22581,8 @@ function EWA_TreeClass(parentObject, className, url) {
 	 *            节点的Key
 	 */
 	this.GetNodeById = function(id) {
-		var obj = $('#EWA_TREE_'+this._Id+' .ewa-tree-node[id="'+id+'"]');
-		if(obj.length == 0){
+		var obj = $('#EWA_TREE_' + this._Id + ' .ewa-tree-node[id="' + id + '"]');
+		if (obj.length == 0) {
 			return null;
 		}
 		return this.GetNode(obj[0]);
@@ -22659,7 +22667,7 @@ function EWA_TreeClass(parentObject, className, url) {
 			return;
 		}
 		while (!(obj.tagName == "SPAN" && (obj.getAttribute("EWA_CMD") != null) || obj
-				.getAttribute('EWA_TREE_TOP') == '1')) {
+			.getAttribute('EWA_TREE_TOP') == '1')) {
 			obj = obj.parentNode;
 			if (obj.tagName == "BODY") {
 				return;
@@ -22667,8 +22675,8 @@ function EWA_TreeClass(parentObject, className, url) {
 		}
 		var node = this.GetNode(obj);
 		if (obj.tagName == "SPAN"
-				&& (obj.getAttribute("EWA_CMD") != null || obj
-						.getAttribute('EWA_TREE_TOP') == '1')) {
+			&& (obj.getAttribute("EWA_CMD") != null || obj
+				.getAttribute('EWA_TREE_TOP') == '1')) {
 			if (this._LastFocus != null) {
 				var lastNode = this.GetNode(this._LastFocus);
 				lastNode.Mark(false);
@@ -22699,14 +22707,14 @@ function EWA_TreeClass(parentObject, className, url) {
 		} else {
 			// 传统的调用方式
 			console
-					.warn('建议采用定义 EWA.F.FOS["xx"].link = function(nodeKey, node){}');
+				.warn('建议采用定义 EWA.F.FOS["xx"].link = function(nodeKey, node){}');
 			var cmd = "link(\""
-					+ node.Key
-					+ "\",\""
-					+ nodeParent.Key
-					+ "\",\""
-					+ node.Text.replace(/\n/mig, '\\n').replace(/\r/mig, '\\r')
-							.replace(/\"/mig, '&quot;') + "\"";
+				+ node.Key
+				+ "\",\""
+				+ nodeParent.Key
+				+ "\",\""
+				+ node.Text.replace(/\n/mig, '\\n').replace(/\r/mig, '\\r')
+					.replace(/\"/mig, '&quot;') + "\"";
 			for (var i = 0; i < node.AddParas.length; i += 1) {
 				if (node.AddParas[i] == null) {
 					cmd += ",null";
@@ -22737,31 +22745,31 @@ function EWA_TreeClass(parentObject, className, url) {
 		if (this.Icons == null) {
 			return "TD01A";
 		}
-		for ( var a in this.Icons) {
+		for (var a in this.Icons) {
 			var b = this.Icons[a];
 			var val = null;
 			switch (b.TEST.toUpperCase()) {
-			case 'KEY':
-				val = node.Key;
-				break;
-			case 'PARENTKEY':
-				val = node.Parent.Key;
-				break;
-			case 'TEXT':
-				val = node.Text;
-				break;
-			case 'P0':
-				val = node.AddParas[0];
-				break;
-			case 'P1':
-				val = node.AddParas[1];
-				break;
-			case 'P2':
-				val = node.AddParas[2];
-				break;
-			case 'MG':
-				val = node.MenuGroup;
-				break;
+				case 'KEY':
+					val = node.Key;
+					break;
+				case 'PARENTKEY':
+					val = node.Parent.Key;
+					break;
+				case 'TEXT':
+					val = node.Text;
+					break;
+				case 'P0':
+					val = node.AddParas[0];
+					break;
+				case 'P1':
+					val = node.AddParas[1];
+					break;
+				case 'P2':
+					val = node.AddParas[2];
+					break;
+				case 'MG':
+					val = node.MenuGroup;
+					break;
 			}
 			if (val == null) {
 				continue;
@@ -22788,7 +22796,7 @@ function EWA_TreeClass(parentObject, className, url) {
 			return;
 		}
 		var html = this._HtmlTemplate
-				.replace("[ID]", "id=\"" + node.Key + "\"");
+			.replace("[ID]", "id=\"" + node.Key + "\"");
 
 		// 附加的字段 2019-03-26
 		var addColsHtml = this.AddCols || "";
@@ -22797,7 +22805,7 @@ function EWA_TreeClass(parentObject, className, url) {
 		var paras = "";
 		for (var i = 0; i < node.AddParas.length; i += 1) {
 			if (node.AddParas[i] != null && node.AddParas[i] != undefined) {
-				paras += "EWA_P" + i + "=\"" + node.AddParas[i].replace(/"/ig, "&quot;").replace(/</ig, "&lt;").replace(/</ig, "&gt;")  + "\" ";
+				paras += "EWA_P" + i + "=\"" + node.AddParas[i].replace(/"/ig, "&quot;").replace(/</ig, "&lt;").replace(/</ig, "&gt;") + "\" ";
 			}
 		}
 		html = html.replace("[TMP_ADD_PARAS]", paras);
@@ -22839,7 +22847,7 @@ function EWA_TreeClass(parentObject, className, url) {
 		// 新创建的对象
 		var newNodeTable = this._TempNode.childNodes[0];
 		objParent.rows[1].cells[objParent.rows[1].cells.length - 1]
-				.appendChild(newNodeTable);
+			.appendChild(newNodeTable);
 		if (objParent.parentNode.childNodes[objParent.parentNode.childNodes.length - 1] != objParent) {
 			objParent.rows[1].cells[0].className = "TD10B";
 		}
@@ -22873,7 +22881,7 @@ function EWA_TreeClass(parentObject, className, url) {
 	};
 	this._CreateFirst = function(nodeFirst, callback) {
 		var html = this._HtmlTemplate1.replace("[ID]", "id='" + nodeFirst.Key
-				+ "'");
+			+ "'");
 		html = html.replace("[B]", nodeFirst.Text);
 		this.ParentObject.innerHTML = html;
 		for (var i = 0; i < nodeFirst.Children.length; i += 1) {
@@ -22972,8 +22980,8 @@ function EWA_TreeClass(parentObject, className, url) {
  */
 function EWA_Treelink(key, parentKey, text, addPara1, addPara2, addPara3) {
 	var s1 = "key=" + key + "\r\nparentKey=" + parentKey + "\r\ntext=" + text
-			+ "\r\naddPara1=" + addPara1 + "\r\naddPara2=" + addPara2
-			+ "\r\naddPara3=" + addPara3;
+		+ "\r\naddPara1=" + addPara1 + "\r\naddPara2=" + addPara2
+		+ "\r\naddPara3=" + addPara3;
 	s1 += "\r\n\r\n您需要覆盖这个方法\r\nlink(key, parentKey, text, addPara1, addPara2, addPara3)";
 	alert(s1);
 }
@@ -22984,9 +22992,9 @@ if (typeof link == 'undefined') {
 
 /* Tree */
 EWA.F.T = {
-	CUR : null,
-	C : EWA_TreeClass,
-	Node : EWA_TreeNodeClass
+	CUR: null,
+	C: EWA_TreeClass,
+	Node: EWA_TreeNodeClass
 };
 /**
  * 利用HTML5的Upload进行上传操作

@@ -24,13 +24,13 @@ EWA.F = {
 	 */
 	getSubEwas: function(parent) {
 		var ewas = [];
-		var tb = $(parent).find('.EWA_TABLE');
+		var tb = $(parent||document.body).find('.EWA_TABLE, .ewa-tree');
 		tb.each(function() {
 			var id = $(this).attr('id');
 			if (!id) {
 				return;
 			}
-			id = id.replace('EWA_FRAME_', '').replace('EWA_LF_', '');
+			id = id.replace('EWA_FRAME_', '').replace('EWA_LF_', '').replace('EWA_TREE_','');
 			var ewa = EWA.F.FOS[id];
 			if (ewa) {
 				ewas.push(ewa);
