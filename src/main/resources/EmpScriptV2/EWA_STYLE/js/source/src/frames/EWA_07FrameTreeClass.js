@@ -1103,7 +1103,7 @@ function EWA_TreeClass(parentObject, className, url) {
 		var paras = "";
 		for (var i = 0; i < node.AddParas.length; i += 1) {
 			if (node.AddParas[i] != null && node.AddParas[i] != undefined) {
-				paras += "EWA_P" + i + "=\"" + node.AddParas[i] + "\" ";
+				paras += "EWA_P" + i + "=\"" + node.AddParas[i].replace(/"/ig, "&quot;").replace(/</ig, "&lt;").replace(/</ig, "&gt;")  + "\" ";
 			}
 		}
 		html = html.replace("[TMP_ADD_PARAS]", paras);
