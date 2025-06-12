@@ -2220,11 +2220,16 @@ td.ewa-lf-edit {
 
 .ewa-err-out .MSG_INFO {
 	width: 100%;
-}.ewa-tree-node-marked .ewa-node-caption>span {
+}.ewa-tree {
+	user-select: none;
+}
+.ewa-tree-node-marked .ewa-node-caption>span {
 	background-color: blue;
 	color: #fff;
 }
-
+.ewa-node-caption:hover {
+    color: blue;
+}
 .ewa-node-caption {
 	cursor: pointer;
 }
