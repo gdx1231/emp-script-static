@@ -17667,6 +17667,67 @@ function EWA_ListFrameClass() {
 	this.REPLACE_HISTORY_STATE = false; // 列表查询更换网页的url
 
 	this._IsSearchGroup = true; //2024-02-27 查询分组标记，默认分组
+
+	// 固定左侧的columns的位置,从0开始
+	this.stickyColumns = function(columns) {
+		var tb = $X('EWA_LF_' + this._Id);
+		if (tb == null) {
+			console.log('not found table[#EWA_LF_' + this._Id + "]");
+			return;
+		}
+		if (tb.rows.length == 0) {
+			return;
+		}
+		let scrollDiv = $(tb).parent();
+		scrollDiv.addClass('ewa-lf-sticky-scroll');
+		// 滚动条滑动时，显示或隐藏最后一个column的右侧阴影
+		scrollDiv.on('scroll', function() {
+			if (this.scrollLeft == 0) {
+				scrollDiv.addClass('ewa-lf-stick-last-hide');
+			} else {
+				if (scrollDiv.hasClass('ewa-lf-stick-last-hide')) {
+					scrollDiv.removeClass('ewa-lf-stick-last-hide');
+				}
+			}
+		})
+		for (let i = 0; i < columns; i++) {
+			this.stickyColumn(i, i == columns - 1, tb);
+		}
+		scrollDiv.trigger('scroll');
+	};
+	this.stickyColumn = function(index, isLast, tb) {
+		tb = tb || $X('EWA_LF_' + this._Id);
+		if (tb == null) {
+			console.log('not found table[#EWA_LF_' + this._Id + "]");
+			return;
+		}
+		if (tb.rows.length == 0) {
+			return;
+		}
+		let row0 = tb.rows[0];
+		let cell = row0.cells[index];
+		if (!cell) {
+			return;
+		}
+		let left = $(cell).position().left;
+		let width = $(cell).width();
+		let css = {
+			left: left,
+			width: width
+		};
+
+		for (let m = 0; m < tb.rows.length; m++) {
+			let c = $(tb.rows[m].cells[index]);
+
+			c.css(css).addClass('ewa-lf-sticky');
+			if (isLast) {
+				//最后一个column的右侧阴影
+				c.addClass('ewa-lf-sticky-last')
+					//避免overflow=hidden遮挡阴影
+					.css('overflow', 'initial');
+			}
+		}
+	};
 	/**
 	* 合并文字搜索到第一个input中
 	 */
@@ -18312,7 +18373,7 @@ function EWA_ListFrameClass() {
 		nextTr.style.display = 'none';
 		td.id = EWA_Utils.tempId('EWA_LF_NR_' + this._Id);
 		$(nextTr).addClass('ewa-lf-add-pre-row');
- 
+
 		return nextTr;
 	};
 	this.MDown = function(tr, evt) {
@@ -20103,9 +20164,9 @@ function EWA_ListFrameClass() {
 		}
 		var ids = [];
 		//var objs = $F(obj, 'input', 'type', 'radio,checkbox');
-		let objs=[];
-		$("#EWA_LF_" + this._Id+">tbody>tr").find("input[type='radio'],input[type='checkbox']").each(function(){
-			if(this.parentNode.className.indexOf('ewa-switch') == -1){
+		let objs = [];
+		$("#EWA_LF_" + this._Id + ">tbody>tr").find("input[type='radio'],input[type='checkbox']").each(function() {
+			if (this.parentNode.className.indexOf('ewa-switch') == -1) {
 				objs.push(this);
 			}
 		});
@@ -20640,7 +20701,7 @@ function EWA_ListFrameClass() {
 	this.EditAfterEvent = function() {
 		let u1 = this.getUrlClass();
 		// 当有行签名时，默认编辑后刷新页面事件 2024-10-23
-		if(u1.GetParameter("EWA_ROW_SIGN") ){
+		if (u1.GetParameter("EWA_ROW_SIGN")) {
 			this.refreshPage();
 		}
 	};
