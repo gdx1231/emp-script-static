@@ -1,3 +1,21 @@
+/* _EWA_MENU in buttons bar */
+.ewa-lf-menu {
+    display: block;
+    float: left;
+}
+.ewa-lf-menu-span::after {
+    display: block;
+    float: left;
+    content: '/';
+    margin-right: 2px;
+    margin-left: 2px;
+}
+.ewa-lf-menu-marked {
+    color: red;
+    text-decoration: underline;
+}
+
+/* fixed column */
 .ewa-lf-sticky-scroll {
     overflow: auto;
     width: 100vw;

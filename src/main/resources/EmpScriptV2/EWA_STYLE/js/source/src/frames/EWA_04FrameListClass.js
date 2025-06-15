@@ -33,6 +33,36 @@ function EWA_ListFrameClass() {
 
 	this._IsSearchGroup = true; //2024-02-27 查询分组标记，默认分组
 
+	//根据参数重新刷新表格 paras="abc=1&name=sun&gendar=0"
+	this.changeTag = function(paras) {
+		let tu = new EWA_UrlClass('fake?' + paras);
+		let u = new EWA_UrlClass(this.Url);
+		for (let para in tu._Paras) {
+			u.AddParameter(para, tu._Paras[para]);
+		}
+		this.Url = u.GetUrl();
+		this.Reload();
+	};
+	this._InitMneu = function() {
+		let menus = window["_EWA_MENU_" + this._Id];
+		//console.log(menus)
+		if (!menus || menus.length == 0) {
+			return;
+		}
+		let ss = [];
+		for (let i = 0; i < menus.length; i++) {
+			let menu = menus[i];
+			let css = (i == 0 ? 'ewa-lf-menu-marked' : '') +
+				(i == menus.length - 1 ? 'ewa-lf-menu-last' : '');
+			let cmd = menu.Cmd.replace(/"/g, '&quot;');
+			let js = "$(this).parent().find('.ewa-lf-menu-marked').removeClass('ewa-lf-menu-marked');$(this).addClass('ewa-lf-menu-marked');";
+			let s = `<a class="ewa-lf-menu ${css}" onclick="${js} ${cmd}">${menu.Txt}</a>`;
+			ss.push(s);
+		}
+		let html = ss.join('<b class="ewa-lf-menu-span"></b >');
+		$('#EWA_RESHOW_' + this._Id).find('.ewa_lf_func_caption').after(html);
+
+	}
 	// 固定左侧的columns的位置,从0开始
 	this.stickyColumns = function(columns) {
 		var tb = $X('EWA_LF_' + this._Id);
@@ -1064,7 +1094,7 @@ function EWA_ListFrameClass() {
 		// td00
 		html.push("<tr><td class='ewa_lf_func' style='padding:0'>");
 		html.push("<div style='display:none'></div>");
-		html.push("<div><div style='cursor:pointer' class='ewa_lf_func_caption'></div></div>");
+		html.push("<div><div class='ewa_lf_func_caption'></div></div>");
 		html.push("</td></tr>");
 
 		// td10
@@ -1284,6 +1314,8 @@ function EWA_ListFrameClass() {
 			}, 10);
 
 		}
+		// 加载菜单到功能条上
+		this._InitMneu();
 	};
 	this.reShowButtonClick = function(button) {
 		//var fId = button.getAttribute('f_id');
