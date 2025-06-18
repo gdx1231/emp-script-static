@@ -3071,6 +3071,7 @@ function EWA_FrameClass() {
 			//显示拼图窗口
 			let title = EWA.LANG == 'enus' ? "Silde puzzle" : "拼图验证";
 			let dia = top.$DialogHtml("<div id='" + tempid + "'></div>", title, rst.bigImgWidth + 20, 200, false);
+			$(dia.getContent()).css('overflow', 'hidden'); //Compatible with the safari
 			rst.ewa_trigger_valid_name = objId;
 			rst.ewa_trigger_valid = triggerValid;
 			rst.ewa_url = url.GetUrl();
