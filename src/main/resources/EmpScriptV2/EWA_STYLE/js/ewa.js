@@ -22902,8 +22902,9 @@ function EWA_TreeClass(parentObject, className, url) {
 
 		var paras = "";
 		for (var i = 0; i < node.AddParas.length; i += 1) {
-			if (node.AddParas[i] != null && node.AddParas[i] != undefined) {
-				paras += "EWA_P" + i + "=\"" + node.AddParas[i].replace(/"/ig, "&quot;").replace(/</ig, "&lt;").replace(/</ig, "&gt;") + "\" ";
+			if (node.AddParas[i]) {
+				let v = node.AddParas[i] + ""; //避免数字造成替换出错
+				paras += "EWA_P" + i + "=\"" + v.replace(/"/ig, "&quot;").replace(/</ig, "&lt;").replace(/</ig, "&gt;") + "\" ";
 			}
 		}
 		html = html.replace("[TMP_ADD_PARAS]", paras);
