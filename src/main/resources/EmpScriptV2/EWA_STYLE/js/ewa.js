@@ -14767,7 +14767,7 @@ function EWA_FrameClass() {
 			var key = m1[i];
 			paras.push(key);
 			var id = key.replace('@@', '');
-			tmp_html = tmp_html.replace(key, "<span class='ewa-row-merge ewa-row-merge-" + id + "' mid=\"" + key
+			tmp_html = tmp_html.replace(key, "<span class='ewa-row-merge ewa-row-merge-" + id + "' mid=\"" + id
 				+ "\"></span>");
 			if (id != toParent) {
 				tb.find('.ewa-row-' + id).hide();
@@ -14794,7 +14794,6 @@ function EWA_FrameClass() {
 		// 合并对象的容器
 		var p = target.parent();
 
-		var tmp = mergeExp;
 		for (var n in paras) {
 			var exp = paras[n];
 			var key = exp.replace('@@', '');
@@ -14804,7 +14803,7 @@ function EWA_FrameClass() {
 				continue;
 			}
 
-			var t = $(o1).find('span[mid="' + exp + '"]');
+			var t = $(o1).find('span[mid="' + key + '"]');
 			if ('placeholder' == isAddMemo) {
 				o.attr('placeholder', memos[key]);
 			} else if (isAddMemo) {
