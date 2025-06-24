@@ -785,15 +785,18 @@ function EWA_AjaxClass(isAsync) {
 	this.IsShowWaitting = true; // 是否显示等待信息
 	this._RunEndTime = null;
 	this._IsAsync = isAsync; // 是否同步请求
+	this.responseStatus = 0; // http status code 200, 404, 504 ...
+
 	if (this._IsAsync) {
 		this._IsAsync = true;
 	} else {
 		this._IsAsync = false;
 	}
+
 	/**
 	 * 显示等待图标/文字
 	 */
-	this._ShowWaitting = function() {
+	this._ShowWaitting = function () {
 		if (!this.IsShowWaitting) {
 			return;
 		}
@@ -814,7 +817,7 @@ function EWA_AjaxClass(isAsync) {
 	/**
 	 * 生成等待文字提示
 	 */
-	this._CreateWaittingText = function() {
+	this._CreateWaittingText = function () {
 		var o1 = document.createElement("DIV");
 		o1.id = this._WaittingId;
 		o1.innerHTML = "Waiting...";
@@ -825,7 +828,7 @@ function EWA_AjaxClass(isAsync) {
 	/**
 	 * 生成等待图示
 	 */
-	this._CreateWaittingImg = function() {
+	this._CreateWaittingImg = function () {
 		var o1 = document.createElement("TABLE");
 		o1.id = this._WaittingId;
 		var tr = o1.insertRow(-1);
@@ -839,7 +842,7 @@ function EWA_AjaxClass(isAsync) {
 	/**
 	 * 隐藏等待
 	 */
-	this.HiddenWaitting = function() {
+	this.HiddenWaitting = function () {
 		var o1 = document.getElementById(this._WaittingId);
 		if (o1 != null) {
 			o1.style.display = "none";
@@ -849,7 +852,7 @@ function EWA_AjaxClass(isAsync) {
 	/**
 	 * 初始化Ajax对象
 	 */
-	this._InitHttp = function() {
+	this._InitHttp = function () {
 		if (!window.XMLHttpRequest) {// ie
 			this._Http = new ActiveXObject("Microsoft.XMLHTTP");
 		} else {
@@ -868,7 +871,7 @@ function EWA_AjaxClass(isAsync) {
 	 * @param {Function}
 	 *            Callback 回调方法
 	 */
-	this.Get = function(url, Callback) {
+	this.Get = function (url, Callback) {
 		if (url == null) {
 			console.log('ajax url not null');
 			return;
@@ -918,7 +921,7 @@ function EWA_AjaxClass(isAsync) {
 	 * @param {Object}
 	 *            callback 回调方法
 	 */
-	this.Post = function(url, sinfo, callback) {
+	this.Post = function (url, sinfo, callback) {
 		if (url == null) {
 			console.log('ajax url not null');
 			return;
@@ -957,7 +960,7 @@ function EWA_AjaxClass(isAsync) {
 	 * @param {Object}
 	 *            callback 回调方法
 	 */
-	this.PostNew = function(url, callback) {
+	this.PostNew = function (url, callback) {
 		var s = [];
 		for (var n in this._Parameters) {
 			var v = this._Parameters[n];
@@ -971,7 +974,7 @@ function EWA_AjaxClass(isAsync) {
 	/**
 	 * 获取返回数据
 	 */
-	this.GetReturnValue = function() {
+	this.GetReturnValue = function () {
 		return this._Http.responseText;
 	};
 	/**
@@ -982,12 +985,12 @@ function EWA_AjaxClass(isAsync) {
 	 * @param {String}
 	 *            val 参数值
 	 */
-	this.AddParameter = function(name, val, notEncode) {
+	this.AddParameter = function (name, val, notEncode) {
 		this._Parameters[name] = (notEncode ? val : encodeURIComponent(val));
 	};
 	this._InitHttp();
 
-	this._getLoaddingImg = function() {
+	this._getLoaddingImg = function () {
 		return (EWA.RV_STATIC_PATH || "/EmpScriptV2") + "/EWA_STYLE/images/loading4.gif";
 	}
 	/**
@@ -1000,7 +1003,7 @@ function EWA_AjaxClass(isAsync) {
 	 * @param {}
 	 *            对象的Id 或 对象 parentId
 	 */
-	this.Install = function(url, parameters, parentId, afterJs, notShowWaitting) {
+	this.Install = function (url, parameters, parentId, afterJs, notShowWaitting) {
 		var _ajax_gdx = this;
 		var obj = (typeof parentId == 'string') ? document.getElementById(parentId) : parentId;
 		if (obj == null) {
@@ -1018,7 +1021,7 @@ function EWA_AjaxClass(isAsync) {
 			parent.append(loadding);
 		}
 
-		this.Post(url, parameters, function() {
+		this.Post(url, parameters, function () {
 			if (!_ajax_gdx.IsRunEnd()) {
 				return;
 			}
@@ -1049,37 +1052,39 @@ function EWA_AjaxClass(isAsync) {
 	 * 
 	 * @return {Boolean}
 	 */
-	this.IsRunEnd = function() {
+	this.IsRunEnd = function () {
+		this.responseStatus = this._Http.status; //200, 404 ...
+		this.responseReadyState = this._Http.readyState;
+
 		if (this._Http.readyState != 4) {
 			return false;
-		} else {
-			this.HiddenWaitting();
-			if (!this._RunEndTime) {
-				var d = new Date();
-				this._RunEndTime = d.getTime();
-			}
-			// 清除对象，避免内存溢出
-			window.setTimeout(function() {
-				for (var i = window._EWA_AJAX_LIST.length - 1; i >= 0; i--) {
-					var a = window._EWA_AJAX_LIST[i];
-					if (a == null) {
-						continue;
-					}
-					if (a.GetEndPastTime() > 1231) {
-						try {
-							a.Dispose();
-						} catch (e) {
-
-						}
-						window._EWA_AJAX_LIST[i] = null;
-						a = null;
-					}
-				}
-			}, 1);
-			return true;
 		}
+
+		this.HiddenWaitting();
+		if (!this._RunEndTime) {
+			var d = new Date();
+			this._RunEndTime = d.getTime();
+		}
+		// 清除对象，避免内存溢出
+		window.setTimeout(function () {
+			for (var i = window._EWA_AJAX_LIST.length - 1; i >= 0; i--) {
+				var a = window._EWA_AJAX_LIST[i];
+				if (a == null) {
+					continue;
+				}
+				if (a.GetEndPastTime() > 1231) {
+					try {
+						a.Dispose();
+					} catch (e) {
+					}
+					window._EWA_AJAX_LIST[i] = null;
+					a = null;
+				}
+			}
+		}, 1);
+		return true;
 	}
-	this.Dispose = function() {
+	this.Dispose = function () {
 		this._Http = null;
 	}
 	/**
@@ -1087,7 +1092,7 @@ function EWA_AjaxClass(isAsync) {
 	 * 
 	 * @return {}
 	 */
-	this.GetEndPastTime = function() {
+	this.GetEndPastTime = function () {
 		if (!this._RunEndTime) {
 			return -1;
 		} else {
@@ -1100,7 +1105,8 @@ function EWA_AjaxClass(isAsync) {
 	 * 
 	 * @return {Boolean}
 	 */
-	this.IsError = function() {
+	this.IsError = function () {
+		this.responseStatus = this._Http.status; //200, 404 ...
 		if (this._Http.status == 200) {
 			return false;
 		} else {
@@ -1112,16 +1118,16 @@ function EWA_AjaxClass(isAsync) {
 	 * 
 	 * @return {}
 	 */
-	this.GetRst = function() {
+	this.GetRst = function () {
 		if (!this.IsRunEnd()) {
 			return null;
-		} else {
-			if (!this.IsError()) {
-				return this._Http.responseText;
-			} else {
-				return this._Http.statusText;
-			}
 		}
+		if (!this.IsError()) {
+			return this._Http.responseText;
+		} else {
+			return this._Http.statusText;
+		}
+
 	}
 }
 
@@ -1139,7 +1145,7 @@ function $JA(url, func) {
 	for (var i = 2; i < arguments.length; i++) {
 		cmds.push(arguments[i]);
 	}
-	ajax.Get(url, function() {
+	ajax.Get(url, function () {
 		_$J_HandleRst(ajax, func, cmds, true); // true表示json
 	});
 	return ajax;
@@ -1159,7 +1165,7 @@ function $J2A(url, func) {
 	for (var i = 2; i < arguments.length; i++) {
 		cmds.push(arguments[i]);
 	}
-	ajax.Get(url, function() {
+	ajax.Get(url, function () {
 		_$J_HandleRst(ajax, func, cmds, false); // false表示html
 	});
 	return ajax;
@@ -1184,7 +1190,7 @@ function $JPA(url, postData, func) {
 			ajax.AddParameter(n, postData[n]);
 		}
 	}
-	ajax.PostNew(url, function() {
+	ajax.PostNew(url, function () {
 		_$J_HandleRst(ajax, func, cmds, true);
 	});
 	return ajax;
@@ -1287,7 +1293,7 @@ function $JP(url, postData, func) {
 			ajax.AddParameter(n, postData[n]);
 		}
 	}
-	ajax.PostNew(url, function() {
+	ajax.PostNew(url, function () {
 		_$J_HandleRst(ajax, func, cmds, true);
 	});
 	return ajax;
@@ -1307,7 +1313,7 @@ function $JP2(url, postData, func) {
 			ajax.AddParameter(n, postData[n]);
 		}
 	}
-	ajax.PostNew(url, function() {
+	ajax.PostNew(url, function () {
 		_$J_HandleRst(ajax, func, cmds, false);
 	});
 	return ajax;
@@ -1331,7 +1337,7 @@ function $JP2(url, postData, func) {
  */
 function __$J(isAsync, url, func, cmds, isJson, disableWaitMsg) {
 	var ajax = new EWA_AjaxClass(isAsync);
-	ajax.Get(url, function() {
+	ajax.Get(url, function () {
 		_$J_HandleRst(ajax, func, cmds, isJson);
 	});
 	if (disableWaitMsg) {
@@ -1352,10 +1358,13 @@ function _$J_HandleRst(ajax, func, cmds, isJson) {
 		return;
 	}
 	if (ajax.IsError()) {
-		if (window.EWA_AjaxErr) {
-			window.EWA_AjaxErr(ajax.GetRst());
+		if(ajax.onError){ //外部定义的错误
+			ajax.onError(ajax.responseStatus);
+		} else if (window.EWA_AjaxErr) {
+			window.EWA_AjaxErr(ajax);
 		} else {
-			console.error(ajax.GetRst());
+			alert('ERROR: ' + ajax.responseStatus);
+			console.error(ajax._Http);
 		}
 		return;
 	}
@@ -1546,7 +1555,7 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 		funcCallBack(obj);
 	}
 };
-$Install = function(url, pid, func, notShowWaitting) {
+$Install = function (url, pid, func, notShowWaitting) {
 	if (url.GetUrl) {
 		url = url.GetUrl();
 	} else if (url.getUrl) {
