@@ -274,7 +274,7 @@ function EWA_ListFrameClass() {
 
 			let fromobj = $(this).find('[id="' + from + '"]');
 			let fromobjParent = fromobj.parentsUntil('tr').last();
-			fromobjParent.hide();
+			fromobjParent.hide().addClass('ewa-row-merge-hide');
 
 			// 分割字符
 			toParent.append(mergeStr);
@@ -378,7 +378,7 @@ function EWA_ListFrameClass() {
 					continue;
 				}
 				if (key != toParent) {
-					o.parent().hide();
+					o.parent().hide().addClass('ewa-row-merge-hide');
 				}
 				var t = o1.find('span[mid="' + key + '"]');
 				if (isAddMemo) {

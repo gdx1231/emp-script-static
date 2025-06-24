@@ -1,14 +1,40 @@
-.ewa-frame>tbody>tr>.EWA_TD_M>span, .ewa-frame>tbody>tr>.EWA_TD_M>a {
+.ewa-merge-table {
+	border-spacing: 0;
+	border:0;
+}
+.ewa-merge-td{
+	white-space: nowrap;
+	padding-right: 4px;
+	padding-left: 4px;
+	border-right: 1px solid #ccc;
+}
+.ewa-merge-td-first {
+	padding-left: 0;
+}
+
+.ewa-merge-td select {
+	width: 100px;
+}
+.ewa-row-merge-memo {
+	margin-right: 2px;
+}
+.ewa-frame>tbody>tr>.EWA_TD_M>span,
+.ewa-frame>tbody>tr>.EWA_TD_M>a {
 	margin: 0 4px;
 }
 
 /* 必填项显示 */
-.ewa-frame .ewa-row-must .EWA_TD_L::after {
+.ewa-frame .ewa-row-must .EWA_TD_L::after,
+.ewa-frame .ewa-row-must .ewa-row-merge-memo::after {
 	content: "*";
 	color: orangered;
 	margin-left: 2px;
 }
-
+/* 合并行的第一个说明隐含，用本行的 .EWA_TD_L */
+.ewa-frame-cols-2 .ewa-merge-td-first .ewa-row-merge-memo,
+.ewa-frame-cols-3 .ewa-merge-td-first .ewa-row-merge-memo  {
+	display: none;
+}
 /* 手写签名 */
 .ewa-sign-box {
 	border: 1px solid #eee;
@@ -40,6 +66,7 @@
 .enus .ewa-sign-btn-revoke::before {
 	content: "Revoke last"
 }
+
 /* 密码输入框和密码查看 */
 .ewa-input-password-with-eye {
 	position: relative;
@@ -67,6 +94,7 @@
 	content: "\f070";
 	color: orangered;
 }
+
 /* 翻译按钮 */
 .ewa-filter-chks {
 	height: 90px;
@@ -91,6 +119,7 @@
 	padding: 2px 4px;
 	border-radius: 5px;
 }
+
 /* switch 开关 */
 .ewa-switch {
 	position: relative;
@@ -182,6 +211,7 @@
 .ewa-select-filter-target select {
 	width: 99%;
 }
+
 /* FRAME 分组样式 */
 .EWA_GROUP {
 	font-weight: bold;
@@ -272,6 +302,7 @@
 	white-space: nowrap;
 	background-image: none;
 }
+
 /* 表头部 */
 .EWA_TD_HA {
 	color: #000;
@@ -294,7 +325,10 @@
 }
 
 /* Frame 左部 */
-.EWA_TD_L, .EWA_TD_R, .EWA_TD_M, .EWA_TD_B {
+.EWA_TD_L,
+.EWA_TD_R,
+.EWA_TD_M,
+.EWA_TD_B {
 	height: 24px;
 	background-color: white;
 }
@@ -304,6 +338,7 @@
 	width: 100px;
 	padding-left: 4px;
 }
+
 /* Frame 中部 */
 .EWA_TD_R {
 	width: 200px;
@@ -323,7 +358,9 @@
 }
 
 /* Frame 输入框 */
-.EWA_INPUT, .EWA_VALID, .EWA_TEXTAREA {
+.EWA_INPUT,
+.EWA_VALID,
+.EWA_TEXTAREA {
 	border: 1px solid #ccc;
 	width: 99.8%;
 	background-color: white;
@@ -376,13 +413,16 @@
 	right: 0;
 }
 
-.ewa-with-icon-left .EWA_INPUT, .ewa-with-icon-left .EWA_TEXTAREA {
+.ewa-with-icon-left .EWA_INPUT,
+.ewa-with-icon-left .EWA_TEXTAREA {
 	padding-left: 25px !important;
 }
 
-.ewa-with-icon-right .EWA_INPUT, .ewa-with-icon-right .EWA_TEXTAREA {
+.ewa-with-icon-right .EWA_INPUT,
+.ewa-with-icon-right .EWA_TEXTAREA {
 	padding-right: 25px !important;
 }
+
 /* Frame 验证 */
 .EWA_VALID {
 	width: 40px;
@@ -404,6 +444,7 @@
 	height: 320px;
 	width: 100%;
 }
+
 /* SQL编辑 */
 .ewa_sql_editor {
 	height: 300px;
@@ -471,7 +512,10 @@
 	border-radius: 5px;
 }
 
-input[type=submit], input[type=button], button, .IX_BUTTON {
+input[type=submit],
+input[type=button],
+button,
+.IX_BUTTON {
 	display: inline-block;
 	margin: 0 4px;
 	text-align: center;
@@ -502,30 +546,38 @@ input[type=submit]:hover {
 	border-color: #204d74;
 }
 
-input[type=button], button {
+input[type=button],
+button {
 	color: #333;
 	background-color: #fff;
 	border: 1px solid #ccc;
 }
 
-input[type=button]:hover, button:hover {
+input[type=button]:hover,
+button:hover {
 	color: #333;
 	background-color: #e6e6e6;
 	border-color: #adadad;
 }
 
-.EWA_INPUT:read-only, .EWA_TEXTAREA:read-only {
+.EWA_INPUT:read-only,
+.EWA_TEXTAREA:read-only {
 	background: #eee;
 }
 
-select:disabled, textarea:disabled, input:disabled, .ewa-ipt-droplist:disabled,
-	.ewa-ipt-date:disabled, button:disabled {
+select:disabled,
+textarea:disabled,
+input:disabled,
+.ewa-ipt-droplist:disabled,
+.ewa-ipt-date:disabled,
+button:disabled {
 	background: #eee;
 	pointer-events: none;
 	color: #111;
 }
 
-input[type=button]:disabled, button:disabled {
+input[type=button]:disabled,
+button:disabled {
 	box-shadow: none;
 	opacity: .65;
 }
@@ -545,7 +597,8 @@ label[ewadisabled] {
 	pointer-events: none;
 }
 
-.ewa_cb_subject .ewa_lf_func_caption, .ewa_cb_caption {
+.ewa_cb_subject .ewa_lf_func_caption,
+.ewa_cb_caption {
 	padding-top: 2px;
 	cursor: pointer;
 	height: 20px;
@@ -612,6 +665,7 @@ label[ewadisabled] {
 .ewa-sms-valid-box .ewa-sms-valid-code-button:disabled {
 	pointer-events: none;
 }
+
 /** ipt **/
 .ewa-ipt-droplist {
 	background-color: lightyellow;
@@ -636,6 +690,7 @@ label[ewadisabled] {
 	margin-right: 1px;
 	float: left;
 }
+
 /* error tip*/
 tr[error] .ewa-tip-error {
 	position: relative;
@@ -690,6 +745,7 @@ tr[error] .ewa-tip-error:after {
 	z-index: 2;
 	top: 4px;
 }
+
 /* 在对话框里限制frame高度为，通过参数 ewa_in_dialog=1 增加 */
 .ewa-in-dialog {
 	height: calc(100vh - 48px);
@@ -699,6 +755,7 @@ tr[error] .ewa-tip-error:after {
 	padding-top: 2px;
 	box-sizing: border-box;
 }
+
 /* 将按钮栏固定在底部 */
 .ewa-in-dialog .EWA_TD_B {
 	position: fixed;
