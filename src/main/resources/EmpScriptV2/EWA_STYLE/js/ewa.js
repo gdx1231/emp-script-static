@@ -14752,8 +14752,20 @@ function EWA_FrameClass() {
 				t.append("<span class='ewa-row-merge-memo'></span>");
 				t.find('.ewa-row-merge-memo').text(memos[key]);
 			}
-			t.append(o);
+			// 找到目标对象的父容器 
+			let itemParent = tb.find('.ewa-row-' + key + ' .EWA_TD_M');
+			if (itemParent.length == 0) {
+				//找不到父容器，只能放在目标对象
+				t.append(o);
+			} else {
+				// 将目标对象的所有内容放在父容器中
+				while (itemParent[0].childNodes.length > 0) {
+					t.append(itemParent[0].childNodes[0]);
+				}
+			}
+			// t.append(o);
 		}
+		//将临时容器下的所有对象放到目标容器里toParentId
 		while (o1.childNodes.length > 0) {
 			p.append(o1.childNodes[0]);
 		}
