@@ -185,7 +185,8 @@ a:hover, .ewa-map-button:hover {
 
 /* 必填项显示 */
 .ewa-frame .ewa-row-must .EWA_TD_L::after,
-.ewa-frame .ewa-row-must .ewa-row-merge-memo::after {
+.ewa-frame .ewa-row-must .ewa-row-merge-memo::after,
+.ewa-frame .ewa-row-must .EWA_TD::after {
 	content: "*";
 	color: orangered;
 	margin-left: 2px;
