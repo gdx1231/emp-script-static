@@ -56,12 +56,13 @@ function EWA_OdtDocWordClass() {
             var p = this.getDock();
             if (p.tagName != 'text:p') { // td
                 var p0 = this.createP(obj.parentNode);
-                this.docks.push(p0);
-                p0.appendChild(o);
+                p.appendChild(p0);
+		        p0.appendChild(o);
+		        this.docks.push(p0);
             } else {
                 p.appendChild(o);
             }
-            this.lastWR = null;
+            // this.lastWR = null;
         } else if (t == 'IMG') {
             var p = this.getDock();
             console.log(p);
