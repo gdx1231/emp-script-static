@@ -280,7 +280,7 @@
 	min-width: 60px;
 	overflow: hidden;
 	flex-direction: column;
-	z-index: 3;
+	z-index: 110;
 	top: 0;
 	background-color: #eee;
 	padding: 0px 2px;
@@ -296,7 +296,7 @@
 	width: auto;
 	height: auto;
 	flex-direction: column;
-	z-index: 4;
+	z-index: 111;
 }
 
 .ewa-lf-search-fix-m1 .ewa-lf-search-item-ctl>div input {
