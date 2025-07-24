@@ -1920,6 +1920,14 @@ EWA_App.Section = {
 	// 针对上一步，下一步显示 input上的文字
 	footerButtonRelate: function(obj) {
 		// 先执行
+		const t0 = obj.attr('last_t') || 0;
+		const t1 = new Date().getTime();
+		if(t1 - t0 < 500){
+			// 间隔小于500毫秒，认为是重复点击
+			return;
+		}
+		obj.setAttribute('last_t', t1);
+		
 		var rid = $(obj).attr('rid');
 		var ref_obj = $X(rid); // 根据rid找到真正的input[button]
 		if (ref_obj == null) {
