@@ -98,6 +98,8 @@
 	box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2) inset;
 	background: #f5f5f5;
 	user-select: none;
+	/* 'user-select' is not supported by Safari. Add '-webkit-user-select' to support Safari 3+. */
+	-webkit-user-select: none;
 }
 
 .ewa-slider-puzzle-text {

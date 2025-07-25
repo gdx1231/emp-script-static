@@ -1,5 +1,6 @@
 .ewa-tree {
 	user-select: none;
+	-webkit-user-select: none;
 }
 .ewa-tree-node-marked .ewa-node-caption>span {
 	background-color: blue;
