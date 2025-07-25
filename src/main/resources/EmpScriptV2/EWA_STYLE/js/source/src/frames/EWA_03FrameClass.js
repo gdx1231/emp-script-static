@@ -14,7 +14,7 @@ function EWA_FrameClass() {
 	this.doPostAfter = null;// POST后的事件，用户定义
 	this.isShowPostWaitting = true; // 是否显示提交时的等待框
 
-	this.textareaAutoSize = function () {
+	this.textareaAutoSize = function() {
 		// /third-party/autosize-master/dist/autosize.min.js
 		if (!window.autosize) {
 			console.warn('autosize.js 没有引入，/third-party/autosize-master/dist/autosize.min.js');
@@ -23,7 +23,7 @@ function EWA_FrameClass() {
 		autosize(this.getObj('textarea').addClass('ewa-textarea-auto-size'));
 	};
 
-	this.getObj = function (exp) {
+	this.getObj = function(exp) {
 		var tb = $('#EWA_FRAME_' + this._Id);
 		if (exp) {
 			return tb.find(exp);
@@ -36,7 +36,7 @@ function EWA_FrameClass() {
 	* @param source input[type=checkbox]元素
 	* @param actionName 提交到后台的 action
 	 */
-	this.switchButtonAction = function (source, actionName) {
+	this.switchButtonAction = function(source, actionName) {
 		if (!actionName) {
 			return;
 		}
@@ -60,7 +60,7 @@ function EWA_FrameClass() {
 		let that = this;
 
 		let u = u1.GetUrl();
-		$JP(u, data, function (rst) {
+		$JP(u, data, function(rst) {
 			// 可以外部定义回调函数 extSwitchCallBack
 			if (that.extSwitchCallBack) {
 				that.extSwitchCallBack(source, rst);
@@ -70,18 +70,18 @@ function EWA_FrameClass() {
 	/**
 	 * 设置为禁止修改状态
 	 */
-	this.setDisable = function () {
+	this.setDisable = function() {
 		var tb = this.getObj();
-		tb.find("input,textarea,select,label").each(function () {
+		tb.find("input,textarea,select,label").each(function() {
 			if (!this.disabled && this.type != 'hidden') {
 				this.disabled = true;
 				this.setAttribute("ewadisabled", 1);
 			}
 		});
-		tb.find(".EWA_DHTML").each(function () {
+		tb.find(".EWA_DHTML").each(function() {
 			if (this.tagName == "DIV") { // 老版本的dhtml
 				var iframe = $(this).find("iframe")[0].contentWindow;
-				var tt = setInterval(function () {
+				var tt = setInterval(function() {
 					if (iframe.document.readyState == 'complete') {
 						window.clearInterval(tt);
 						iframe.frames[0].document.body.contentEditable = false;
@@ -93,7 +93,7 @@ function EWA_FrameClass() {
 				}, 300);
 			} else if (this.tagName == "TEXTAREA") { // 新版本的h5
 				var target = $(this).parent();
-				var tt = setInterval(function () {
+				var tt = setInterval(function() {
 					var qiframe = target.find("iframe");
 					if (qiframe.length > 0) {
 						var iframe = qiframe[0].contentWindow;
@@ -112,15 +112,15 @@ function EWA_FrameClass() {
 	/**
 	 * 设置为允许修改状态
 	 */
-	this.setEnable = function () {
+	this.setEnable = function() {
 		var tb = this.getObj();
-		tb.find("input,textarea,select,label").each(function () {
+		tb.find("input,textarea,select,label").each(function() {
 			if (this.disabled && this.getAttribute("ewadisabled")) {
 				this.disabled = false;
 				this.removeAttribute("ewadisabled");
 			}
 		});
-		tb.find(".EWA_DHTML").each(function () {
+		tb.find(".EWA_DHTML").each(function() {
 			if (this.tagName == "DIV") {
 				var iframe = $(this).find("iframe")[0].contentWindow;
 				iframe.frames[0].document.body.contentEditable = true;
@@ -150,7 +150,7 @@ function EWA_FrameClass() {
 	 * @callBackDoFilter 点击字母的回调
 	 * 
 	 */
-	this.convertFilterCheckbox = function (checkboxTargetId, filterTargetId, charFieldName, isMergeCell,
+	this.convertFilterCheckbox = function(checkboxTargetId, filterTargetId, charFieldName, isMergeCell,
 		callBackConverted, callBackDoFilter) {
 		var map = {};
 		var trCheckBox = this.getObj('.ewa-row-' + checkboxTargetId);
@@ -185,7 +185,7 @@ function EWA_FrameClass() {
 			charFieldName = 'PY';
 		}
 
-		trCheckBox.find('input[type=checkbox]').each(function () {
+		trCheckBox.find('input[type=checkbox]').each(function() {
 			var o = JSON.parse($(this).attr('json'));
 			var py = o[charFieldName]; // 获取字母
 			if (!py) {
@@ -201,7 +201,7 @@ function EWA_FrameClass() {
 				moveToChecked(this)
 			}
 
-			$(this).on('change', function () {
+			$(this).on('change', function() {
 				if (this.checked) {
 					moveToChecked(this);
 				} else {
@@ -227,9 +227,9 @@ function EWA_FrameClass() {
 			trCheckBox.find('.EWA_TD_M').attr('colspan', 2);
 		}
 
-		trfilter.find('a.ewa-filter-char').on('click', function () {
+		trfilter.find('a.ewa-filter-char').on('click', function() {
 			var c = $(this).attr('code');
-			trCheckBox.find('input[type=checkbox]').each(function () {
+			trCheckBox.find('input[type=checkbox]').each(function() {
 				if (c) {
 					if (!this.checked) {
 						if ($(this).parent().attr('ref_id')) {
@@ -279,9 +279,9 @@ function EWA_FrameClass() {
 	 * @param pyName
 	 *            用于筛选的字母字段
 	 */
-	this.createFilterCheckbox = function (checkboxTarget, filterTarget, initvals, ajaxUrl, idName, textName, pyName) {
+	this.createFilterCheckbox = function(checkboxTarget, filterTarget, initvals, ajaxUrl, idName, textName, pyName) {
 		var c = this;
-		$J(ajaxUrl, function (rst) {
+		$J(ajaxUrl, function(rst) {
 			c.createFilterCheckboxByData(checkboxTarget, filterTarget, initvals, rst, idName, textName, pyName);
 		});
 	};
@@ -303,7 +303,7 @@ function EWA_FrameClass() {
 	 * @param pyName
 	 *            用于筛选的字母字段
 	 */
-	this.createFilterCheckboxByData = function (checkboxTarget, filterTarget, initvals, data, idName, textName, pyName) {
+	this.createFilterCheckboxByData = function(checkboxTarget, filterTarget, initvals, data, idName, textName, pyName) {
 		var pys = {};
 		var init_vals = init_vals ? "[]" : initvals.split(',');
 
@@ -368,13 +368,13 @@ function EWA_FrameClass() {
 			}
 		}
 		filterTarget.innerHTML = filters.join(" ");
-		$(filterTarget).find('a').each(function () {
+		$(filterTarget).find('a').each(function() {
 			var alpha = $(this).text();
 			if (alpha != 'ALL') {
 				$(this).attr('ids', pys[alpha].join(","));
 			}
 
-			$(this).on('click', function () {
+			$(this).on('click', function() {
 				if ($(this).text() == 'ALL') {
 					$(checkboxTarget).find('nobr.ewa-filter-chk').show();
 					return;
@@ -384,7 +384,7 @@ function EWA_FrameClass() {
 				for (var n in ids) {
 					ids_map[ids[n]] = 1;
 				}
-				$(checkboxTarget).find('input.ewa-filter-chkbox').each(function () {
+				$(checkboxTarget).find('input.ewa-filter-chkbox').each(function() {
 					if (this.checked || ids_map[this.id]) {
 						$(this).parent().show();
 					} else {
@@ -397,10 +397,10 @@ function EWA_FrameClass() {
 	/**
 	 * 隐含没有内容的行
 	 */
-	this.hiddenNoContentRow = function () {
+	this.hiddenNoContentRow = function() {
 		var names = 'img,a,input[type=text],input[type=button],textarea';
 		let tb = this.getObj();
-		this.getObj('.EWA_TD_M').each(function () {
+		this.getObj('.EWA_TD_M').each(function() {
 			if ($(this).text() == '') {
 				if ($(this).find(names).length == 0) {
 					$(this).parent().hide();
@@ -425,7 +425,7 @@ function EWA_FrameClass() {
 	 *            默认值
 	 * @afterEvent 加载完成后的事件
 	 */
-	this.itemReload = function (itemName, defaultValue, afterEvent) {
+	this.itemReload = function(itemName, defaultValue, afterEvent) {
 		if (!itemName) {
 			return;
 		}
@@ -433,7 +433,7 @@ function EWA_FrameClass() {
 		u1.AddParameter("EWA_AJAX", "SELECT_RELOAD");
 		u1.AddParameter("EWA_RELOAD_ID", itemName);
 		// 当前表单上的所有元素同时提交，避免因为上下元素关联出现问题
-		this.getObj('input,select').each(function () {
+		this.getObj('input,select').each(function() {
 			if (this.name == itemName) {
 				return;
 			}
@@ -449,7 +449,7 @@ function EWA_FrameClass() {
 			let opt = o.options[i];
 			map[opt.value] = 1;
 		}
-		$J(u, function (rst) {
+		$J(u, function(rst) {
 			if (!rst.RST) {
 				$Tip(rst.ERR);
 				return;
@@ -505,13 +505,13 @@ function EWA_FrameClass() {
 	/**
 	 * 检查option的变化
 	 */
-	this._checkSelectOptionsChange = function () {
+	this._checkSelectOptionsChange = function() {
 		if (!this._SelectFilters) {
 			return;
 		}
 		var c = this;
 		if (this.isSelectFilter) {
-			setTimeout(function () {
+			setTimeout(function() {
 				c._checkSelectOptionsChange();
 			}, 311);
 		}
@@ -523,11 +523,11 @@ function EWA_FrameClass() {
 				c._selectOptionsChangeed(o);
 			}
 		}
-		setTimeout(function () {
+		setTimeout(function() {
 			c._checkSelectOptionsChange();
 		}, 311);
 	};
-	this._selectOptionsChangeed = function (o) {
+	this._selectOptionsChangeed = function(o) {
 		//console.log('changed')
 		var target = this.getObj("select#" + o.id);
 
@@ -540,7 +540,7 @@ function EWA_FrameClass() {
 		this.getObj('#' + id2).html("");
 		o.html = target.html();
 	};
-	this._initSelectFilterCreateCode = function (codeJsonFrom, target) {
+	this._initSelectFilterCreateCode = function(codeJsonFrom, target) {
 		var ss = ["<option value=''>-ALL-</option>"];
 		if (!(codeJsonFrom)) {
 			// 放置26个字母（A-Z）
@@ -551,7 +551,7 @@ function EWA_FrameClass() {
 		} else {
 			var map = {};
 			var arr = [];
-			target.find("option").each(function () {
+			target.find("option").each(function() {
 				if (this.value == '') {
 					return;
 				}
@@ -592,7 +592,7 @@ function EWA_FrameClass() {
 	 * @param filterFrom
 	 *            如果是json的话，对应的字段
 	 */
-	this.initSelectFilter = function (obj_id, filterType, filterFrom, codeJsonFrom) {
+	this.initSelectFilter = function(obj_id, filterType, filterFrom, codeJsonFrom) {
 
 		if (this["INIT_SELECT_FILTER" + obj_id]) { // 创建过了
 			return;
@@ -649,7 +649,7 @@ function EWA_FrameClass() {
 	/**
 	 * select筛选发生变化时，显示不同的select列表（options）
 	 */
-	this._chCode = function (obj, filterType, filterFrom) {
+	this._chCode = function(obj, filterType, filterFrom) {
 		this.isSelectFilter = true;
 		var hide = $(obj).next();
 		var target = $(obj).parent().parent().find(".ewa-select-filter-target select");
@@ -676,7 +676,7 @@ function EWA_FrameClass() {
 	/**
 	 * 检查option规定部分的首字母是否是规定字母（例如B）
 	 */
-	this._chCodeFilter = function (opt, filterType, filterFrom, chkValue) {
+	this._chCodeFilter = function(opt, filterType, filterFrom, chkValue) {
 		var id;
 		if (filterType == 'json') {
 			var json = JSON.parse(opt.getAttribute('json'));
@@ -706,7 +706,7 @@ function EWA_FrameClass() {
 	/**
 	 * 设置为非必填项
 	 */
-	this.setUnMust = function (name) {
+	this.setUnMust = function(name) {
 		var a = this.ItemList.Items[name.toUpperCase()];
 		if (a) {
 			var b = a.getElementsByTagName("IsMustInput")[0].getElementsByTagName("Set")[0];
@@ -716,7 +716,7 @@ function EWA_FrameClass() {
 	/**
 	 * 设置必填项
 	 */
-	this.setMust = function (name) {
+	this.setMust = function(name) {
 		var a = this.ItemList.Items[name.toUpperCase()];
 		if (a) {
 			var b = a.getElementsByTagName("IsMustInput")[0].getElementsByTagName("Set")[0];
@@ -724,7 +724,7 @@ function EWA_FrameClass() {
 		}
 	};
 
-	this.RedrawCreateSpans = function () {
+	this.RedrawCreateSpans = function() {
 		var trs = this.getObj('tr');
 		for (var i = 0; i < trs.length; i++) {
 			var tr = trs[i];
@@ -753,7 +753,7 @@ function EWA_FrameClass() {
 		// 改写脚本
 		EWA_FrameShowAlert = EWA_FrameShowAlert1;
 		EWA_FrameRemoveAlert = EWA_FrameRemoveAlert1;
-		this.getObj('.ewa_d1').each(function () {
+		this.getObj('.ewa_d1').each(function() {
 			this.title = this.innerHTML;
 		});
 
@@ -772,10 +772,10 @@ function EWA_FrameClass() {
 	/**
 	 * 获取元素的描述，Info和Memo
 	 */
-	this.GetItemDescription = function (itemName) {
+	this.GetItemDescription = function(itemName) {
 		return this.ItemList.GetDescription(itemName);
 	};
-	this.ShowPlaceHolder = function (colSpan) {
+	this.ShowPlaceHolder = function(colSpan) {
 		var tb = this.getObj();
 		tb.addClass('ewa-frame-cols-' + colSpan);
 		for (var name in this.ItemList.Items) {
@@ -792,18 +792,16 @@ function EWA_FrameClass() {
 			var memo = dess.Memo;
 			var info = dess.Info;
 			var ph = null;
-			if (colSpan == 1) {
+			if (colSpan == 1 || o.parent().attr('colspan')) {
 				ph = info;
-				if (memo != null && memo.trim().length > 0) {
-					if (memo != ph) {
-						if (o.attr('ewa_tag') == 'smsValid') { // 短信验证码
-							ph = memo;
-						} else {
-							// memo信息放到对象的下部
-							//var memoStr = "<div class='ewa-item-memo'>" + memo + "</div>";
-							//o.parentsUntil('tr').last().append(memoStr); // td
-							ph += ", " + memo;
-						}
+				if (memo && memo != ph) {
+					if (o.attr('ewa_tag') == 'smsValid') { // 短信验证码
+						ph = memo;
+					} else {
+						// memo信息放到对象的下部
+						//var memoStr = "<div class='ewa-item-memo'>" + memo + "</div>";
+						//o.parentsUntil('tr').last().append(memoStr); // td
+						ph += ", " + memo;
 					}
 				}
 				if (o.hasClass('ewa-switch')) {
@@ -833,30 +831,30 @@ function EWA_FrameClass() {
 		}
 	};
 	// 调整宽度
-	this.RedrawChangWidth = function () {
+	this.RedrawChangWidth = function() {
 		let tb = this.getObj();
 		let tb_width = tb.width();
 		let cols = tb.find('.ewa_msg_box')[0].colSpan / 2;
 		let info_width = 90;
-		$("#EWA_FRAME_" + this._Id + ">tbody>tr[class*='ewa-row-']:not('.ewa-row-msg-box')").each(function () {
+		$("#EWA_FRAME_" + this._Id + ">tbody>tr[class*='ewa-row-']:not('.ewa-row-msg-box')").each(function() {
 			let info_cols = $(this).find("td.ewa_redraw_info:visible").length;
 			let ctl_width = (tb_width - info_width * info_cols) / cols;
-			$(this).find("td.ewa_redraw_ctl:visible").each(function () {
+			$(this).find("td.ewa_redraw_ctl:visible").each(function() {
 				let colspan = this.colSpan || 1;
 				$(this).css('width', ctl_width * colspan);
 			});
 		});
 
 		var c = this;
-		addEvent(window, 'size', function () {
+		addEvent(window, 'size', function() {
 			c.RedrawChangWidth();
 		});
 	};
-	this.Mearge = function (fromId, toId, mergeStr) {
+	this.Mearge = function(fromId, toId, mergeStr) {
 		console.log('拼写错误：请用 Merge');
 		this.Merge(fromId, toId, mergeStr);
 	};
-	this.Merge = function (fromId, toId, mergeStr, cb) {
+	this.Merge = function(fromId, toId, mergeStr, cb) {
 		this.merges(toId, [toId, fromId], mergeStr, cb);
 	};
 	/**
@@ -867,7 +865,7 @@ function EWA_FrameClass() {
 	 * @param {*} func 回调函数，执行完调用的程序
 	 * @returns 
 	 */
-	this.merges = function (toParentId, itemIds, isAddMemo, func) {
+	this.merges = function(toParentId, itemIds, isAddMemo, func) {
 		if (!toParentId || !itemIds || itemIds.length == 0) {
 			return;
 		}
@@ -897,7 +895,7 @@ function EWA_FrameClass() {
 	 *            是否添加备注信息
 	 * @func 执行完调用的程序
 	 */
-	this.MergeExp = function (toParentId, mergeExp, isAddMemo, func) {
+	this.MergeExp = function(toParentId, mergeExp, isAddMemo, func) {
 		if (!mergeExp) {
 			console.log("mergeExp 没有设置");
 			return;
@@ -982,7 +980,7 @@ function EWA_FrameClass() {
 			func(p);
 		}
 	};
-	this.MergeItems = function () {
+	this.MergeItems = function() {
 		for (var n in this.MeargeMap) {
 			var m = this.MeargeMap[n];
 			var o1 = $X('_ewa_tr$' + n);
@@ -1016,7 +1014,7 @@ function EWA_FrameClass() {
 		}
 	};
 
-	this.LoadJson = function (actionName, func) {
+	this.LoadJson = function(actionName, func) {
 		if (actionName == null) {
 			return;
 		}
@@ -1040,7 +1038,7 @@ function EWA_FrameClass() {
 	 * @param afterJs
 	 *            执行后调用的脚本
 	 */
-	this.DoAction = function (obj, action, confirm, tip, parasArray, afterJs) {
+	this.DoAction = function(obj, action, confirm, tip, parasArray, afterJs) {
 		EWA.F.CID = this._Id;
 		if (action == null || action.trim() == "") {
 			// alert("action not value");
@@ -1088,7 +1086,7 @@ function EWA_FrameClass() {
 		var u = url.RemoveParameter("EWA_ACTION");
 		this._Ajax.PostNew(u, EWA.F.FOS[EWA.F.CID]._CallBackJs);
 	};
-	this.GuideShowCreate = function (infos) {
+	this.GuideShowCreate = function(infos) {
 		this._GroupInfos = infos;
 
 		var tb = $X('EWA_FRAME_' + this._Id);
@@ -1109,7 +1107,7 @@ function EWA_FrameClass() {
 		ipt0.type = "button";
 		ipt0.value = (EWA.LANG == 'enus') ? "Back" : "上一步";
 		ipt0.style.display = 'none';
-		ipt0.onclick = function () {
+		ipt0.onclick = function() {
 			var idx = tb.getAttribute('EWA_GUIDE_IDX');
 			if (idx * 1 == 0) {
 				$Tip('到头了');
@@ -1131,7 +1129,7 @@ function EWA_FrameClass() {
 		ipt1.id = "ewa_but_" + Math.random();
 		ipt1.type = "submit";
 		ipt1.value = EWA.LANG == 'enus' ? "Next" : "下一步";
-		ipt1.onclick = function () {
+		ipt1.onclick = function() {
 			var idx = tb.getAttribute('EWA_GUIDE_IDX');
 			var id = tb.id.replace('EWA_FRAME_', '');
 			if (EWA.F.FOS[id].GuideShowCheck(idx)) {
@@ -1189,7 +1187,7 @@ function EWA_FrameClass() {
 		div.appendChild(tb);
 		tb.parentNode.className = "EWA_GROUP_GUIDE";
 	};
-	this.GuideShowTitle = function (idx) {
+	this.GuideShowTitle = function(idx) {
 		var tb = $X('EWA_FRAME_' + this._Id);
 		// var tdTitle=$X(tb.getAttribute('EWA_GUIDE_ID_TITLE'));
 		// var nums=['一','二','三','四','五','六','七','八','九','十'];
@@ -1209,7 +1207,7 @@ function EWA_FrameClass() {
 
 	};
 
-	this.GuideShowCheck = function (idx) {
+	this.GuideShowCheck = function(idx) {
 		var isOk = true;
 
 		var firstObj = null;
@@ -1240,7 +1238,7 @@ function EWA_FrameClass() {
 		}
 		return isOk;
 	};
-	this._GetTr = function (obj) {
+	this._GetTr = function(obj) {
 		var inc = 0;
 		var o = obj;
 		while (inc < 100) {
@@ -1257,7 +1255,7 @@ function EWA_FrameClass() {
 		}
 		return null;
 	};
-	this.GuideShow = function (idx) {
+	this.GuideShow = function(idx) {
 
 		this.GuideShowTitle(idx);
 
@@ -1286,7 +1284,7 @@ function EWA_FrameClass() {
 		this._ShowHidenGroup(tb, idx);
 
 	};
-	this._ShowHidenGroup = function (tb, newIdx) {
+	this._ShowHidenGroup = function(tb, newIdx) {
 		for (var i = 0; i < tb.rows.length - 1; i++) {
 			var row = tb.rows[i];
 			var idx = 0;
@@ -1300,7 +1298,7 @@ function EWA_FrameClass() {
 			}
 		}
 	};
-	this.GroupShow = function (obj, grpIdx) {
+	this.GroupShow = function(obj, grpIdx) {
 		if (obj.className.indexOf('1') > 0) {
 			return;
 		}
@@ -1360,7 +1358,7 @@ function EWA_FrameClass() {
 	 * @param {Function}
 	 *            afterJs 执行后调用的Js
 	 */
-	this.DoActionJSON = function (action, jsonName, parasArray, afterJs) {
+	this.DoActionJSON = function(action, jsonName, parasArray, afterJs) {
 		EWA.F.CID = this._Id;
 
 		this._Ajax = new EWA.C.Ajax();
@@ -1386,7 +1384,7 @@ function EWA_FrameClass() {
 		this._Ajax.PostNew(u, EWA.F.FOS[EWA.F.CID]._CallBackJs);
 	};
 
-	this._CallBackJs = function () {
+	this._CallBackJs = function() {
 		var ewa = EWA.F.FOS[EWA.F.CID];
 		var ajax = ewa._Ajax;
 		if (ajax._Http.readyState != 4) {
@@ -1432,7 +1430,7 @@ function EWA_FrameClass() {
 	 * @param cb 循环info回调的方法，p0当前tr，p1当前info, p2当前序号
 	 * @return 影响的Tr数组
 	 */
-	this.RewriteInfo = function (infoJson, idName, infoName, memoName, cb) {
+	this.RewriteInfo = function(infoJson, idName, infoName, memoName, cb) {
 		var tb = $('this.getObj()_' + this._Id);
 		var arr = [];
 		idName = idName || "id";
@@ -1482,7 +1480,7 @@ function EWA_FrameClass() {
 		return arr;
 	};
 
-	this._HiddenMemo = function (obj, tb) {
+	this._HiddenMemo = function(obj, tb) {
 		var td = obj.parentNode
 		var tr = td.parentNode;
 		var isNone = false;
@@ -1503,7 +1501,7 @@ function EWA_FrameClass() {
 
 		return isNone ? "" : s1;
 	};
-	this.ShowMemo = function (id) {
+	this.ShowMemo = function(id) {
 		var tabs = $X(this._Id + '__ewa_meger').getElementsByTagName('SPAN');
 		for (var i = 0; i < tabs.length; i++) {
 			var id1 = tabs[i].id.replace('tab_', 'tr_');
@@ -1521,7 +1519,7 @@ function EWA_FrameClass() {
 	/**
 	 * 合并备注字段
 	 */
-	this.MergeMemo = function () {
+	this.MergeMemo = function() {
 		var tb = $X('EWA_FRAME_' + this._Id);
 		var objs = tb.getElementsByTagName('textarea');
 		if (objs.length == 0) {
@@ -1575,7 +1573,7 @@ function EWA_FrameClass() {
 	 * @param {Object}
 	 *            验证失败信息
 	 */
-	this.DoValidEx = function (obj, vxMode, vxJs, vxAction, vxOk, vxFail) {
+	this.DoValidEx = function(obj, vxMode, vxJs, vxAction, vxOk, vxFail) {
 		if (obj.value == "") {
 			return;
 		}
@@ -1598,7 +1596,7 @@ function EWA_FrameClass() {
 			}
 		}
 	};
-	this._DoValidExAction = function (obj, vxAction, okmsg, errmsg) {
+	this._DoValidExAction = function(obj, vxAction, okmsg, errmsg) {
 		if (obj == null) {
 			return;
 		}
@@ -1639,7 +1637,7 @@ function EWA_FrameClass() {
 
 		var c = this;
 
-		_Ajax.PostNew(this.Url, function () {
+		_Ajax.PostNew(this.Url, function() {
 			if (_Ajax._Http.readyState != 4) {
 				return;
 			}
@@ -1670,7 +1668,7 @@ function EWA_FrameClass() {
 		});
 	};
 
-	this.ValidCodeError = function (isHiddenAlert) {
+	this.ValidCodeError = function(isHiddenAlert) {
 		let t0 = this._t_ValidCodeError || 0;
 		let t1 = new Date().getTime();
 		if (t1 - t0 < 1000) {
@@ -1683,7 +1681,7 @@ function EWA_FrameClass() {
 			return;
 		}
 		this._t_ValidCodeError = t1;
-		$('.ewa-valid-code-img').each(function () {
+		$('.ewa-valid-code-img').each(function() {
 			this.click()
 		});
 		if (!isHiddenAlert) {
@@ -1693,17 +1691,17 @@ function EWA_FrameClass() {
 		}
 	};
 	//重复提交后的提醒（幂等性）
-	this.checkIdempotenceError = function () {
+	this.checkIdempotenceError = function() {
 		var ss = _EWA_EVENT_MSG['IdempotanceError'];
 		$Tip(ss);
 	};
 	//拼图验证失败
-	this.checkValidSildePuzzleError = function () {
+	this.checkValidSildePuzzleError = function() {
 		var ss = _EWA_EVENT_MSG['ValidSildePuzzleError'];
 		$Tip(ss);
 	};
 
-	this.Init = function (xmlString) {
+	this.Init = function(xmlString) {
 		this.Xml = new EWA.C.Xml();
 		this.Xml.LoadXml(xmlString);
 
@@ -1728,7 +1726,7 @@ function EWA_FrameClass() {
 	/**
 	 * 触发验证，例如拼图验证
 	 */
-	this._InitTriggerValids = function () {
+	this._InitTriggerValids = function() {
 		var tb = this.getObj();
 		var js = "EWA.F.FOS['" + this._Id + "'].callTriggerValid(this)";
 		this.triggerValids = {};
@@ -1784,13 +1782,13 @@ function EWA_FrameClass() {
 	/**
 	 * 调用触发前判断（例如滑动拼图），检查是否符合执行调用的要求
 	 */
-	this.callTriggerValidBefore = function (obj) {
+	this.callTriggerValidBefore = function(obj) {
 		return true;
 	};
 	/**
 	 * 调用触发验证，例如滑动拼图
 	 */
-	this.callTriggerValid = function (obj) {
+	this.callTriggerValid = function(obj) {
 		if (!this.callTriggerValidBefore(obj)) {
 			return;
 		}
@@ -1811,7 +1809,7 @@ function EWA_FrameClass() {
 		let tempid = EWA_Utils.tempId();
 
 
-		$J(url.GetUrl(), function (rst) {
+		$J(url.GetUrl(), function(rst) {
 			if (!rst.RST) {
 				alert(rst.ERR);
 				return;
@@ -1827,7 +1825,7 @@ function EWA_FrameClass() {
 			rst.ewa_trigger_valid = triggerValid;
 			rst.ewa_url = url.GetUrl();
 
-			EWA.UI.SlidePuzzle(rst, top.$('#' + tempid), function (result) {
+			EWA.UI.SlidePuzzle(rst, top.$('#' + tempid), function(result) {
 				console.log('2. puzzle cb true');
 
 				// obj1.removeAttr('onclick');
@@ -1836,10 +1834,10 @@ function EWA_FrameClass() {
 					obj1.attr('onclick', $(obj).attr('_onclick'));
 					click = true;
 				}
-				setTimeout(function () {
+				setTimeout(function() {
 					$(dia.getMain()).animate({ opacity: 0 }, 500);
 				}, 500);
-				setTimeout(function () {
+				setTimeout(function() {
 					let type = obj1.attr('type');
 					// let tagName = obj1[0].tagName;
 
@@ -1867,7 +1865,7 @@ function EWA_FrameClass() {
 	/**
 	 * 添加必须输入的样式
 	 */
-	this._InitMustInputs = function () {
+	this._InitMustInputs = function() {
 		var tb = this.getObj();
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
@@ -1892,7 +1890,7 @@ function EWA_FrameClass() {
 	/**
 	 * 添加加密的样式
 	 */
-	this._InitEncyptions = function () {
+	this._InitEncyptions = function() {
 		var tb = this.getObj();
 		var nodeList = this.ItemList;
 		var c = this;
@@ -1954,7 +1952,7 @@ function EWA_FrameClass() {
 			u1.AddParameter("EWA_ENCY_FROM_ID", obj.attr('id'));
 			var u = u1.GetUrl();
 			obj.parent().attr('enc_url', u).attr('fid', obj.attr('id'));
-			obj.parent().on('click', function () {
+			obj.parent().on('click', function() {
 				if ($(this).attr('enc_ok')) {
 					return;
 				}
@@ -1966,7 +1964,7 @@ function EWA_FrameClass() {
 				$(this).attr("t", t1);
 				var u = $(this).attr('enc_url');
 				var obj = $(this).find('#' + $(this).attr('fid'));
-				$J(u, function (rst) {
+				$J(u, function(rst) {
 					if (rst.RST) {
 						obj.prop("disabled", false);
 						obj.removeAttr('ewa_encyrption');
@@ -1990,7 +1988,7 @@ function EWA_FrameClass() {
 	 *            objForm
 	 * @return {}
 	 */
-	this._InitTranslations = function () {
+	this._InitTranslations = function() {
 		var js = "EWA.F.FOS[&quot;" + this._Id + "&quot;]._Trans(this)";
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
@@ -2027,7 +2025,7 @@ function EWA_FrameClass() {
 			}
 		}
 	};
-	this._Trans = function (obj) {
+	this._Trans = function(obj) {
 		if (!obj) {
 			return;
 		}
@@ -2060,7 +2058,7 @@ function EWA_FrameClass() {
 			}
 			var txt = EWA.LANG == 'enus' ? 'Translating...' : "翻译中...";
 
-			$Tip(txt, function () {
+			$Tip(txt, function() {
 				return !trans.IsRun;
 			});
 		}
@@ -2068,7 +2066,7 @@ function EWA_FrameClass() {
 	/**
 	* 绑定当输入法打开时的判断
 	 */
-	this._bindCompostion = function (inputShowText, inputSaveValue) {
+	this._bindCompostion = function(inputShowText, inputSaveValue) {
 		if (EWA.B.IE) {
 			return;
 		}
@@ -2079,23 +2077,23 @@ function EWA_FrameClass() {
 
 		c["_droplist_"][inputSaveValue.id] = { _is_composition: false };
 
-		$(inputShowText).on('compositionstart', function () {
+		$(inputShowText).on('compositionstart', function() {
 			// 输入法打开输入
 			c["_droplist_"][inputSaveValue.id]._is_composition = true;
-		}).on('compositionend', function () {
+		}).on('compositionend', function() {
 			// 输入法输入完毕
 			c["_droplist_"][inputSaveValue.id]._is_composition = false;
 			EWA.F.I.DropList(this);
 		}).removeAttr('oninput')
 			.removeAttr('onkeyup')
-			.on('input', function () {
+			.on('input', function() {
 				if (c["_droplist_"][inputSaveValue.id]._is_composition) {
 					return;
 				}
 				EWA.F.I.DropList(this);
 			});
 	};
-	this._GetDropListValue = function () {
+	this._GetDropListValue = function() {
 		var tb = this.getObj();
 		if (tb.length == 0) {
 			return;
@@ -2132,7 +2130,7 @@ function EWA_FrameClass() {
 		}
 	};
 
-	this.refreshDropList = function (id, value) {
+	this.refreshDropList = function(id, value) {
 		let target = this.getObj('input[id="' + id + '"]');
 		if (target.length == 0) {
 			console.warn('Can not found id=' + id);
@@ -2152,7 +2150,7 @@ function EWA_FrameClass() {
 	};
 
 
-	this._GetDropListValue1 = function (textInput, valueInput) {
+	this._GetDropListValue1 = function(textInput, valueInput) {
 		if (valueInput.value == '') {
 			valueInput.setAttribute('setvalue', 1);
 			return;
@@ -2193,7 +2191,7 @@ function EWA_FrameClass() {
 			data["EWA_ACTION"] = action;
 			data[valueInput.id] = valueInput.value;
 		}
-		$JP(url, data, function (s) {
+		$JP(url, data, function(s) {
 			if (s.length == 0) {
 				return;
 			}
@@ -2239,7 +2237,7 @@ function EWA_FrameClass() {
 	/**
 	 * 用于外部调用
 	 */
-	this.DoPostEx = function () {
+	this.DoPostEx = function() {
 		EWA.F.F.CUR = this;
 		var objForm = document.forms[0];
 		if (!this.CheckValidAll(objForm)) {
@@ -2285,7 +2283,7 @@ function EWA_FrameClass() {
 	 *            是否进行合法性检查，默认检查
 	 * @return {}
 	 */
-	this.CreateAjax = function (objForm, unCheckValid) {
+	this.CreateAjax = function(objForm, unCheckValid) {
 		EWA.F.F.CUR = this;
 		if (objForm == null) {
 			objForm = $('#f_' + this._Id)[0];
@@ -2312,7 +2310,7 @@ function EWA_FrameClass() {
 	 *            objForm
 	 * @returns data
 	 */
-	this.CreatePostData = function (objForm) {
+	this.CreatePostData = function(objForm) {
 		var objForm = objForm || $('#f_' + this._Id)[0];
 		var data = {};
 		for (var name in this.ItemList.Items) {
@@ -2395,18 +2393,18 @@ function EWA_FrameClass() {
 	};
 	this.createPostData = this.CreatePostData;
 	// 提交前检查，返回true or false;
-	this.DoPostBefore = function () {
+	this.DoPostBefore = function() {
 		return true;
 	};
 	/**
 	 * 是否在进行异步提交前检查
 	 */
-	this.isDoPostBeforeTimer = function () {
+	this.isDoPostBeforeTimer = function() {
 		return this._checkStatusFristResult != null;
 	};
 
 	// 检查上传文件状态
-	this._uploadingFileCheck = function (ipt) {
+	this._uploadingFileCheck = function(ipt) {
 		//	var ipt = html5uploads[i];
 		var ipt_name = ipt.id;
 		var ht5 = window['h5u_' + this._Id + '$' + ipt_name];
@@ -2458,7 +2456,7 @@ function EWA_FrameClass() {
 		this.uploadProcess = true;
 		return true;
 	};
-	this._checkTriggerValids = function () {
+	this._checkTriggerValids = function() {
 		if (!this.triggerValids) {
 			return true;
 		}
@@ -2500,7 +2498,7 @@ function EWA_FrameClass() {
 		}
 		return true;
 	};
-	this.DoPost = function (objForm, url, isSkipDoPostBefore) {
+	this.DoPost = function(objForm, url, isSkipDoPostBefore) {
 		if (this.posting) {
 			return false;
 		}
@@ -2524,7 +2522,7 @@ function EWA_FrameClass() {
 				this._checkStatusInc = 0; // 检查计数器
 				this._checkStatusFristResult = rst;
 				// 用定时器检查
-				this._checkStatusTimer = window.setInterval(function () {
+				this._checkStatusTimer = window.setInterval(function() {
 					// 检查计数器==0 用前面的结果，避免多次检查
 					var rst = c._checkStatusInc == 0 ? c._checkStatusFristResult : c.DoPostBefore();
 					c._checkStatusInc++;
@@ -2546,10 +2544,10 @@ function EWA_FrameClass() {
 						return;
 					}
 					if (result && useTip) {
-						$Confirm(tipMsg, tipMsg, function () {
+						$Confirm(tipMsg, tipMsg, function() {
 							// yes
 							c.DoPost(objForm, url, true);
-						}, function () {
+						}, function() {
 							// no
 							return;
 						});
@@ -2581,7 +2579,7 @@ function EWA_FrameClass() {
 		}
 		if (incUploadings > 0) {
 			// 延时700ms再次尝试提交数据
-			setTimeout(function () {
+			setTimeout(function() {
 				c.DoPost(objForm, url);
 			}, 700);
 			return;
@@ -2618,7 +2616,7 @@ function EWA_FrameClass() {
 
 				if (!isRun) {
 					var c = this;
-					setTimeout(function () {
+					setTimeout(function() {
 						c.DoPost(objForm, url);
 					}, 700);
 					isRun = true;
@@ -2642,7 +2640,7 @@ function EWA_FrameClass() {
 
 		//检查拼图验证等
 		if (!this._checkTriggerValids()) {
-			setTimeout(function () {
+			setTimeout(function() {
 				c.DoPost(objForm, url, isSkipDoPostBefore);
 			}, 500);
 			return;
@@ -2685,7 +2683,7 @@ function EWA_FrameClass() {
 		}
 
 
-		this._Ajax.PostNew(url, function () {
+		this._Ajax.PostNew(url, function() {
 			that._CallBack();
 		});
 
@@ -2698,7 +2696,7 @@ function EWA_FrameClass() {
 
 		return true;
 	};
-	this._CallBack = function () {
+	this._CallBack = function() {
 		let that = this; // EWA.F.F.CUR
 		var ajax = that._Ajax;
 		if (!ajax.IsRunEnd()) {
@@ -2743,10 +2741,10 @@ function EWA_FrameClass() {
 		}
 		ajax = null;
 	};
-	this.Reload = function () {
+	this.Reload = function() {
 		// for EWA_Behavior.RELOAD_PARENT
 	};
-	this.Reload1 = function () {
+	this.Reload1 = function() {
 		// guolei 2020-05-26，当初指定了id，其实任何效果也没有
 		console.log('Reload1 这个干嘛用？谁在调用？');
 	};
@@ -2754,7 +2752,7 @@ function EWA_FrameClass() {
 	/**
 	 * 重新加载Frame,guolei 2020-05-26
 	 */
-	this.ReloadFrame = function (func) {
+	this.ReloadFrame = function(func) {
 		var frame_table = $('#f_' + this._Id); //form
 		if (frame_table.length == 0) {
 			return;
@@ -2781,7 +2779,7 @@ function EWA_FrameClass() {
 		var u1 = new EWA_UrlClass(this.Url);
 		u1.AddParameter("ewa_ajax", "install");
 		var url = u1.GetUrl();
-		$Install(url, tmp_id, function () {
+		$Install(url, tmp_id, function() {
 			if (func) {
 				func(ewa_frame_main, this);
 			}
@@ -2795,7 +2793,7 @@ function EWA_FrameClass() {
 	 *            objForm
 	 * @return {}
 	 */
-	this.CheckValidAll = function (objForm) {
+	this.CheckValidAll = function(objForm) {
 		var isOk = true;
 
 		var firstObj = null;
@@ -2826,7 +2824,7 @@ function EWA_FrameClass() {
 	 *            objForm
 	 * @return {}
 	 */
-	this.H5Type = function () {
+	this.H5Type = function() {
 		var nodeList = this.ItemList;
 		var firstObj = null;
 		for (var name in this.ItemList.Items) {
@@ -2858,7 +2856,7 @@ function EWA_FrameClass() {
 		}
 
 	};
-	this.GetObject = function (objName, objForm) {
+	this.GetObject = function(objName, objForm) {
 		if (!objForm) {
 			objForm = $('FORM#f_' + this._Id);
 		}
@@ -2877,7 +2875,7 @@ function EWA_FrameClass() {
 	 *            obj
 	 * @return {Boolean}
 	 */
-	this.CheckValid = function (obj, event) {
+	this.CheckValid = function(obj, event) {
 		if (obj.tagName == 'SPAN' || obj.tagName == 'IMG') {
 			return true;
 		}
@@ -2888,7 +2886,7 @@ function EWA_FrameClass() {
 			// 点击label会后赋值input
 			if (tag == 'LABEL' || tag == 'INPUT') {
 				var c = this;
-				setTimeout(function () {
+				setTimeout(function() {
 					var v = c._GetObjectValue(obj);
 					c.ItemList.CheckValid(obj, val);
 				}, 10);
@@ -2906,11 +2904,11 @@ function EWA_FrameClass() {
 	 *            obj
 	 * @return {}
 	 */
-	this._GetObjectValue = function (obj) {
+	this._GetObjectValue = function(obj) {
 		return this.ItemList.GetObjectValue(obj);
 	};
 
-	this.getUrlClass = function () {
+	this.getUrlClass = function() {
 		var u = new EWA_UrlClass();
 		u.SetUrl(this.Url);
 		return u;
