@@ -78,7 +78,11 @@
 		    <version>1.7.32</version>
 		    <scope>test</scope>
 		</dependency>
-
+<dependency>
+    <groupId>com.google.javascript</groupId>
+    <artifactId>closure-compiler</artifactId>
+    <version>v20250706</version>
+</dependency>
 	</dependencies>
 	<build>
 		<plugins>
