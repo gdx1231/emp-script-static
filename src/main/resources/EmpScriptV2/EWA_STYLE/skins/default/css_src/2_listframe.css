@@ -14,7 +14,10 @@
     color: red;
     text-decoration: underline;
 }
-
+/* fixed top headers */
+.ewa-lf-sticky-scroll-vertical .ewa-lf-sticky-header {
+    box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.2);
+}
 /* fixed column */
 .ewa-lf-sticky-scroll {
     overflow: auto;
@@ -44,7 +47,7 @@
     transition: box-shadow .3s;
     width: 30px;
 }
-.ewa-lf-stick-last-hide .ewa-lf-sticky-last::after {
+.ewa-lf-sticky-last-hide .ewa-lf-sticky-last::after {
 	display: none;
 }
 .ewa-lf-merge-header-split {
@@ -497,6 +500,7 @@
 	font-weight: bold;
 	height: 24px;
 	line-height: 24px;
+	white-space: nowrap;
 }
 
 .ewa-lf-grp-icon {
