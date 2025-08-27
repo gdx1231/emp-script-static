@@ -23,7 +23,14 @@ select {
 	-moz-appearance: none;
 }
 
-table, td, th, input, button, select, option, textarea {
+table,
+td,
+th,
+input,
+button,
+select,
+option,
+textarea {
 	font-size: inherit;
 	font-family: inherit;
 }
@@ -33,13 +40,15 @@ form {
 	padding: 0;
 }
 
-a, .ewa-map-button {
+a,
+.ewa-map-button {
 	COLOR: #08c;
 	text-decoration: none;
 	cursor: pointer;
 }
 
-a:hover, .ewa-map-button:hover {
+a:hover,
+.ewa-map-button:hover {
 	color: red;
 }
 
@@ -66,7 +75,8 @@ a:hover, .ewa-map-button:hover {
 }
 
 .show {
-	color: blue;;
+	color: blue;
+	;
 }
 
 .ewa-pattern-bg {
@@ -105,12 +115,38 @@ a:hover, .ewa-map-button:hover {
 	font-size: 13px;
 }
 
-.crm_main_nav1_cur, .crm_main_nav1:hover {
+.crm_main_nav1_cur,
+.crm_main_nav1:hover {
 	border: 1px solid #fff;
 	background-color: #fff;
 	color: black;
 }
 
+.ewa-break .ewa-frame,
+.ewa-break .ewa-frame>tbody {
+	display: block;
+	background-color: transparent;
+}
+
+.ewa-break .EWA_TABLE>tbody>tr {
+	display: inline;
+}
+
+.ewa-break .EWA_TABLE>tbody>tr>td {
+	display: inline;
+	background-color: transparent;
+}
+
+.ewa-break .EWA_TABLE>tbody>tr>td>.EWA_INPUT {
+	width: auto;
+}
+
+.ewa-break .EWA_TABLE>tbody>tr>td>.EWA_SELECT {
+	width: auto;
+}
+.ewa-break .EWA_TABLE>tbody>tr>td>div[tag=REPT]{
+	display: inline;
+}
 /*文字颜色*/
 .ewa-text-color-red {
 	color: red;
