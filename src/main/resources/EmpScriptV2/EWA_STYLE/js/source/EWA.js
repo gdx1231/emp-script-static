@@ -2747,7 +2747,7 @@ function EWA_TanslatorCalss() {
 	 * @prarm transCompleteCallback 全部翻译完成的调用 function 可为空
 	 * 
 	 */
-	this.transAll = function (objs_ch, objs_en, transCompleteItemCallBack, transCompleteCallback) {
+	this.transAll = function(objs_ch, objs_en, transCompleteItemCallBack, transCompleteCallback) {
 		this.idx = 0;
 		this.idx_ok = 0;// 翻译完成数量
 		if (objs_ch == null) {
@@ -2772,7 +2772,7 @@ function EWA_TanslatorCalss() {
 	 * @prarm transCompleteCallback 全部翻译完成的调用 function 可为空
 	 * 
 	 */
-	this.transAllToCn = function (objs_ch, objs_en, transCompleteItemCallBack, transCompleteCallback) {
+	this.transAllToCn = function(objs_ch, objs_en, transCompleteItemCallBack, transCompleteCallback) {
 		this.idx = 0;
 		this.idx_ok = 0;// 翻译完成数量
 		if (objs_ch == null) {
@@ -2784,13 +2784,16 @@ function EWA_TanslatorCalss() {
 		this._transCompleteCallback = transCompleteCallback;
 		this._transCompleteItemCallBack = transCompleteItemCallBack;
 		this.start_trans('cn');
+		$Tip('enus' == EWA.LANG ? "Translate started" : "翻译开始", () => {
+			return this.check_complete();
+		});
 	};
 	/**
 	 * 开始翻译
 	 * @param {} transToLang 
 	 * @returns 
 	 */
-	this.start_trans = function (transToLang) {
+	this.start_trans = function(transToLang) {
 		if (this.idx <= this._objs_ch.length - 1) {
 			const idx = this.idx;
 			this.idx++;
@@ -2814,18 +2817,18 @@ function EWA_TanslatorCalss() {
 
 			// 定时调用
 			const c = this;
-			setTimeout(function () {
+			setTimeout(function() {
 				c.start_trans(transToLang);
 			}, 123);
 			return;
 		}
 		// setTimeout(this.post_server, 1231);
 	};
-	this.trans_item = function (fromObj, toObj, transToLang) {
+	this.trans_item = function(fromObj, toObj, transToLang) {
 		let that = this;
 		if (this.trans == null) {
 			this.trans = new EWA_TransClass();
-			this.trans.transAfter = function (rst, func) {
+			this.trans.transAfter = function(rst, func) {
 				that.idx_ok++;
 				that.call_item_callback(func, rst);
 			};
@@ -2839,7 +2842,7 @@ function EWA_TanslatorCalss() {
 	/**
 	 * 根据对象返回文字
 	 */
-	this.get_text = function (fromObj) {
+	this.get_text = function(fromObj) {
 		if (!fromObj == null || fromObj == undefined) {
 			return null;
 		}
@@ -2863,12 +2866,12 @@ function EWA_TanslatorCalss() {
 		}
 		return chstr || "";
 	};
-	this.call_item_callback = function (fromObj, rst) {
+	this.call_item_callback = function(fromObj, rst) {
 		if (this._transCompleteItemCallBack) {
 			this._transCompleteItemCallBack(fromObj, rst);
 		}
 	}
-	this.check_complete = function () {
+	this.check_complete = function() {
 		if (this._objs_ch.length == this.idx_ok) {
 			$Tip('enus' == EWA.LANG ? "Translate completed" : "翻译完成");
 
@@ -2889,10 +2892,10 @@ function EWA_TransClass() {
 
 	this._IDX = 0;
 	this.IsRun = false;
-	this.TransToEn = function (hz, func) {
+	this.TransToEn = function(hz, func) {
 		this.transToEn(hz, func);
 	};
-	this.transToEn = function (hz, func) {
+	this.transToEn = function(hz, func) {
 		if (hz == null || hz.trim() == '') {
 			if (func instanceof Function) {// 调用用户的方法
 				func(null);
@@ -2910,10 +2913,10 @@ function EWA_TransClass() {
 			console.log('没有指定翻译引擎');
 		}
 	};
-	this.TransToCn = function (english, func) {
+	this.TransToCn = function(english, func) {
 		this.transToCn(english, func);
 	};
-	this.transToCn = function (english, func) {
+	this.transToCn = function(english, func) {
 		if (english == null || english.trim() == '') {
 			if (func instanceof Function) {// 调用用户的方法
 				func(null);
@@ -2931,7 +2934,7 @@ function EWA_TransClass() {
 			console.log('没有指定翻译引擎');
 		}
 	};
-	this._trans_azure = function (fromStr, func, isTransToEn) {
+	this._trans_azure = function(fromStr, func, isTransToEn) {
 		let that = this;
 		let ajaxCfg = {
 			url: this.azureTansCfg.url + (isTransToEn ? "&from=zh-Hans&to=en" : "&from=en&to=zh-Hans"),
@@ -2942,7 +2945,7 @@ function EWA_TransClass() {
 			},
 			data: JSON.stringify([{ "text": fromStr }]),
 			type: "POST",
-			success: function (results) {
+			success: function(results) {
 				// [{"translations":[{"text":"你好","to":"zh-Hans"}]}]
 				if (results.length == 0) {
 					$Tip('No result');
@@ -2952,7 +2955,7 @@ function EWA_TransClass() {
 				that.transBackCallCommon(rst, func);
 				// delete window[this._Id];
 			},
-			error: function (req) {
+			error: function(req) {
 				that.IsRun = false;
 				$Tip(req.responseText);
 			}
@@ -2963,7 +2966,7 @@ function EWA_TransClass() {
 	/**
 	 * 有道翻译，不区分英文和汉字
 	 */
-	this._trans_youdao = function (fromStr, func) {
+	this._trans_youdao = function(fromStr, func) {
 		var funcName = this._get_func_name();
 		var funcName1 = funcName + "AAAAA";
 		var funcStr = this.transback_youdao_tmp.toString().replace("transback_youdao_tmp", '');
@@ -2983,7 +2986,7 @@ function EWA_TransClass() {
 		s.src = u;
 		document.getElementsByTagName("head")[0].appendChild(s);
 	};
-	this._trans_bing = function (fromStr, func, isTransToEn) {
+	this._trans_bing = function(fromStr, func, isTransToEn) {
 		var funcName = this._get_func_name();
 		var funcName1 = funcName + "AAAAA";
 
@@ -3011,12 +3014,12 @@ function EWA_TransClass() {
 		s.src = u;
 		document.getElementsByTagName("head")[0].appendChild(s);
 	};
-	this._get_user_func_str = function (funcName, funcName1) {
+	this._get_user_func_str = function(funcName, funcName1) {
 		var js = "var fromClass=window['" + this._Id + "'];\n var func=window['" + funcName1 + "']; \n var _fname='" + funcName
 			+ "'; \n var _fname1='" + funcName1 + "'; \n ";
 		return js;
 	};
-	this._get_func_name = function () {
+	this._get_func_name = function() {
 		this._IDX++;
 		var funcName = '___GDX_T_' + this._IDX;
 		return funcName;
@@ -3024,7 +3027,7 @@ function EWA_TransClass() {
 	/**
 	 * bing 回调模板脚本
 	 */
-	this.transback_bing_tmp = function (rst) {
+	this.transback_bing_tmp = function(rst) {
 		// 替换 下面 FF 脚本内容
 		/* FF */
 		try {
@@ -3038,7 +3041,7 @@ function EWA_TransClass() {
 	/**
 	 * youdao 回调模板脚本
 	 */
-	this.transback_youdao_tmp = function (rst) {
+	this.transback_youdao_tmp = function(rst) {
 		// 替换 下面 FF 脚本内容
 		/* FF */
 		try {
@@ -3066,7 +3069,7 @@ function EWA_TransClass() {
 		delete window[_fname1];
 		delete window[_fname];
 	};
-	this.transBackCallCommon = function (rst, func) {
+	this.transBackCallCommon = function(rst, func) {
 		this.IsRun = false;
 		if (func == null) {
 			console.log(rst)
@@ -3100,7 +3103,8 @@ function EWA_TransClass() {
 				autosize.update(func);
 			}
 
-		} else if (tag == 'DIV' || tag == 'SPAN') {
+		} else if (tag == 'DIV' || tag == 'SPAN' || tag == 'A' || tag == 'P' 
+			|| tag == 'TD' || tag == 'TH' || tag == 'PRE' || tag == 'LI' || tag == 'BUTTON') {
 			if (tag == 'DIV' && $(func).attr('EWA_DHTML')) {
 				$(func).find('iframe')[0].contentWindow.frames[0].document.body.innerHTML = rst;
 				$(func).find('input[type=hidden]')[0].value = rst;
