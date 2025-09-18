@@ -366,6 +366,64 @@ function EWA_ListFrameClass() {
 		this.Merge(from, to, meargeStr);
 	};
 	/**
+	 * 创建合并表达式的参数
+	 * @param {*} htmlString 
+	 * @returns 
+	 */
+	this.createMergeExpParameters = function (htmlString) {
+		// 正则表达式匹配 @@ 或 @ 开头的占位符
+		const placeholderRegex = /@(@)?[a-zA-Z_][a-zA-Z0-9_]*/g;
+		const matches = htmlString.match(placeholderRegex) || [];
+		// 构建结果对象
+		const result = {};
+		// 尝试解析 HTML
+		try {
+			// 直接用 <div>${htmlString}</div> 包装输入
+			const $element = $(`<div>${htmlString}</div>`);
+			// 获取所有 DOM 属性
+			const domAttributes = {};
+			$element.find('*').addBack().each(function () {
+				$.each(this.attributes, function (index, attr) {
+					domAttributes[attr.name] = attr.value;
+				});
+			});
+
+			// 检查每个占位符
+			matches.forEach(match => {
+				const id = match.startsWith('@@') ? match.slice(2) : match.slice(1);
+				let isAttr = false;
+				let attrName = '';
+
+				// 检查占位符是否出现在属性值中
+				for (const [name, value] of Object.entries(domAttributes)) {
+					if (value.includes(match)) {
+						isAttr = true;
+						attrName = name;
+						break;
+					}
+				}
+
+				result[match] = {
+					id: id,
+					isAttr: isAttr,
+					attrName: attrName
+				};
+			});
+		} catch (e) {
+			// 如果解析失败，所有占位符都不是 DOM 属性
+			matches.forEach(match => {
+				const id = match.startsWith('@@') ? match.slice(2) : match.slice(1);
+				result[match] = {
+					id: id,
+					isAttr: false,
+					attrName: ''
+				};
+			});
+		}
+
+		return result;
+	};
+	/**
 	 * 根据表达式合并单元格
 	 * 
 	 * @param toParent
@@ -384,23 +442,25 @@ function EWA_ListFrameClass() {
 			return;
 		}
 		let tb = $('#EWA_LF_' + this._Id);
-
 		// mergeExp="@id1 x @id2 = @id3 (@id4)"
-		var r1 = /\@\@[a-zA-Z0-9\-\._:]*\b/ig;
-		var m1 = mergeExp.match(r1);
-		var paras = [];
+		// var r1 = /\@\@[a-zA-Z0-9\-\._:]*\b/ig;
+		// var m1 = mergeExp.match(r1);
+		const parasInfo = this.createMergeExpParameters(mergeExp);
 		var tmp_html = mergeExp;
 		var memos = {};
 
 		//	2020-05-28 	合并列表头
 		let headers = [];
-		for (var i = 0; i < m1.length; i++) {
-			var key = m1[i];
-			paras.push(key);
-			var id = key.replace('@@', '');
-			// mearge是拼写错误
-			let rep = "<span class='ewa-lf-merge ewa-lf-merge-" + id + " ewa-lf-mearge ewa-lf-mearge-" + id + "' mid=\"" + id + "\"></span>";
-			tmp_html = tmp_html.replace(key, rep);
+		//for (var i = 0; i < m1.length; i++) {
+		for (const key in parasInfo) {
+			const para = parasInfo[key];
+			const isDomAttr = para.isAttr;
+			const id = para.id;
+			if (!isDomAttr) {
+				// mearge是拼写错误
+				let rep = "<span class='ewa-lf-merge ewa-lf-merge-" + id + " ewa-lf-mearge ewa-lf-mearge-" + id + "' mid=\"" + id + "\"></span>";
+				tmp_html = tmp_html.replace(key, rep);
+			}
 			if (id != toParent) {
 				tb.find('tr[ewa_tag="HEADER"] [id="' + id + '"]').parent().hide();
 				// 计算行
@@ -433,26 +493,38 @@ function EWA_ListFrameClass() {
 			}
 
 
-			var o1 = $('<div style="display:none"></div>');
+			const o1 = $('<div style="display:none"></div>');
 			o1.html(tmp_html);
 
 			// var tmp = mergeExp;
-			for (var n in paras) {
-				var exp = paras[n];
-				var key = exp.replace('@@', '');
-				var o = $(this).find('[id="' + key + "\"]");
+			for (const key in parasInfo) {
+				const para = parasInfo[key];
+				console.log(para);
+				const isDomAttr = para.isAttr;
+				const id = para.id;
+				var o = $(this).find('[id="' + id + "\"]");
 				if (o.length == 0) {
 					continue;
 				}
-				if (key != toParent) {
+				if (id != toParent) {
 					o.parent().hide().addClass('ewa-row-merge-hide');
 				}
-				var t = o1.find('span[mid="' + key + '"]');
-				if (isAddMemo) {
-					t.append("<span class='ewa-lf-mearge-memo'></span>");
-					t.find('.ewa-lf-mearge-memo').html(memos[key]);
+				if (!isDomAttr) {
+					const t = o1.find('span[mid="' + id + '"]');
+					if (isAddMemo) {
+						t.append("<span class='ewa-lf-mearge-memo'></span>");
+						t.find('.ewa-lf-mearge-memo').html(memos[id]);
+					}
+					t.append(o);
+				} else {
+					const attrName = para.attrName;
+					o1.find("[" + attrName + "='" + key + "']").each(function () {
+						const v = $(this).attr(attrName);
+						if (v === key) {
+							$(this).attr(attrName, o.text().trim());
+						}
+					});
 				}
-				t.append(o);
 			}
 			while (o1[0].childNodes.length > 0) {
 				p.append(o1[0].childNodes[0]);
