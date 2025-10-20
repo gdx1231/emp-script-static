@@ -584,7 +584,7 @@ function _$J_HandleRst(ajax, func, cmds, isJson) {
 		return;
 	}
 	if (ajax.IsError()) {
-		if(ajax.onError){ //外部定义的错误
+		if (ajax.onError) { //外部定义的错误
 			ajax.onError(ajax.responseStatus);
 		} else if (window.EWA_AjaxErr) {
 			window.EWA_AjaxErr(ajax);
@@ -679,7 +679,7 @@ function _$J_SELECT(data, obj, textName, valueName, isAddBlank, initValue, funcC
 			return "not defined textName";
 		}
 		if (textName instanceof Function) {
-			return textName[d];
+			return textName(d);
 		}
 		if (textName.indexOf("@@") == -1) {
 			return d[textName];
