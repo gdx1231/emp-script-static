@@ -165,7 +165,7 @@ function EWAC$Field() {
 			if (this.IsFk) {
 				return "select";
 			}
-			if (this.Length < 200) {
+			if (this.Length < 500) {
 				return "text";
 			} else {
 				return "textarea";
@@ -173,6 +173,30 @@ function EWAC$Field() {
 		} else {
 			return "span";
 		}
+	};
+	this.GetOrder = function() {
+		if (this.FrameTag.toUpperCase() !== "ListFrame".toUpperCase()) {
+			return "0";
+		}
+		var t = this.Type.toLowerCase();
+		if (t.indexOf("blob") >= 0 || t.indexOf("image") >= 0) {
+			return "0";
+		}
+		if (this.Length > 200) {
+			return "0"
+		}
+		return "1";
+	};
+	this.GetSearch = function() {
+		if (this.FrameTag.toUpperCase() !== "ListFrame".toUpperCase()) {
+			return "";
+		}
+		const t = this.GetType().toLowerCase();
+		console.log(t, this.Length, this.Name, this.Description);
+		if (t == "string" && this.Length <= 200) {
+			return "text";
+		}
+		return "";
 	};
 	this.GetType = function() {
 		var t = this.Type.toLowerCase();
@@ -200,7 +224,7 @@ function EWAC$Field() {
 			}
 		}
 		if (t.indexOf("num") >= 0 || t.indexOf("money") >= 0) {
-			return "Money";
+			return "LeastMoney"; //最短的货币格式
 		}
 		return "";
 	};
@@ -229,12 +253,14 @@ function EWAC$Fields() {
 	this.GetSqlRelationSelect = function() {
 		var s1 = "SELECT * FROM " + this.TableName + " WHERE NOT " + this.Pk + " IN( \r\n\t SELECT " + this.Pk
 			+ " FROM RelationTable B WHERE B.REF_ID =@REF_ID\r\n)";
+		console.log(s1);
 		return s1;
 	};
 	this.GetSqlRelationUpdate = function() {
 		var s1 = "INSERT INTO RelationTable(" + this.Pk + ",REF_ID)\r\n\t " + "SELECT DISTINCT " + this.Pk + ", @REF_ID FROM "
 			+ this.TableName + " WHERE " + this.Pk + " IN (@IDS_SPLIT) AND NOT " + this.Pk + " IN( \r\n\t SELECT " + this.Pk
 			+ " FROM RelationTable B WHERE B.REF_ID =@REF_ID\r\n)";
+		console.log(s1);
 		return s1;
 	};
 	/**
@@ -254,6 +280,7 @@ function EWAC$Fields() {
 				s1 += f.Name + "=@" + f.Name;
 			}
 		}
+		console.log(s1);
 		return s1;
 	};
 	this._GetTreeFields = function() {
@@ -269,15 +296,21 @@ function EWAC$Fields() {
 	 */
 	this.GetSqlTreeNodeRename = function() {
 		this._GetTreeFields();
-		return "UPDATE " + this.TableName + " SET " + this.TreeText + "=@" + this.TreeText + " WHERE " + this.TreeKey + "=@"
-			+ this.TreeKey;
+		const mdateFieldName = _GetMDateField();
+		var s1 = "UPDATE " + this.TableName + " SET " + this.TreeText + " = @" + this.TreeText
+			+ (mdateFieldName ? "," + mdateFieldName + " = @sys_date" : "")
+			+ " WHERE " + this.TreeKey + "=@" + this.TreeKey;
+		console.log(s1);
+		return s1;
 	};
 	/**
 	 * 获取树的删除节点SQL
 	 */
 	this.GetSqlTreeNodeDelete = function() {
 		this._GetTreeFields();
-		return "DELETE FROM " + this.TableName + " WHERE " + this.TreeKey + "=@" + this.TreeKey;
+		var s1 = "DELETE FROM " + this.TableName + " WHERE " + this.TreeKey + "=@" + this.TreeKey;
+		console.log(s1);
+		return s1;
 	};
 	/**
 	 * 获取树的新增节点SQL
@@ -296,7 +329,9 @@ function EWAC$Fields() {
 			+ s01 + ") B";
 		var s3 = "SELECT * FROM " + this.TableName + " WHERE " + this.TreeParentKey + "=@" + this.TreeParentKey + " AND "
 			+ this.TreeText + "=@" + this.TreeText;
-		return s1 + s2 + ";\n" + s3;
+		s1 = s1 + s2 + ";\n" + s3;
+		console.log(s1);
+		return s1;
 	};
 	/**
 	 * 获取树的加载SQL
@@ -305,7 +340,9 @@ function EWAC$Fields() {
 		this._GetTreeFields();
 		var s1 = "SELECT * FROM " + this.TableName + " WHERE 1=1 ORDER BY ";
 		var order = this.TreeLevel + " , " + this.TreeOrder;
-		return s1 + order;
+		s1 = s1 + order;
+		console.log(s1);
+		return s1;
 	};
 
 	this.GetSqlTreeChangeNode = function() {
@@ -333,23 +370,23 @@ function EWAC$Fields() {
 	/**
 	 * 获取主键表达式
 	 */
-	this._GetSqlPk = function(notPk) {
-		var ss = [];
+	this._GetSqlPk = function(notPk, prefix) {
+		const ss = [];
 		if (!notPk) {
-			var pks = this.userDefinedPkFields || this.PkFields; // 使用自定义主键或表定义主键
+			const pks = this.userDefinedPkFields || this.PkFields; // 使用自定义主键或表定义主键
 
-			for (var i = 0; i < pks.length; i += 1) {
-				var s1 = pks[i].Name + " = @" + pks[i].Name;
+			for (let i = 0; i < pks.length; i += 1) {
+				const s1 = (prefix ? prefix + "." : "") + pks[i].Name + " = @" + pks[i].Name;
 				ss.push(s1);
 			}
 		}
 		if (window.EWAC_DEF && EWAC_DEF.WHERE) {
-			for ( var n in EWAC_DEF.WHERE) {
-				var f = this.Fields.GetItem(n);
+			for (const n in EWAC_DEF.WHERE) {
+				const f = this.Fields.GetItem(n);
 				if (f == null) {
 					continue;
 				}
-				var s1 = n + " = @" + EWAC_DEF.WHERE[n];
+				const s1 = n + " = @" + EWAC_DEF.WHERE[n];
 				ss.push(s1);
 			}
 		}
@@ -358,48 +395,69 @@ function EWAC$Fields() {
 				return " 1>2 -- table not defined pk";
 			}
 		}
-		return ss.join("\r\n\tAND ");
+		return ss.join("\n\tAND ");
+	};
+
+	this._GetMDateField = function() {
+		for (let i = 0; i < this.Fields.Count(); i += 1) {
+			const f = this.Fields.GetItem(i);
+			if (f.Name.toUpperCase().indexOf('_MDATE') > 0) {
+				// 默认修改日期
+				return f.Name;
+			}
+
+		}
+		return null;
+	};
+	this._GetCDateField = function() {
+		for (let i = 0; i < this.Fields.Count(); i += 1) {
+			const f = this.Fields.GetItem(i);
+			if (f.Name.toUpperCase().indexOf('_CDATE') > 0) {
+				// 默认创建日期
+				return f.Name;
+			}
+
+		}
+		return null;
+	};
+	this._GetStatusField = function() {
+		const node = _EWAC_DEFINE._Xml.GetElement("EasyWebTemplate/Page/PageSize/Set");
+		if (!node) { //目前只有ListFrame有状态字段
+			return null;
+		}
+		const statusField = node.getAttribute("StatusField");
+		if (!statusField || statusField.toUpperCase().indexOf("[OBJECT") == 0) {
+			return null;
+		}
+		return statusField;
+	};
+	this._GetSqlUpdateStatus = function(status) {
+		if (this.PkFields.length == 0 && (this.userDefinedPkFields == null || this.userDefinedPkFields.length == 0)) {
+			$Tip('请注意，主键没有定义，可以上一步进行设置');
+		}
+
+		const statusField = this._GetStatusField();
+		if (!statusField) {
+			$Tip('请注意，状态字段没有定义，可以上一步进行设置');
+			statusField = " 没有定义状态字段 ";
+		}
+		const mdateFieldName = this._GetMDateField();
+		var s1 = "UPDATE " + this.TableName + " SET " + statusField + "='" + status + "' "
+			+ (mdateFieldName ? ", " + mdateFieldName + " = @sys_date" : "") + " WHERE "
+			+ this._GetSqlPk();
+		console.log(s1);
+		return s1;
 	};
 	/**
 	 * Listframe delete模式（逻辑删除）
 	 */
 	this.GetSqlDeleteA = function() {
-
-		if (this.PkFields.length == 0 && (this.userDefinedPkFields == null || this.userDefinedPkFields.length == 0)) {
-			$Tip('请注意，主键没有定义，可以上一步进行设置');
-		}
-
-		var node = _EWAC_DEFINE._Xml.GetElement("EasyWebTemplate/Page/PageSize/Set");
-
-		var statusField = node.getAttribute("StatusField");
-		console.log(statusField);
-
-		if (!statusField || statusField.toUpperCase().indexOf("[OBJECT") == 0) {
-			$Tip('请注意，状态字段没有定义，可以上一步进行设置');
-			statusField = " 没有定义状态字段 ";
-		}
-
-		var s1 = "UPDATE " + this.TableName + " SET " + statusField + "='DEL' WHERE " + this._GetSqlPk();
-		return s1;
+		return this._GetSqlUpdateStatus('DEL');
 	};
+
 	// 恢复数据 2016-12-01
 	this.GetSqlRestore = function() {
-		if (this.PkFields.length == 0 && (this.userDefinedPkFields == null || this.userDefinedPkFields.length == 0)) {
-			$Tip('请注意，主键没有定义，可以上一步进行设置');
-		}
-
-		var node = _EWAC_DEFINE._Xml.GetElement("EasyWebTemplate/Page/PageSize/Set");
-
-		var statusField = node.getAttribute("StatusField");
-		console.log(statusField);
-
-		if (!statusField || statusField.toUpperCase().indexOf("[OBJECT") == 0) {
-			$Tip('请注意，状态字段没有定义，可以上一步进行设置');
-			statusField = " 没有定义状态字段 ";
-		}
-
-		var s1 = "UPDATE " + this.TableName + " SET " + statusField + "='USED' WHERE " + this._GetSqlPk();
-		return s1;
+		return this._GetSqlUpdateStatus('USED');
 	};
 	/**
 	 * 获取树的删除数据SQL
@@ -412,27 +470,49 @@ function EWAC$Fields() {
 	 * 获取加载数据SQL
 	 */
 	this.GetSqlSelect = function() {
-		var s1 = "SELECT A.* FROM " + this.TableName + " A WHERE " + this._GetSqlPk();
+		var s1 = "SELECT A.* FROM " + this.TableName + " A WHERE " + this._GetSqlPk(null, "A");
+		console.log(s1);
 		return s1;
 	};
 	/**
 	 * 加载Listframe 数据
 	 */
 	this.GetSqlSelectLF = function() {
-		var s2 = this._GetSqlPk(true);
+		var s2 = this._GetSqlPk(true); // 1=1
 		var s1 = "SELECT A.* FROM " + this.TableName + " A WHERE " + (s2 == "" ? "1=1" : s2);
 		var node = _EWAC_DEFINE._Xml.GetElement("EasyWebTemplate/Page/PageSize/Set");
 		var recycle = node.getAttribute("Recycle"); // 回收站资料
 
 		if (1 == recycle) {
-			var statusField = node.getAttribute("StatusField");
-			if (!statusField || statusField.toUpperCase().indexOf("[OBJECT") == 0) {
+			const statusField = this._GetStatusField();
+			if (!statusField) {
 				$Tip('请注意，状态字段没有定义，可以上一步进行设置');
 				statusField = " 没有定义状态字段 ";
 			}
-			s1 += "\n\tAND A." + statusField + " = CASE WHEN @EWA_RECYCLE='1' THEN 'DEL' ELSE 'USED' END\n";
+			s1 += "\n\t-- ewa_test @EWA_RECYCLE is null"
+			s1 += "\n\tAND A." + statusField + " =  'USED'";
+			s1 += "\n\t-- ewa_test @EWA_RECYCLE = '1'"
+			s1 += "\n\tAND A." + statusField + " =   'DEL'";
+			s1 += "\n\t-- ewa_test\n"
 		}
-
+		let order = null;
+		for (var i = 0; i < this.Fields.Count(); i += 1) {
+			var f = this.Fields.GetItem(i);
+			if (f.Type.toUpperCase().indexOf("IDENTITY") > 0) {
+				order = f.Name; //  默认按自增字段排序
+				break;
+			}
+		}
+		if (order == null) {
+			const mdateFieldName = this._GetMDateField();
+			if (mdateFieldName) {
+				order = mdateFieldName; // 默认按修改日期排序
+			}
+		}
+		if (order) {
+			s1 = s1 + "\nORDER BY A." + order + " DESC";
+		}
+		console.log(s1);
 		return s1;
 	};
 
@@ -440,6 +520,8 @@ function EWAC$Fields() {
 	 * 获取更新SQL
 	 */
 	this.GetSqlUpdate = function() {
+		const statusField = this._GetStatusField();
+		const cdateFieldName = this._GetCDateField();
 		var s1 = "UPDATE " + this.TableName + " SET ";
 		var m = 0;
 		for (var i = 0; i < this.Fields.Count(); i += 1) {
@@ -447,8 +529,12 @@ function EWAC$Fields() {
 			if (f.Type.toUpperCase().indexOf("IDENTITY") > 0 || f.IsPk || f.IsChecked == false) {
 				continue;
 			}
-			if (f.Name.toUpperCase().indexOf('_CDATE') > 0) {
+			if (cdateFieldName && f.Name.toUpperCase() == cdateFieldName.toUpperCase()) {
 				// 默认创建日期
+				continue;
+			}
+			if (statusField && statusField.toUpperCase() == f.Name.toUpperCase()) {
+				// 状态字段
 				continue;
 			}
 			if (m > 0) {
@@ -457,25 +543,23 @@ function EWAC$Fields() {
 				m = 1;
 			}
 
-			s1 += "\r\n\t" + f.Name + " = @" + this._GetPara(f);
-			;
+			s1 += "\n\t" + f.Name + " = @" + this._GetPara(f);
 		}
-		return s1 + "\r\nWHERE " + this._GetSqlPk();
+		s1 = s1 + "\nWHERE " + this._GetSqlPk();
+		console.log(s1);
+		return s1;
 	};
 	/**
 	 * 获取新增数据SQL
 	 */
 	this.GetSqlNew = function() {
-		var s1 = "INSERT INTO " + this.TableName + " (";
-		var s2 = ") VALUES ( ";
-		var m = 0;
-		for (var i = 0; i < this.Fields.Count(); i += 1) {
-			var f = this.Fields.GetItem(i);
+		let s1 = "INSERT INTO " + this.TableName + " (";
+		let s2 = ") VALUES ( ";
+		let m = 0;
+		const statusField = this._GetStatusField();
+		for (let i = 0; i < this.Fields.Count(); i += 1) {
+			const f = this.Fields.GetItem(i);
 			if (f.Type.toUpperCase().indexOf("IDENTITY") > 0 || f.IsChecked == false) {
-				continue;
-			}
-			if (f.Name.toUpperCase().indexOf('_MDATE') > 0) {
-				// 默认修改日期
 				continue;
 			}
 			if (m > 0) {
@@ -485,9 +569,15 @@ function EWAC$Fields() {
 				m = 1;
 			}
 			s1 += f.Name;
-			s2 += "@" + this._GetPara(f);
+			if (statusField && statusField.toUpperCase() == f.Name.toUpperCase()) {
+				s2 += "'USED'";
+			} else {
+				s2 += "@" + this._GetPara(f);
+			}
 		}
-		return s1 + s2 + ")";
+		s1 = s1 + s2 + ")";
+		console.log(s1);
+		return s1;
 	};
 	this._GetPara = function(f) {
 		if (window.EWAC_DEF && EWAC_DEF.FIELD_MAP) {
@@ -496,8 +586,26 @@ function EWAC$Fields() {
 				return EWAC_DEF.FIELD_MAP[n];
 			}
 		}
+		const name = f.Name.toUpperCase().trim();
 		if (f.GetType() == 'Date') {
 			return "SYS_DATE";
+		} else if (name.indexOf('UNID') >= 0 && name !='REF_UNID' ) {
+			return "SYS_UNID";
+		} else if (name == "IP" || name.indexOf("IP_") == 0 || name.endsWith("_IP")) {
+			return "SYS_REMOTEIP";
+		} else if (name == "UA" || name == "USERAGENT" || name == "USER_AGENT"
+			|| name.indexOf("USER_AGENT_") == 0 || name.endsWith("_USER_AGENT")
+			|| name.indexOf("USERAGENT_") == 0 || name.endsWith("_USERAGENT")
+			|| name.endsWith("_UA") || name.endsWith("UA_")
+		) {
+			return "SYS_USER_AGENT";
+		} else if (name == "REFERER" || name.indexOf("REFERER_") == 0 || name.endsWith("_REFERER")
+		) {
+			return "SYS_REMOTE_REFERER";
+		} else if (name == "REMOTE_URL" || name.indexOf("REMOTE_URL_") == 0 || name.endsWith("_REMOTE_URL")
+			|| name == "JSP" || name.indexOf("JSP_") == 0 || name.endsWith("_JSP")
+		) {
+			return "SYS_REMOTE_URL_ALL";
 		} else {
 			return f.Name;
 		}
@@ -540,7 +648,13 @@ function EWA$Define$Button() {
 	};
 	this.GetParentStyle = function() {
 		return this.ParentStyle;
-	}
+	};
+	this.GetOrder = function() {
+		return "0";
+	};
+	this.GetSearch = function() {
+		return "";
+	};
 }
 function EWA$Define$Menu() {
 	this.Name;
@@ -560,6 +674,12 @@ function EWA$Define$Menu() {
 		return "";
 	};
 	this.CreateFkSql = function() {
+		return "";
+	};
+	this.GetOrder = function() {
+		return "0";
+	};
+	this.GetSearch = function() {
 		return "";
 	};
 }
@@ -1030,7 +1150,7 @@ function EWA_DefineClass(frameTag) {
 		var buts = tmp.Buttons;
 		var items = tmp.Items;
 		var s1 = "<table border=0 id='fields_choose' width=80% align=center cellspacing=1 cellpadding=2>";
-		s1+="<tr><th><a href='javascript:$(&quot;#fields_choose input[type=checkbox]&quot;).each(function(){this.checked=!this.checked})'>Choose</a></th><th>Field</th><th>Type</th></tr>";
+		s1 += "<tr><th><a href='javascript:$(&quot;#fields_choose input[type=checkbox]&quot;).each(function(){this.checked=!this.checked})'>Choose</a></th><th>Field</th><th>Type</th></tr>";
 
 		for (var i = 0; i < this.Fields.Fields.Count(); i += 1) {
 			var f = this.Fields.Fields.GetItem(i);
@@ -1293,7 +1413,7 @@ function EWA_DefineClass(frameTag) {
 			this.Fields.PkFields[this.Fields.PkFields.length] = f;
 		}
 		f.IsChecked = $T("input", row.cells[0])[0].checked;
-		 //非空
+		//非空
 		f.MustInput = GetInnerText(row.cells[5]).trim() == "false" ? 1 : 0;
 		//自增
 		f.IsIdentity = GetInnerText(row.cells[6]).trim() == "true" ? 1 : 0;
