@@ -18112,7 +18112,6 @@ function EWA_ListFrameClass() {
 			// var tmp = mergeExp;
 			for (const key in parasInfo) {
 				const para = parasInfo[key];
-				console.log(para);
 				const isDomAttr = para.isAttr;
 				const id = para.id;
 				var o = $(this).find('[id="' + id + "\"]");
