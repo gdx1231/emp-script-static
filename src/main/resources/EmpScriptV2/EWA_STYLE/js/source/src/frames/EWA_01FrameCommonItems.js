@@ -44,8 +44,14 @@ function EWA_FrameCommonItems() {
 		if (!(DisableOnModify && DisableOnModify.toUpperCase() == 'YES')) {
 			return;
 		}
-		var o = $X(name1);
-		if (o) {
+		var o = this.F? this.F.getObj('#' + name1)[0] : $X(name1);
+		if (!o) {
+			return
+		}
+		const o1 = $(o);
+		if('REPT' == o1.attr('tag')){ //radio or checkbox	
+			o1.find('input').attr('disabled', 'disabled');
+		} else {
 			o.setAttribute('disabled', 'disabled');
 			if (o.getAttribute('DlsShow')) {
 				// droplist设置显示的对象禁用

@@ -2635,9 +2635,10 @@ function EWA_ListFrameClass() {
 		this.Xml = new EWA.C.Xml();
 		this.Xml.LoadXml(xmlString);
 		this.ItemList.Init(this.Xml);
+		this.ItemList.F = this;
 		this.Resources = new EWA_FrameResoures();
 		this.Resources.Init(this.Xml);
-		var tb = $X('EWA_LF_' + this._Id);
+		var tb = $('#EWA_LF_' + this._Id)[0];
 		if (!tb || tb.tagName != 'table' || tb.rows.length <= 1) {
 			return;
 		}

@@ -13203,8 +13203,14 @@ function EWA_FrameCommonItems() {
 		if (!(DisableOnModify && DisableOnModify.toUpperCase() == 'YES')) {
 			return;
 		}
-		var o = $X(name1);
-		if (o) {
+		var o = this.F? this.F.getObj('#' + name1)[0] : $X(name1);
+		if (!o) {
+			return
+		}
+		const o1 = $(o);
+		if('REPT' == o1.attr('tag')){ //radio or checkbox	
+			o1.find('input').attr('disabled', 'disabled');
+		} else {
 			o.setAttribute('disabled', 'disabled');
 			if (o.getAttribute('DlsShow')) {
 				// droplist设置显示的对象禁用
@@ -20248,9 +20254,10 @@ function EWA_ListFrameClass() {
 		this.Xml = new EWA.C.Xml();
 		this.Xml.LoadXml(xmlString);
 		this.ItemList.Init(this.Xml);
+		this.ItemList.F = this;
 		this.Resources = new EWA_FrameResoures();
 		this.Resources.Init(this.Xml);
-		var tb = $X('EWA_LF_' + this._Id);
+		var tb = $('#EWA_LF_' + this._Id)[0];
 		if (!tb || tb.tagName != 'table' || tb.rows.length <= 1) {
 			return;
 		}
