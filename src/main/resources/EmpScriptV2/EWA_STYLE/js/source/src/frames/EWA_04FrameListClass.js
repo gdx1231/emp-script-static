@@ -1184,7 +1184,7 @@ function EWA_ListFrameClass() {
 			}
 			for (var i = 0; i < gridTable.rows[0].cells.length; i++) {
 				var cell = gridTable.rows[0].cells[i];
-				if (cell.childNodes[0].id.toUpperCase() == name) {
+				if (cell.childNodes.length > 0 && cell.childNodes[0].id && cell.childNodes[0].id.toUpperCase() == name) {
 					rowIndexes.push(i);
 					node.setAttribute("but_show", "1");
 					break;
