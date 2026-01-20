@@ -5874,7 +5874,7 @@ function EWA_ListFrameClass() {
 		return null;
 	};
 	/**
-	 * 在当前行新增一个新行, 2024-07-24
+	 * 在当前行新增一个新行, 或返回当前的新行 2024-07-24
 	 * @param tr 当前行
 	 */
 	this.newRowOneTd = function (currentTr) {
@@ -5882,14 +5882,17 @@ function EWA_ListFrameClass() {
 			return null
 		}
 		currentTr = $(currentTr)[0];
-		let nextTr = currentTr.parentNode.rows[currentTr.rowIndex + 1];
+		const rowSpan = currentTr.cells[0].rowSpan;
+		const rowIndex = currentTr.rowIndex + rowSpan; //rowSpan默认=1
+
+		let nextTr = currentTr.parentNode.rows[rowIndex];
 		if (nextTr != null && nextTr.getAttribute('add_pre_row') == "1") {
 			return nextTr;
 		}
 		let o = currentTr.parentNode.parentNode; // tb
-		let colspan = o.rows[0].cells.length;
-
-		nextTr = o.insertRow(currentTr.rowIndex + 1);
+		// 去掉隐含的列
+		let colspan = $(o.rows[0]).find('td:visible').length;
+		nextTr = o.insertRow(rowIndex);
 		nextTr.setAttribute('add_pre_row', 1);
 		let td = nextTr.insertCell(-1);
 		td.colSpan = colspan;
@@ -7786,13 +7789,13 @@ function EWA_ListFrameClass() {
 		}
 		this.Goto(this._PageCurrent, httpReferer);
 	};
-	this.refreshPage = function (httpReferer, callBack) {
-		this.replaceRowsData(null, null, httpReferer, callBack);
+	this.refreshPage = function (httpReferer, callBack, isStopReload) {
+		this.replaceRowsData(null, null, httpReferer, callBack, isStopReload);
 	};
 	/**
 	* 根据ajax请求，替换当前表中对应的行数据
 	 */
-	this.replaceRowsData = function (searchExp, replaceFuntion, httpReferer, callBack) {
+	this.replaceRowsData = function (searchExp, replaceFuntion, httpReferer, callBack, isStopReload) {
 		let u = this.getUrlClass();
 		u.AddParameter("EWA_AJAX", "LF_RELOAD");
 		u.AddParameter("EWA_IS_SPLIT_PAGE", "no");
@@ -7820,11 +7823,11 @@ function EWA_ListFrameClass() {
 				console.error(ret);
 				return;
 			}
-			that.replaceRowsWithDataHtml(ret, replaceFuntion, httpReferer, callBack);
+			that.replaceRowsWithDataHtml(ret, replaceFuntion, httpReferer, callBack, isStopReload);
 		});
 
 	};
-	this.replaceRowsWithDataHtml = function (newDataHtml, replaceFuntion, httpReferer, callBack) {
+	this.replaceRowsWithDataHtml = function (newDataHtml, replaceFuntion, httpReferer, callBack, isStopReload) {
 		let pNode = $("<div></div>");
 		pNode.html(newDataHtml);
 
@@ -7866,6 +7869,14 @@ function EWA_ListFrameClass() {
 		});
 		pNode.remove();
 
+		if (changedTrClones.length == 0) {
+			// 没有数据变化
+			if (callBack) {
+				callBack(changedTrClones);
+			}
+			return;
+		}
+
 		this.SearchMark();
 		if (this.IsReShow) {
 			this.ReShowWithNoButtons();
@@ -7878,10 +7889,10 @@ function EWA_ListFrameClass() {
 		if (this.SubBottomsArray) {
 			this._SubBottoms();
 		}
-		if (this.ReloadAfter) {
+		if (!isStopReload && this.ReloadAfter) {
 			this.ReloadAfter(httpReferer);
 		}
-		if (this.ReloadAfterApp) {
+		if (!isStopReload && this.ReloadAfterApp) {
 			// app中定义
 			this.ReloadAfterApp(httpReferer);
 		}
