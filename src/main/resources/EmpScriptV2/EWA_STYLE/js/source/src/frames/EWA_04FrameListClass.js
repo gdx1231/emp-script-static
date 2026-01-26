@@ -1223,6 +1223,10 @@ function EWA_ListFrameClass() {
 	};
 
 	this.ReShow = function (notReDrawButtons) {
+		var gridTable = $X('EWA_LF_' + this._Id);
+		if(gridTable == null){
+			return;
+		}
 		this.IsReShow = true;
 		var newDivId = '_G_' + this._Id;
 		this.NewDivId = newDivId;
@@ -1262,7 +1266,8 @@ function EWA_ListFrameClass() {
 		// css = "width:100%;height:100%;overflow:auto;position: absolute";
 		//}
 
-		var gridTable = $X('EWA_LF_' + this._Id);
+		
+		
 
 		var objMain = gridTable.parentNode.parentNode; // table->div->table|test1->div|EWA_FRAME_MAIN
 		// console.log(objMain);
