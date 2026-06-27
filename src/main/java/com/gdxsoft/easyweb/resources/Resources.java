@@ -149,6 +149,8 @@ public class Resources {
 			path = path.replace("/thrid-party/", "/third-party/");
 		} else if (path.indexOf("/js_jquery/") >= 0 && path.indexOf("EWA_ALL") < 0) {
 			path = path.replace("/js_jquery/", "/source/");
+		} else if (path.indexOf("/ace/v1.4.12/") >= 0) {
+			path = path.replace("/ace/v1.4.12/", "/ace/v1.44.0/");
 		}
 
 		path = path.replace("//", "/").replace("//", "/").replace("//", "/").replace("//", "/");
