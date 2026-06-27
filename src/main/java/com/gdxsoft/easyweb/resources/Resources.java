@@ -72,17 +72,17 @@ public class Resources {
 		}
 		boolean binary = false;
 		if (ext.equalsIgnoreCase("js")) {
-			r.setType("text/javascript");
+			r.setType("application/javascript");
 		} else if (ext.equalsIgnoreCase("htm") || ext.equalsIgnoreCase("html")) {
 			r.setType("text/html");
 		} else if (ext.equalsIgnoreCase("txt") || ext.equalsIgnoreCase("csv")) {
 			r.setType("text/plain");
 		} else if (ext.equalsIgnoreCase("json")) {
-			r.setType("text/json");
+			r.setType("application/json");
 		} else if (ext.equalsIgnoreCase("css")) {
 			r.setType("text/css");
 		} else if (ext.equalsIgnoreCase("xml")) {
-			r.setType("text/xml");
+			r.setType("application/xml");
 		} else if (ext.equalsIgnoreCase("jif") || ext.equalsIgnoreCase("jiff") || ext.equalsIgnoreCase("jpg")
 				|| ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif")
 				|| ext.equalsIgnoreCase("webp") || ext.equalsIgnoreCase("apng")) {
@@ -120,19 +120,8 @@ public class Resources {
 		}
 	}
 
-	/**
-	 * Get the EWA static files, js, css, images ...
-	 * 
-	 * @param resourcePath static path
-	 * @return the resource
-	 */
-	public static Resource getResource(String resourcePath) {
-		// from cached
-		if (CACHED.containsKey(resourcePath)) {
-			return CACHED.get(resourcePath);
-		}
+	private static String rewritePath(String resourcePath) {
 		String path = resourcePath;
-		// for compatible
 		if (path.indexOf("EWA_ALL.js") > 0 || path.indexOf("EWA_ALL.2.0.js") > 0) {
 			path = "/EWA_STYLE/js/ewa.js";
 		} else if (path.indexOf("EWA_ALL.min.2.0.js") > 0) {
@@ -154,10 +143,27 @@ public class Resources {
 		}
 
 		path = path.replace("//", "/").replace("//", "/").replace("//", "/").replace("//", "/");
+		return path;
+	}
 
-		// load from resources
-		Resource r = loadResource(path);
-		CACHED.put(resourcePath, r);
+	/**
+	 * Get the EWA static files, js, css, images ...
+	 * 
+	 * @param resourcePath static path
+	 * @return the resource
+	 */
+	public static Resource getResource(String resourcePath) {
+		String path = rewritePath(resourcePath);
+
+		Resource r = CACHED.get(path);
+		if (r != null) {
+			return r;
+		}
+
+		r = loadResource(path);
+		if (r.getStatus() == 200) {
+			CACHED.putIfAbsent(path, r);
+		}
 
 		return r;
 	}
