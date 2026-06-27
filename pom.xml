@@ -3,9 +3,9 @@
 	<url>https://github.com/gdx1231/emp-script-static</url>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gdxsoft.easyweb</groupId>
-	<artifactId>emp-script-static</artifactId>
+	<artifactId>emp-script-static-jdk17</artifactId>
 	<version>1.1.10</version>
-	<name>EmpScript static files</name>
+	<name>EmpScript static files (JDK 17)</name>
 	<description>EmpScript static files</description>
 	<developers>
 		<developer>
@@ -85,13 +85,13 @@
 </dependency>
 	</dependencies>
 	<build>
+		<directory>target17</directory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>17</release>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -167,8 +167,8 @@
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<sourceFile>target/${project.build.finalName}.jar</sourceFile>
-							<destinationFile>target/${project.artifactId}-last.jar</destinationFile>
+							<sourceFile>${project.build.directory}/${project.build.finalName}.jar</sourceFile>
+							<destinationFile>${project.build.directory}/${project.artifactId}-last.jar</destinationFile>
 						</configuration>
 					</execution>
 				</executions>
