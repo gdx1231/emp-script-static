@@ -1,1 +1,0 @@
-/* move to EWA_06TransClass */
