@@ -1,0 +1,10 @@
+  if (typeof define === 'function' && define.amd) {
+    define(function () {
+      return EWA_VueClass;
+    })
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = EWA_VueClass
+  } else {
+    call.EWA_VueClass = EWA_VueClass;
+  }
+})(this);

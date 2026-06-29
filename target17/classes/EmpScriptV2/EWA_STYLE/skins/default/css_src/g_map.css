@@ -1,0 +1,75 @@
+/** map **/
+.ewa-map-small {
+	height: 150px;
+	width: 100%;
+	position: relative;
+}
+
+.ewa-map-small-td {
+	height: 150px;
+}
+
+.ewa-map-small-cnt {
+	width: 100%;
+	height: 100%;
+}
+
+.ewa-map-full-but {
+	cursor: pointer;
+	top: 5px;
+	right: 5px;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	color: #fff;
+	background: #08c;
+	border-radius: 100%;
+}
+
+.ewa-map-full-but:hover {
+	color: #08c;
+	background: #fff;
+}
+
+.ewa-map-full-but b {
+	line-height: 20px;
+	font-size: 13px;
+}
+
+.ewa-map-full {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	right: 0;
+	bottom: 0;
+	z-index: 10312;
+	display: block;
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.ewa-map-full-cnt {
+	width: 100%;
+	height: 100%;
+}
+
+.ewa-map-full p {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 100%;
+	background-color: red;
+}
+
+.ewa-map-full p:hover {
+	background-color: #fff;
+	color: red;
+}

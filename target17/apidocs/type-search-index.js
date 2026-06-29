@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"com.gdxsoft.easyweb.resources","l":"DemoDataOfHsqldb"},{"p":"com.gdxsoft.easyweb.resources","l":"MyUtils"},{"p":"com.gdxsoft.easyweb.resources","l":"Resource"},{"p":"com.gdxsoft.easyweb.resources","l":"Resources"},{"p":"com.gdxsoft.easyweb.resources","l":"Servlet"},{"l":"所有类和接口","u":"allclasses-index.html","k":"18"}];updateSearchResults();

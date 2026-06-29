@@ -1,0 +1,159 @@
+@CHARSET "UTF-8";
+
+.EWA_UI_PROP_PANEL {
+	width: 300px;
+	height: 500px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	font-size: 11px;
+	border-top: 1px solid #CDCDCD;
+	border-bottom: 1px solid #CDCDCD;
+	border-left: 1px solid #CDCDCD;
+	font-family: arial;
+}
+
+.EWA_UI_PROP_PANEL NOBR {
+	font-size: 11px;
+}
+
+.EWA_UI_PROP_PANEL TD {
+	height: 19px;
+}
+
+.EWA_UI_PROP_PANEL TABLE {
+	table-layout: fixed;
+}
+
+.EWA_UI_PROP_GROUP {
+	width: 100%;
+	background-color: #eee;
+}
+
+.EWA_UI_PROP_GROUP_INNER {
+	width: 100%;
+	background-color: #eee;
+	border-left: 1px solid #CCC;
+	border-top: 1px solid #CCC;
+}
+
+.EWA_UI_PROP_GROUP_C0 {
+	width: 15px;
+	height: 15px;
+	font-weight: bold;
+	text-align: center;
+	cursor: default;
+}
+
+.EWA_UI_PROP_GROUP_C1 {
+	font-weight: bold;
+	cursor: default;
+	font-size:11px;
+}
+
+.EWA_UI_PROP_ROW {
+	width: 100%;
+	height: 19px;
+	border-top: 1px solid #CCC;
+}
+
+.EWA_UI_PROP_ROW_C0 {
+	background-color: #FFF;
+	width: 100px;
+	border-left: 1px solid #CCC;
+	font-family: arial;
+	font-size: 11px;
+	padding-left: 2px;
+	cursor: default;
+}
+
+.EWA_UI_PROP_ROW_C1 {
+	background-color: #FFF;
+	border-left: 1px solid #CCC;
+	font-family: arial;
+}
+
+.EWA_UI_PROP_ROW_C0M {
+	background-color: #FFF;
+	width: 100%;
+	border-left: 1px solid #CCC;
+	font-family: arial;
+	font-size: 11px;
+	padding-left: 2px;
+	cursor: default;
+	font-weight: bold;
+}
+
+.EWA_UI_PROP_ROW_C0M DIV {
+	overflow: hidden;
+	width: 100%;
+}
+
+.EWA_UI_PROP_ROW_C0_MARK {
+	background-color: blue;
+	color: white;
+}
+
+.EWA_UI_PROP_ROW_C0_UNMARK {
+	background-color: #FFF;
+	color: #000;
+}
+
+.EWA_UI_PROP_INPUT {
+	border: 0px;
+	width: 100%;
+	font-size: 11px;
+}
+
+.EWA_UI_PROP_BUT {
+	font-size: 11px;
+	height: 15px;
+	width: 15px;
+	padding: 1px;
+	display: none;
+	padding-right: 2px;
+}
+
+.EWA_UI_PROP_SELECT {
+	width: 100%;
+	font-size: 11px;
+}
+
+.EWA_UI_PROP_SET {
+	width: 600px;
+	height: 300px;
+	background-color: #ccc;
+	font-size: 12px;
+	font-family: arial;
+}
+
+.EWA_UI_PROP_SET_C0 {
+	width: 160px;
+	height: 100%;
+}
+
+.EWA_UI_PROP_SET_C1 {
+	width: 30px;
+	text-align: center;
+	background-color: #fff;
+}
+
+.EWA_UI_PROP_SET_C2 {
+	background-color: #fff;
+	height: 100%;
+	border: 1px solid #ccc;
+}
+.EWA_UI_PROP_SET_C3 {
+	background-color: #fff;
+	border: 1px solid #ccc;
+}
+.EWA_UI_PROP_SET button{
+	height: 18px;
+	font-size: 11px;
+	padding: 1px;
+	}
+.EWA_UI_PROP_SET SELECT {
+	font-size: 12px;
+	width: 100%;
+	height: 100%;
+}
+

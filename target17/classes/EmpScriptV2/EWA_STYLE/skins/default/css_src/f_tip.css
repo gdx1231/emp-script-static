@@ -1,0 +1,110 @@
+/** tip **/
+.ewa-tip-arrow {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.ewa-tip-tl {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 6px;
+	height: 6px;
+	background-image:
+		url("data:image/gif;base64,R0lGODlhBgAGAHcAMSH+GlNvZnR3YXJlOiBNaWNyb3NvZnQgT2ZmaWNlACH5BAEAAAAALAAAAAAGAAYAgwAAAKqqqrKysrGxsbq6utzc3MvLy/b29v///wECAwECAwECAwECAwECAwECAwECAwQTEEgxBqiknGsOQgDhfUPxkeMXAQA7");
+	width: 6px;
+}
+
+.ewa-tip-tm {
+	padding: 0 !important;
+	margin: 0 !important;
+	height: 6px;
+	background-repeat: repeat-x;
+	background-image:
+		url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAAGCAYAAABTuy/PAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH1ggHFwsEWOSOzQAAAD1JREFUeJzt1jEBACAQxDDAv5MXebiA4RIFHbtnJgsAgBo7iQEEAChyfgcAAPCWAQQAKGMAAQDKGEAAgDIX1GEHB09LpM0AAAAASUVORK5CYII=");
+}
+
+.ewa-tip-tr {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 6px;
+	height: 6px;
+	background-image:
+		url("data:image/gif;base64,R0lGODlhBgAGAHcAMSH+GlNvZnR3YXJlOiBNaWNyb3NvZnQgT2ZmaWNlACH5BAEAAAAALAAAAAAGAAYAgwAAALGxsbKysqqqqrq6utzc3MvLy/b29v///wECAwECAwECAwECAwECAwECAwECAwQTMAQB6ikkVISO0VxHCCFSBOURRAA7");
+}
+
+.ewa-tip-bl {
+	padding: 0 !important;
+	margin: 0 !important;
+	height: 6px;
+	width: 6px;
+	background-image:
+		url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsPAAALDwGS+QOlAAAAB3RJTUUH1ggIFDoliPU3LgAAAFNJREFUeJxlyaEVwCAMQMFfHCvwUOzEIh2ERaoyTGwUjxGIpKI1pWcPEVlzzrULQB9jsAvAZWa4+y+au3dV/eQBICIVaDHGXEohpfTEmxk4gQrkG2mnMVoF46pBAAAAAElFTkSuQmCC");
+}
+
+.ewa-tip-bm {
+	padding: 0 !important;
+	margin: 0 !important;
+	height: 6px;
+	background-repeat: repeat-x;
+	background-image:
+		url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAAGCAYAAABTuy/PAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH1ggHFwohCvtrywAAAD9JREFUeJzt1kERACAMBDFg8K+kHouL8rhEwT53d3cvAABinN8BAADMMoAAAGEMIABAGAMIABDmVtXvBgAABj0LZQYO1C+iewAAAABJRU5ErkJggg==");
+}
+
+.ewa-tip-br {
+	padding: 0 !important;
+	margin: 0 !important;
+	height: 6px;
+	width: 6px;
+	background-image:
+		url("data:image/gif;base64,R0lGODlhBgAGAKIGAMvLy7Gxsdzc3Pb29rq6uv///////wAAACH5BAEAAAYALAAAAAAGAAYAAAMRWFoTW4KsQYwaoI5YTeiGkQAAOw==");
+}
+
+.ewa-tip-l {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 6px;
+	background-image:
+		url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAKACAYAAAC/ugmkAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH1ggHFwoz+UIagwAAAEhJREFUeJztyUENADAIBDCCfycncjMABkj7bSV5k66FEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQoiL8QESMBvrcTtYcwAAAABJRU5ErkJggg==");
+	background-repeat: repeat-x;
+}
+
+.ewa-tip-m {
+	padding: 0 !important;
+	margin: 0 !important;
+	background: #fff;
+}
+
+.ewa-tip-r {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 6px;
+	background-image:
+		url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAKACAYAAAC/ugmkAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH1ggHFwoQWyVr8QAAAExJREFUeJztyTERADAMxLC0/KGE43fqEgg5ebROktSou+vO+QMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsBEeZ08LAIq+omoAAAAASUVORK5CYII=");
+	background-repeat: repeat-x;
+}
+
+.ewa-tip {
+	padding: 0 !important;
+	margin: 0 !important;
+	position: absolute;
+	width: 0;
+	height: 0;
+}
+
+.ewa-tip-for {
+	padding: 0 !important;
+	margin: 0 !important;
+	position: absolute;
+	z-index: 22;
+	left: 0px;
+	top: 0px;
+}
+/* 用于 $Mark显示的外部框  */
+.ewa-mark {
+	position: absolute;
+	z-index: 100001;
+	border: 2px solid #FF9800;
+	padding: 0px;
+	box-sizing: content-box;
+	border-radius: 4px;
+}

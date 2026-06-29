@@ -30,6 +30,10 @@ echo start compress with google
 java -jar ${sh_dir}/compiler.jar --js ${target}/EWA_ALL.js --js_output_file ${target}/EWA_ALL.min.js --language_out ECMASCRIPT_2019 --create_source_map ${target}/EWA_ALL.min.map
 
 echo "//# sourceMappingURL=ewa.min.map" >> ${target}/EWA_ALL.min.js
+
+# fix source map: replace build-machine relative path, keep source/EWA_ALL.js
+sed -i '' 's|[^"]*/\(source/[^/"]*\.js\)|\1|g' ${target}/EWA_ALL.min.map
+
 echo start combine EWA_ALL.min.2.0.js
 mv ${target}/EWA_ALL.min.js ${target}/../ewa.min.js
 mv ${target}/EWA_ALL.js ${target}/../ewa.js

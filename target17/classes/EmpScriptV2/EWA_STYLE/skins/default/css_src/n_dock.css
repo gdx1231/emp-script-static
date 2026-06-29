@@ -1,0 +1,97 @@
+/* 底部菜单 dock */
+.ewa-dock {
+	height: 0;
+	position: fixed;
+	bottom: 0;
+	z-index: 10;
+	width: 100%;
+}
+
+.ewa-dock .ewa-dock-table {
+	position: relative;
+	bottom: 80px;
+	height: 80px;
+	background-color: #ccc;
+	opacity: 0.86;
+	border-radius: 5px 5px 0 0;
+	margin: auto;
+	border-left: 10px solid #ccc;
+	border-right: 10px solid #ccc;
+}
+
+.ewa-dock .ewa-dock-item-td {
+	height: 60px;
+	width: 60px;
+	padding-left: 5px;
+	padding-right: 5px;
+	text-align: center;
+}
+
+.ewa-dock .ewa-dock-item-div {
+	border-radius: 4px;
+	height: 60px;
+	width: 60px;
+	background-color: #08c;
+	color: #fff;
+	cursor: pointer;
+	position: relative;
+}
+
+.ewa-dock-item-div:hover {
+	background-color: #fff;
+	color: #08c;
+	transition-duration: 0.7s;
+	-web-kit-transition-duration: 0.7s;
+}
+.ewa-dock-item-div .badge {
+    height: 20px;
+    min-width: 20px;
+    background-color: red;
+    color: #fff;
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    line-height: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 11px;
+}
+.ewa-dock .ewa-dock-item-icon {
+	line-height: 60px;
+	font-size: 40px;
+}
+
+.ewa-dock-title {
+	position: absolute;
+	min-width: 50px;
+	display: none;
+	z-index: 212;
+	white-space: nowrap;
+}
+
+.ewa-dock-title  div {
+	position: relative;
+	width: 100%;
+	z-index: 2;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	background-color: #8D8804;
+	padding: 0 4px;
+	border-radius: 5px;
+	color: #fff;
+	box-sizing: content-box;
+}
+
+.ewa-dock-title p {
+	position: relative;
+	padding: 0px;
+	height: 12px;
+	width: 12px;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	margin: auto;
+	margin-top: -6px;
+	z-index: 1;
+	background-color: #8D8804;
+}

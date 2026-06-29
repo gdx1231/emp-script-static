@@ -1,0 +1,71 @@
+/*组合框*/
+.ewa-combo-box {
+	position: relative;
+}
+
+.ewa-combo-box i {
+	float: right;
+	top: 3px;
+	right: 3px;
+	position: absolute;
+	height: 16px;
+	line-height: 16px;
+	padding: 0 0 0 3px;
+}
+
+.ewa-combo-box .ewa-combo-btn-down {
+	color: #4AA0FA;
+}
+
+.ewa-combo-box .ewa-combo-btn-close {
+	display: none;
+	color: red;
+}
+
+.ewa-combo-box .ewa-combo-droplist {
+	background-color: #fff;
+	float: left;
+	position: absolute;
+	width: 100%;
+	display: none;
+	z-index:2;
+}
+
+.ewa-combo-box .ewa-combo-dp {
+	border: 1px solid #4AA0FA;
+	border-radius: 3px;
+	max-height: 200px;
+	overflow: auto;
+}
+
+.ewa-combo-box input {
+	width: 100%;
+	border: 0;
+	height: 20px;
+	line-height: 20px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+
+.ewa-combo-box ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.ewa-combo-box li {
+	padding: 0 6px;
+	line-height: 20px;
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	background-color: #ffffff;
+}
+
+.ewa-combo-box li:hover {
+	background-color: #efefef;
+}
+
+.ewa-combo-box li.combo-cur-item {
+	background: #efefef;
+}

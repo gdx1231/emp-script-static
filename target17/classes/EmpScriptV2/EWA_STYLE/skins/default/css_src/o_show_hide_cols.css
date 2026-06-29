@@ -1,0 +1,67 @@
+.custom-cols-panel-box{
+    float: right;
+    right: 4px;
+    top:30px;
+    background-color:#fff;
+    border:1px solid #ccc;
+    min-width: 200px;
+    min-height: 100px;
+    overflow: hidden;
+    display: none;
+    color:#333;
+    position: fixed;
+    z-index:100;
+}
+
+.custom-cols-panel-box ul{
+    list-style:none;
+    padding: 0;
+    margin: 0;
+}
+.custom-cols-panel-box li{
+    padding:0px 6px 0px 12px;
+    height:24px;
+    position:relative;
+    overflow:hidden;
+}
+.custom-cols-panel-box li:hover {
+    background-color: #eee;
+}
+.custom-cols-panel-box li label{
+    display: block;
+    float: left;
+    width: 100%;
+    position: absolute;
+    padding-left:30px;
+    left: 0;
+    top: 0;
+}
+.custom-cols-panel-box li.not-hide-col label{
+    color:#ccc;
+}
+
+.custom-cols-panel-box .custom-cols-header{
+    margin: 0;
+    padding-left: 12px;
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+}
+.custom-cols-panel-box .but-close{
+    float:right;
+    position: absolute;
+    top:6px;
+    right: 6px;
+    font-size: 16px;
+    color:#ccc;
+    cursor: pointer;
+}
+.custom-cols-panel-box .but-close:hover{
+    color:#bbb;
+}
+.custom-cols-panel-box .custom-cols-contain{
+    overflow: auto;
+    padding-bottom: 12px;
+}
