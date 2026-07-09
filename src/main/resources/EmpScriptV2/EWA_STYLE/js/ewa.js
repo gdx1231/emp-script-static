@@ -11855,6 +11855,7 @@ function EWA_UI_PicViewClass() {
  * 导航按钮
  * 
  */
+if (typeof EWA_UI_NavBarClass === 'undefined') {
 class EWA_UI_NavBarClass {
 	constructor() {
 		this.id = null;
@@ -11971,6 +11972,7 @@ class EWA_UI_NavBarClass {
 			}
 		}
 	};
+}
 }/**
  * 提交后的行为
  */

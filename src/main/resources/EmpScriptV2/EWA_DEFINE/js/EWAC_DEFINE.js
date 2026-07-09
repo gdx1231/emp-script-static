@@ -1,6 +1,3 @@
-/**
- * @include "../../EWA_STYLE/js/EWA.js"
- */
 function EWAC$Add() {
 	this.Text;
 	this.XmlPath;
@@ -1417,14 +1414,17 @@ function EWA_DefineClass(frameTag) {
 		f.MustInput = GetInnerText(row.cells[5]).trim() == "false" ? 1 : 0;
 		//自增
 		f.IsIdentity = GetInnerText(row.cells[6]).trim() == "true" ? 1 : 0;
-		var fks = GetInnerText(row.cells[7]).split(".");
-		f.FkTableName = fks[0].trim();
-		f.FkColumnName = fks[1].trim();
-		if (f.FkTableName.length > 0) {
+		
+		let fkInfo = GetInnerText(row.cells[7]).trim();
+		if( fkInfo.length > 0 && fkInfo.indexOf(".") > 0){
+			var fks = fkInfo.split(".");
+			f.FkTableName = fks[0].trim();
+			f.FkColumnName = fks[1].trim();
 			f.IsFk = true;
 		} else {
-			f.IsFk = false;
-		}
+            f.IsFk = false;
+        }
+		
 		return f;
 	};
 	//
