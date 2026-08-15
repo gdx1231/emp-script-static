@@ -3,7 +3,7 @@
 	<url>https://github.com/gdx1231/emp-script-static</url>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gdxsoft.easyweb</groupId>
-	<artifactId>emp-script-static</artifactId>
+	<artifactId>emp-script-static${artifact.suffix}</artifactId>
 	<version>1.1.12</version>
 	<name>EmpScript static files</name>
 	<description>Static resources (CSS, JavaScript and images) for the EWA (Easy Web Application) project</description>
@@ -40,6 +40,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<artifact.suffix></artifact.suffix>
 	</properties>
 
 	<dependencies>
@@ -90,8 +93,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -181,6 +184,49 @@
 		https://issues.sonatype.org/browse/OSSRH-65277
 	-->
 	<profiles>
+		<profile>
+			<id>jakarta</id>
+			<properties>
+				<maven.compiler.source>17</maven.compiler.source>
+				<maven.compiler.target>17</maven.compiler.target>
+				<artifact.suffix>-jakarta</artifact.suffix>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+			<dependencies>
+				<!-- Jakarta EE 10 servlet API (provided by Tomcat 10.1) -->
+				<dependency>
+					<groupId>jakarta.servlet</groupId>
+					<artifactId>jakarta.servlet-api</artifactId>
+					<version>6.0.0</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<!-- 字节码级改写 javax.* → jakarta.* -->
+					<plugin>
+						<groupId>org.eclipse.transformer</groupId>
+						<artifactId>transformer-maven-plugin</artifactId>
+						<version>1.0.0</version>
+						<executions>
+							<execution>
+								<id>transform-jakarta</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>transform</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<rules>
+								<jakartaDefaults>true</jakartaDefaults>
+								<overwrite>true</overwrite>
+							</rules>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>release</id> <!-- 部署要用到 -->
 			<build>
