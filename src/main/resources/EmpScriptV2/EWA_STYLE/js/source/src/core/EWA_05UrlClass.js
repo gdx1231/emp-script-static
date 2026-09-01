@@ -15,6 +15,11 @@ function EWA_UrlClass(init_url) {
 	}
 	this._URL = url;
 	this._Paras = {};
+	// 去掉 #fragment 部分，避免参数值被污染
+	var hashIdx = url.indexOf('#');
+	if (hashIdx >= 0) {
+	    url = url.substring(0, hashIdx);
+	}
 	this._Root = url.split('?')[0];
 	if (url.indexOf("?") < 0) {
 	    return;
