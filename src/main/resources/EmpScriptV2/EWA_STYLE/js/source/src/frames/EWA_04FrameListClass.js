@@ -35,11 +35,13 @@ function EWA_ListFrameClass() {
     this.REPLACE_HISTORY_STATE = false; // 列表查询更换网页的url
 
     this._IsSearchGroup = true; //2024-02-27 查询分组标记，默认分组
-
-	//将buttons显示在 row 的最后一个 td 里
+    this.getObj = function(exp) {
+        return exp ? $('#EWA_LF_' + this._Id).find(exp) : $('#EWA_LF_' + this._Id);
+    }
+    //将buttons显示在 row 的最后一个 td 里 2026-09-02
     this.mergeButtonsInRow = function(herderText) {
         var newButtons = [];
-		var ewa = this;
+        var ewa = this;
         var checkRow = this.getObj('tr:eq(0)');
         for (var name in ewa.ItemList.Items) {
             var node = ewa.ItemList.Items[name];
@@ -65,9 +67,9 @@ function EWA_ListFrameClass() {
                 var evt = this._GetSubValue("EventSet", 'EventValue', node);
                 const newButton = $('<input type=button>').attr('onclick', evt.replace('event', 'this')).addClass('IX_BUTTON')
                     .attr('value', text).attr('rid', name);
-				if(title){
-					newButton.attr('title', title);
-				}
+                if (title) {
+                    newButton.attr('title', title);
+                }
                 newButtons.push(newButton);
             }
         }
@@ -91,13 +93,13 @@ function EWA_ListFrameClass() {
             });
             this.getObj().parent().css('overflow-x', 'auto').css('width', '100%')
         }
-		const $lfSearch = $('#_G_' + this._Id +' .ewa-lf-search');
-		
-		//reload skip append buttons
-		if($lfSearch.attr('set_new_buttons')){
-			return;
-		}
-		$lfSearch.attr('set_new_buttons', 'yes');
+        const $lfSearch = $('#_G_' + this._Id + ' .ewa-lf-search');
+
+        //reload skip append buttons
+        if ($lfSearch.attr('set_new_buttons')) {
+            return;
+        }
+        $lfSearch.attr('set_new_buttons', 'yes');
         for (let i = 0;i < newButtons.length;i++) {
             $lfSearch.append(newButtons[i]);
         }
