@@ -5034,9 +5034,10 @@ function EWA_ListFrameClass() {
     }
     //将buttons显示在 row 的最后一个 td 里 2026-09-02
     this.mergeButtonsInRow = function(herderText) {
-        var newButtons = [];
-        var ewa = this;
-        var checkRow = this.getObj('tr:eq(0)');
+        const newButtons = [];
+		const newButtonIds = {};
+        const ewa = this;
+        const checkRow = this.getObj('tr:eq(0)');
         for (var name in ewa.ItemList.Items) {
             var node = ewa.ItemList.Items[name];
             var tag = ewa._GetSubValue("Tag", "Tag", node);
@@ -5065,6 +5066,7 @@ function EWA_ListFrameClass() {
                     newButton.attr('title', title);
                 }
                 newButtons.push(newButton);
+				newButtonIds[itemName] = true;
             }
         }
 
@@ -5081,7 +5083,10 @@ function EWA_ListFrameClass() {
             }
             this.getObj('.ewa-lf-data-row').each(function() {
                 let $containter = $(this).find('.ewa-col-funcs');
-                $(this).find('input[type=button]:gt(0)').each(function() {
+                $(this).find('input[type=button]').each(function() {
+					if(newButtonIds[this.id]){
+						return;
+					}
                     $containter.append(this);
                 });
             });
