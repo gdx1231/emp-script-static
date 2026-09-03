@@ -18,3 +18,5 @@ ewa_conf_console.xml
 /emp-script-static.iml
 .github/
 .vs/
+
+/test/
