@@ -2,13 +2,16 @@
 
 echo create EWA.js
 sh_dir=`dirname $0`
+cd "$sh_dir" && sh_dir=$(pwd)
 
 src=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_STYLE/js/source/src
 target=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_STYLE/js/source
+final=${sh_dir}/../src/main/resources/EmpScriptV2/EWA_STYLE/js
 
 echo   DIR：${sh_dir}
 echo   SRC：${src}
 echo TARGET：${target}
+echo FINAL：${final}
 
 cat ${src}/core/*.js  > ${target}/EWA.js
 
@@ -24,16 +27,18 @@ cat ${src}/misc/*.js > ${target}/EWA_MISC.js
 echo create EWA_ALL.js
 cat ${target}/EWA.js ${target}/EWA_UI.js ${target}/EWA_FRAME.js  ${target}/EWA_MISC.js > ${target}/EWA_ALL.js
 
-echo start compress with google 
+echo start compress with google
 
-#echo start compress EWA_ALL.js
-java -jar ${sh_dir}/compiler.jar --js ${target}/EWA_ALL.js --js_output_file ${target}/EWA_ALL.min.js --language_out ECMASCRIPT_2019 --create_source_map ${target}/EWA_ALL.min.map
+# 未压缩合并文件放到最终目录（ewa.js），并作为 sourcemap 的 source
+mv ${target}/EWA_ALL.js ${final}/ewa.js
 
-echo "//# sourceMappingURL=ewa.min.map" >> ${target}/EWA_ALL.min.js
+# 在最终目录内调用编译器，map 的 file/sources 写成相对 ewa.min.map 的裸文件名
+(cd "${final}" && java -jar "${sh_dir}/compiler.jar" \
+ --js ewa.js --js_output_file ewa.min.js --language_out ECMASCRIPT_2019 \
+ --create_source_map ewa.min.map)
+
+echo "//# sourceMappingURL=ewa.min.map" >> "${final}/ewa.min.js"
 echo start combine EWA_ALL.min.2.0.js
-mv ${target}/EWA_ALL.min.js ${target}/../ewa.min.js
-mv ${target}/EWA_ALL.js ${target}/../ewa.js
-mv ${target}/EWA_ALL.min.map ${target}/../ewa.min.map
 
 
 
