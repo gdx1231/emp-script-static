@@ -328,6 +328,13 @@ function EWA_UI_MenuClass(className) {
 		// 出发menu的对象
 		this.SHOW_BY_OBJECT = obj;
 		dia = dia || this.Dialog;
+		if (dia._IsFixed) {
+			// GetPosition 返回文档坐标，fixed 定位需换算为视口坐标，减去滚动量
+			var doc = obj.ownerDocument;
+			var w = doc.parentWindow ? doc.parentWindow : doc.defaultView;
+			loc.X -= $(w).scrollLeft();
+			loc.Y -= $(w).scrollTop();
+		}
 		if (lvl == null || lvl == 0) {
 			dia.Move(loc.X, loc.Y);
 		} else {
@@ -370,11 +377,23 @@ function EWA_UI_MenuClass(className) {
 			}
 		}
 		if (m > 0) {
-			var x = evt.x ? evt.x : evt.pageX;
-			var y = evt.y ? evt.y : evt.pageY;
-			y += document.documentElement.scrollTop || document.body.scrollTop;
-			x += document.documentElement.scrollLeft || document.body.scrollLeft;
-
+			var sx = document.documentElement.scrollLeft || document.body.scrollLeft;
+			var sy = document.documentElement.scrollTop || document.body.scrollTop;
+			var x, y;
+			if (EWA.B.IE) {
+				// IE 的 evt.x/y 是视口坐标，加滚动量换算为文档坐标
+				x = evt.x + sx;
+				y = evt.y + sy;
+			} else {
+				// pageX/pageY 已是文档坐标
+				x = evt.pageX;
+				y = evt.pageY;
+			}
+			if (this.Dialog._IsFixed) {
+				// fixed 定位需视口坐标
+				x -= sx;
+				y -= sy;
+			}
 			this.Dialog.Move(x, y);
 			this.Dialog.Show(true);
 			this.Dialog.ResizeByContent();

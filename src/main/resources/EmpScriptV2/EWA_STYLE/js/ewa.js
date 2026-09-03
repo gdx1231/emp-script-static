@@ -5126,6 +5126,13 @@ function EWA_UI_MenuClass(className) {
 		// 出发menu的对象
 		this.SHOW_BY_OBJECT = obj;
 		dia = dia || this.Dialog;
+		if (dia._IsFixed) {
+			// GetPosition 返回文档坐标，fixed 定位需换算为视口坐标，减去滚动量
+			var doc = obj.ownerDocument;
+			var w = doc.parentWindow ? doc.parentWindow : doc.defaultView;
+			loc.X -= $(w).scrollLeft();
+			loc.Y -= $(w).scrollTop();
+		}
 		if (lvl == null || lvl == 0) {
 			dia.Move(loc.X, loc.Y);
 		} else {
@@ -5168,11 +5175,23 @@ function EWA_UI_MenuClass(className) {
 			}
 		}
 		if (m > 0) {
-			var x = evt.x ? evt.x : evt.pageX;
-			var y = evt.y ? evt.y : evt.pageY;
-			y += document.documentElement.scrollTop || document.body.scrollTop;
-			x += document.documentElement.scrollLeft || document.body.scrollLeft;
-
+			var sx = document.documentElement.scrollLeft || document.body.scrollLeft;
+			var sy = document.documentElement.scrollTop || document.body.scrollTop;
+			var x, y;
+			if (EWA.B.IE) {
+				// IE 的 evt.x/y 是视口坐标，加滚动量换算为文档坐标
+				x = evt.x + sx;
+				y = evt.y + sy;
+			} else {
+				// pageX/pageY 已是文档坐标
+				x = evt.pageX;
+				y = evt.pageY;
+			}
+			if (this.Dialog._IsFixed) {
+				// fixed 定位需视口坐标
+				x -= sx;
+				y -= sy;
+			}
 			this.Dialog.Move(x, y);
 			this.Dialog.Show(true);
 			this.Dialog.ResizeByContent();
@@ -6387,6 +6406,11 @@ function EWA_UI_DialogClass() {
 		p.X = p.left;
 		var doc = obj.ownerDocument;
 		var w = doc.parentWindow ? doc.parentWindow : doc.defaultView;
+		if (this._IsFixed) {
+			// offset() 返回文档坐标，fixed 定位需换算为视口坐标，减去对象所在窗口的滚动量
+			p.X -= $(w).scrollLeft();
+			p.Y -= $(w).scrollTop();
+		}
 		if (w == this.CreateWindow) {
 			var x = document.body.clientWidth;
 			var y = document.body.clientHeight;
@@ -6450,8 +6474,9 @@ function EWA_UI_DialogClass() {
 		if (h2 < 0) {
 			h2 = 0;
 		}
-		var h3 = docSize.SH;
-		var w3 = docSize.SW;
+		// fixed 模式坐标相对视口，不叠加页面滚动量
+		var h3 = this._IsFixed ? 0 : docSize.SH;
+		var w3 = this._IsFixed ? 0 : docSize.SW;
 		o.setAttribute('_SCROLL_X', w3);
 		o.setAttribute('_SCROLL_Y', h3);
 		this.Move(w2 + w3, h2 + h3);
@@ -6460,7 +6485,9 @@ function EWA_UI_DialogClass() {
 	this.ResizeByContent = function() {
 		var o = this.GetFrame();
 		var obj = this.GetFrameContent().childNodes[0];
+		var isIframeContent = false;
 		if (obj.tagName == "IFRAME") {
+			isIframeContent = true;
 			var o2 = obj.contentWindow;
 			if (o2 && o2.document && o2.document.body) {
 				var o1 = o2.document.getElementById('Test1');
@@ -6485,12 +6512,34 @@ function EWA_UI_DialogClass() {
 		// }
 		var w = $(obj).width();
 		w += w00;
+		// 用渲染高度作为内容高度；scrollHeight 会返回滚动容器内部完整内容高度，
+		// 导致内容实际上是 625 时却按上方内容高度去封顶，把弹窗撑成视口高度
 		var h = $(obj).height() + h00;
 		var x = o.style.left.replace("px", "") * 1;
 		var y = o.style.top.replace("px", "") * 1;
 
 		if ((w + x) > this.CreateWindow.document.body.clientWidth) {
 			this.Move(this.CreateWindow.document.body.clientWidth - w - 20, y);
+		}
+		// 内容高度超过视口时（body 出现滚动条），限制弹窗高度，超出部分在内容区内滚动
+		this._IsHeightCapped = false;
+		var docSize = EWA.UI.Utils.GetDocSize(this.CreateWindow);
+		var maxHeight = docSize.H - 10;
+		if (this.IsShowTitle) {
+			// 与 Resize 中标题栏高度的计算方式保持一致
+			maxHeight -= $(this.GetFrameTitle()).parent().height();
+		}
+		if (h > maxHeight) {
+			h = maxHeight;
+			this._IsHeightCapped = true;
+		}
+		if (isIframeContent) {
+			// iframe 内容：TD 只是容器，绝不自己出滚动条，滚动由 iframe 内部（body 或 .ewa-in-dialog）承担
+			this.GetFrameContent().style.overflow = 'hidden';
+		} else {
+			// 非 iframe 内容：超高时在内容区滚动
+			this.GetFrameContent().style.overflow = this._IsHeightCapped ? 'auto'
+					: '';
 		}
 		// console.log('ResizeByContent', w, h, w00, h00);
 		this.Resize(w, h, true);
@@ -6639,9 +6688,13 @@ function EWA_UI_DialogClass() {
 		}
 		w._EWA_UI_DIALOG_COVERINDEX += 1;
 		this.zIndex = w._EWA_UI_DIALOG_COVERINDEX;
-		var position = window.EWA_UI_DIALOG_FIXED ? "position:fixed" : "position:absolute";
-		// 在css中定义		
-		// var position = "";		
+		// 标志优先从弹窗挂载的窗口读取：在顶层窗口设置一次 EWA_UI_DIALOG_FIXED，
+		// 所有挂载到该窗口的弹窗（含各 iframe 页面中打开的）统一定位模式
+		this._IsFixed = (w.EWA_UI_DIALOG_FIXED || window.EWA_UI_DIALOG_FIXED) ? true
+				: false;
+		var position = this._IsFixed ? "position:fixed" : "position:absolute";
+		// 在css中定义
+		// var position = "";
 		// 主框体
 		var styleFrame = "display:none; " + position + "; width:" + this.Width
 				+ "; height:" + this.Height + "; z-index:" + this.zIndex
@@ -6987,7 +7040,8 @@ function EWA_UI_PopWindowClass(parentWindow, isDisposeOnClose) {
 		this._Dialog.IsCover = true;
 		this._Dialog.Create();
 		this._Dialog.Show(true);
-		var html = "<iframe style='width:100%;height:100%;' name='__EMP_COMMON_IFRAME"
+		// display:block 消除行内元素基线空隙，避免内容区出现多余滚动条
+		var html = "<iframe style='width:100%;height:100%;display:block;' name='__EMP_COMMON_IFRAME"
 				+ this._Name + "' frameborder='0'></iframe>";
 		this.SetHtml(html);
 	};
@@ -7000,11 +7054,12 @@ function EWA_UI_PopWindowClass(parentWindow, isDisposeOnClose) {
 }
 
 EWA.UI.DialogOnScroll = function() {
-	if (window.EWA_UI_DIALOG_FIXED || typeof _EWA_DIALOGS == 'undefined') {
+	if (typeof _EWA_DIALOGS == 'undefined') {
 		return;
 	}
 	for (var i = 0; i < _EWA_DIALOGS.length; i += 1) {
-		if (_EWA_DIALOGS[i] == null) {
+		// fixed 模式由浏览器保持视口定位，无需跟随滚动
+		if (_EWA_DIALOGS[i] == null || _EWA_DIALOGS[i]._IsFixed) {
 			continue;
 		}
 		try {
@@ -7243,6 +7298,12 @@ __Dialog._SetTitle = function(wnd) {
 	oFrame.document.body.style.margin = "0px";
 	oFrame.document.body.style.overflow = "hidden";
 	wnd._Dialog.ResizeByContent();
+	if (wnd._Dialog._IsHeightCapped
+			&& !oFrame.document.body.querySelector('.ewa-in-dialog')) {
+		// 弹窗高度受限，且页面未自带滚动容器（如 ewa-in-dialog）时，让 iframe 内部滚动，避免内容被裁切；
+		// 若页面已有 .ewa-in-dialog 滚动容器，则由其自身滚动，iframe body 保持 hidden，避免双滚动条
+		oFrame.document.body.style.overflow = "auto";
+	}
 	// 移动到屏幕中央
 	wnd.MoveCenter();
 
