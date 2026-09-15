@@ -1152,7 +1152,13 @@ tr[error] .ewa-tip-error:after {
 	width: 78px;
 	text-align: center;
 }
-
+.ewa-lf-search-item-ctl .ewa-lf-search-fix-button {
+	border-radius: 10px;
+}
+.ewa-lf-search-item-ctl .ewa-lf-search-fix-button-checked {
+	background-color: rgba(0, 86, 245, 0.1);
+	color: rgba(0, 86, 245, 1);
+}
 /* 列表中点击文字快速选择 */
 .ewa-lf-search-text-click {
 	cursor: pointer;

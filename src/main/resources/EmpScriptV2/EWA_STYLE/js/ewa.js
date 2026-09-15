@@ -17752,7 +17752,7 @@ function EWA_ListFrameClass() {
     //将buttons显示在 row 的最后一个 td 里 2026-09-02
     this.mergeButtonsInRow = function(herderText) {
         const newButtons = [];
-		const newButtonIds = {};
+        const newButtonIds = {};
         const ewa = this;
         const checkRow = this.getObj('tr:eq(0)');
         for (var name in ewa.ItemList.Items) {
@@ -17783,7 +17783,7 @@ function EWA_ListFrameClass() {
                     newButton.attr('title', title);
                 }
                 newButtons.push(newButton);
-				newButtonIds[itemName] = true;
+                newButtonIds[itemName] = true;
             }
         }
 
@@ -17801,9 +17801,9 @@ function EWA_ListFrameClass() {
             this.getObj('.ewa-lf-data-row').each(function() {
                 let $containter = $(this).find('.ewa-col-funcs');
                 $(this).find('input[type=button]').each(function() {
-					if(newButtonIds[this.id]){
-						return;
-					}
+                    if (newButtonIds[this.id]) {
+                        return;
+                    }
                     $containter.append(this);
                 });
             });
@@ -20011,6 +20011,7 @@ function EWA_ListFrameClass() {
 
         var ssFix = [];
         var ssOth = [];
+        var ssButton = [];
         var jsonFix = {};
         for (var name in this._SearchJson) {
             this._SearchJson[name].ORI_NAME = name;
@@ -20081,13 +20082,16 @@ function EWA_ListFrameClass() {
                 tmp.push(ttt);
             }
             tmp.push("</td></tr></table>");
-            if (search == "fix" && this._IsSearchGroup) { //固定查询和分组标记
+            if ("3" == searchItem.M) {//button
+                ssButton.push(tmp.join(""));
+            } else if (search == "fix" && this._IsSearchGroup) { //固定查询和分组标记
+                //console.log(tmp);
                 ssFix.push(tmp.join(''));
             } else {
                 ssOth.push(tmp.join(''));
             }
         }
-        if ((ssOth.length + ssFix.length) == 0) {
+        if ((ssOth.length + ssFix.length + ssButton.length) == 0) {
             return;
         }
         // var title = _EWA_INFO_MSG["EWA.SYS.DATASEARCH"];
@@ -20099,6 +20103,10 @@ function EWA_ListFrameClass() {
         // 固定查询
         for (var i = 0;i < ssFix.length;i++) {
             ss.push(" " + ssFix[i] + " ");
+        }
+        // button
+        for (var i = 0;i < ssButton.length;i++) {
+            ss.push(" " + ssButton[i] + " ");
         }
         ss.push("</td></tr></table>")
 
@@ -20232,7 +20240,9 @@ function EWA_ListFrameClass() {
         if (searchItem.M == "1") {
             tp = "checkbox";
         } else if (searchItem.M == "2") { // select
-            return this._SearchFix1(name, searchItem, tag, value);
+            return this._SearchFixSelect(name, searchItem, tag, value);
+        } else if (searchItem.M == "3") { // button
+            return this._SearchFixButton(name, searchItem, tag, value);
         }
         var tmp = "<" + tag + "><nobr><input t='fix' [@CHK] id='@ID' value=\"@V\" type='" + tp + "' name='" + name + "' /><label for='@ID'>@T</label></nobr></"
             + tag + "> ";
@@ -20248,6 +20258,9 @@ function EWA_ListFrameClass() {
             var item = searchItem.D[i];
             var val = item[0];
             var txt = item[1];
+            if (item[2]) {
+                txt += "(" + item[2] + ")"
+            }
             var id = this.Id + "_" + name + "_SearchFix_" + i;
             var tmp1 = tmp.replace("@ID", id);
             tmp1 = tmp1.replace("@ID", id);
@@ -20264,8 +20277,121 @@ function EWA_ListFrameClass() {
 
         return ss.join('');
     };
+    this.searchFixButtonClick = function(fromButton) {
+        $(fromButton).parent().find('button').each(function() {
+            if (this == fromButton) {
+                $(this).addClass('ewa-lf-search-fix-button-checked');
+                $(this).find('input').prop('checked', true);
+            } else {
+                $(this).removeClass('ewa-lf-search-fix-button-checked');
+                $(this).find('input').prop('checked', false);
+            }
+        });
+
+    };
+    this.reShowStatistics = function(searchCfg) {
+        /*		var s={SUP_NO: {"T": "text"}
+                , CRM_COM_NAME: {"T": "text"}
+                , BUSINESS_NUMBER: {"T": "text"}
+                , CRM_COM_SIGN_STATUS: {"T": "fix", "isSearchQuick":true, D: [["SIGN_NO", "资源库" ,48],["SIGN_YES", "已批准" ,74],["SIGN_NEW", "待批准" ,0]], M:'3'}
+                , CRM_COM_BUSINESS_TYPE: {"T": "fix", D: [["CC_BUSINESS_TYPE_R", "零售" ],["CC_BUSINESS_TYPE_W", "批发" ],["CC_BUSINESS_TYPE_WR", "批发零售" ],["CC_BUSINESS_TYPE_ALL", "供销双向" ]], M:'0'}
+                , CRM_COM_INDUSTRY_CAT: {"T": "fix", D: [["125", "升学" ],["1", "游学" ],["12", "留学" ],["27", "访学" ],["38", "营地" ],["47", "机票" ],["54", "签证" ],["64", "地接" ],["74", "课程" ],["99", "师导" ],["110", "志工" ],["112", "实习" ],["115", "就业" ],["118", "定居" ],["121", "合作办学" ],["CC_IND_CAT_11", "(旧)游学" ],["CC_IND_CAT_12", "(旧)留学" ],["CC_IND_CAT_13", "(旧)培训机构" ],["CC_IND_CAT_14", "(旧)大学" ],["CC_IND_CAT_15", "(旧)中小学" ],["CC_IND_CAT_16", "(旧)旅行社" ],["CC_IND_CAT_17", "(旧)机票公司" ],["CC_IND_CAT_18", "(旧)签证公司" ],["CC_IND_CAT_19", "(旧)企业" ],["CC_IND_CAT_20", "(旧)政府部门" ],["CC_IND_CAT_21", "(旧)行业协会" ],["CC_IND_CAT_22", "(旧)媒体" ],["CC_IND_CAT_23", "(旧)个人" ]], M:'2'}
+                , COU_NAME: {"T": "text"}
+                , CITY_NAME: {"T": "text"}
+                };
+            */
+
+        //停止搜索自动触发   
+        this._is_search_composition = true;
+        for (var n in searchCfg) {
+            const cfg = searchCfg[n];
+            if (cfg.T != 'fix') {
+                continue;
+            }
+            let tb = $('.ewa-lf-search-item.ewa-ref-' + n);
+            if (tb.length == 0) {
+                console.log('NOT fund .ewa-lf-search-item.ewa-ref-' + n);
+                contine;
+            }
+            let objs;
+            if ("2" === cfg.M) { //select
+                // select 跳过第 0 个空白 option
+                objs = tb.find('option[id]');
+            } else if ("3" === cfg.M) {//button
+                objs = tb.find('button');
+            } else {
+                objs = tb.find('input'); // radio, checkbox
+            }
+            for (let i = 0;i < cfg.D.length;i++) {
+                const d = cfg.D[i];
+                if (d[2] == undefined) {
+                    continue;
+                }
+
+                const o = objs[i];
+                if (!o) {
+                    console.log('not fund input/option/button index=' + i);
+                    continue;
+                }
+                const txt = d[1] + (d[2] ? "(" + d[2] + ")" : "");
+                if (o.tagName == 'INPUT') {
+                    o.value = txt;
+                } else if (o.tagName == 'OPTION') {
+                    o.text = txt;
+                } else {
+                    $(o).find('span').text(txt);
+                }
+            }
+        }
+
+        var s = this.SearchGetExp(this._SEARCH_BOX);
+        this._SEARCH_ITEM_EXP = s;
+        this._is_search_composition = false;
+    };
+    // button
+    this._SearchFixButton = function(name, searchItem, tag, value) {
+        // console.log(value)
+        var js = "EWA.F.FOS['" + this._Id + "'].searchFixButtonClick(this)";
+        var tmp = "<button  class=\"@CLS\" type='button' id='@ID' onclick=\"" + js + "\">"
+            + "<input t='fix' style='display:none' type='radio' name=\"" + name + "\" value=\"@V\" @CKD><span>@T</span></button>";
+        var ss = [];
+        var total = 0; //总记录数
+        for (var i = 0;i < searchItem.D.length;i++) {
+            var item = searchItem.D[i];
+            var txt = item[1];
+            if (item[2]) {
+                txt += "(" + item[2] + ")";
+                total += item[2];
+            }
+            var cls = 'ewa-lf-search-fix-button';
+            var id = this.Id + "_" + name + "_SearchFix_" + i;
+            var tmp1 = tmp.replace("@ID", id);
+            tmp1 = tmp1.replace("@V", item[0]);
+            tmp1 = tmp1.replace("@T", txt);
+            if (value) {
+                if (item[0] == value) {
+                    tmp1 = tmp1.replace("@CKD", "checked");
+                    cls += " ewa-lf-search-fix-button-checked";
+                } else {
+                    tmp1 = tmp1.replace("@CKD", "");
+                }
+            } else {
+                if (0 === i) {
+                    tmp1 = tmp1.replace("@CKD", "checked");
+                    cls += " ewa-lf-search-fix-button-checked";
+                } else {
+                    tmp1 = tmp1.replace("@CKD", "");
+                }
+            }
+            tmp1 = tmp1.replace("@CLS", cls);
+            ss.push(tmp1);
+        }
+        ss[0] = ss[0].replace("(-1)", "(" + total + ")");
+
+        return ss.join('');
+    };
     // select
-    this._SearchFix1 = function(name, searchItem, tag, value) {
+    this._SearchFixSelect = function(name, searchItem, tag, value) {
         var ss = [];
         // console.log(value)
         ss.push("<select t='fix' name='" + name + "'><option></option>")
@@ -20274,9 +20400,13 @@ function EWA_ListFrameClass() {
         for (var i = 0;i < searchItem.D.length;i++) {
             var item = searchItem.D[i];
             var id = this.Id + "_" + name + "_SearchFix_" + i;
+            var txt = item[1];
+            if (item[2]) {
+                txt += "(" + item[2] + ")"
+            }
             var tmp1 = tmp.replace("@ID", id);
             tmp1 = tmp1.replace("@V", item[0]);
-            tmp1 = tmp1.replace("@T", item[1]);
+            tmp1 = tmp1.replace("@T", txt);
             if (value && item[0] == value) {
                 tmp1 = tmp1.replace("@CKD", "selected");
             } else {
