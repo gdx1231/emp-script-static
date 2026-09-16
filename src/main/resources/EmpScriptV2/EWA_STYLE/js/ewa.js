@@ -14826,20 +14826,19 @@ function EWA_FrameClass() {
 			var key = m1[i];
 			paras.push(key);
 			var id = key.replace('@@', '');
-			let td = tb.find('.ewa-row-' + id);
-			let must = td.hasClass('ewa-row-must') ? "ewa-row-must" : "";
+			let tr = tb.find('.ewa-row-' + id);
+			let must = tr.hasClass('ewa-row-must') ? "ewa-row-must" : "";
 			let span = "<span class='ewa-row-merge " + must + " ewa-row-merge-" + id + "' mid=\"" + id + "\"></span>";
 			tmp_html = tmp_html.replace(key, span);
 			if (id != toParentId) {
-				td.hide().addClass('ewa-row-merge-hide')
+				tr.hide().addClass('ewa-row-merge-hide')
 					.attr('hiddennocontentrow', 1); // 避免groupshow显示
+			} else {
+				tr.addClass('ewa-row-merge-target');
+				tr.removeClass('ewa-row-must'); //移除必输，在span.ewa-row-merge 定义
 			}
 			memos[id] = this.GetItemDescription(id).Info;
 		}
-		// console.log(memos);
-		// console.log(paras);
-
-		// console.log(tmp_html);
 
 		// 临时容器
 		var o1 = document.createElement('div');
