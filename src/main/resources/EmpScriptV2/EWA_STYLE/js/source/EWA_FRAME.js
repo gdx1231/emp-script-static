@@ -5021,7 +5021,7 @@ function EWA_ListFrameClass() {
     this.ReloadAfter = null; // Ajax刷新后的事件，用户定义
     this.CheckedAllAfter = null; // 全选后的时间，用户定义
     this.IsNotMDownAutoChecked = false; // 自动选择checkbox radio;
-
+    this._isMergeButtonsInRow = false;
     //2025-08-22
     this._isStickyHeaders = false; // 是否启用表头固定
     // 2022-05-26
@@ -5031,8 +5031,14 @@ function EWA_ListFrameClass() {
     this.getObj = function(exp) {
         return exp ? $('#EWA_LF_' + this._Id).find(exp) : $('#EWA_LF_' + this._Id);
     }
+    this.mergeButtonsInRowInit = function() {
+        this._isMergeButtonsInRow = true;
+        this.mergeButtonsInRow();
+        this.ReloadAfter
+    };
     //将buttons显示在 row 的最后一个 td 里 2026-09-02
     this.mergeButtonsInRow = function(herderText) {
+        herderText = herderText || EWA.LANG == 'enus' ? 'Options' : '操作';
         const newButtons = [];
         const newButtonIds = {};
         const ewa = this;
@@ -5080,14 +5086,30 @@ function EWA_ListFrameClass() {
                     $td.addClass('EWA_TD_M ewa-col-funcs');
                 }
             }
+			let index=0;
+			let c = this;
             this.getObj('.ewa-lf-data-row').each(function() {
                 let $containter = $(this).find('.ewa-col-funcs');
                 $(this).find('input[type=button]').each(function() {
+					if(index === 0){
+						let tdjq='.ewa-col-'+this.id;
+						c.getObj(tdjq).hide();
+					}
                     if (newButtonIds[this.id]) {
                         return;
                     }
-                    $containter.append(this);
+                    if ($(this).parent().hasClass('ewa-with-icon')) {
+                        // <a rid="butModify" class="ewa-button-with-icon" ...>
+                        // <div class="ewa-with-icon ewa-with-icon-left ewa-tag-button">
+                        // <label for="butModify" class="fa fa-bluetooth"></label>
+                        // <input id='butModify' ...>
+                        // </div></a>
+                        $containter.append($(this).parent().parent()); //直到 A 标签
+                    } else {
+                        $containter.append(this);
+                    }
                 });
+				index++;
             });
             this.getObj().parent().css('overflow-x', 'auto').css('width', '100%')
         }
@@ -6354,26 +6376,8 @@ function EWA_ListFrameClass() {
                 if ($X('__EWA_DEBUG')) {
                     td10.childNodes[0].appendChild($X('__EWA_DEBUG'));
                 }
-                /*
-                var o = $X(newDivId);
-                var tb = o.getElementsByTagName("table")[0];
-                var size = EWA.UI.Utils.GetDocSize(window);
-                var h1 = o.parentNode.parentNode.previousSibling.offsetHeight;
-                o.style.top = h1 + 'px'
-                o.style.height = size.H - h1 + 'px';
-                */
-                // tb.style.position='absolute';
-                // tb.parentNode.style.position='absolute';
-                // tb.style.width=o.offsetWidth;
+
             }, 100);
-            /*addEvent(window, "resize", function() {
-                var o = $X(newDivId);
-                var size = EWA.UI.Utils.GetDocSize(window);
-                var h1 = o.parentNode.parentNode.previousSibling.offsetHeight;
-                o.style.top = h1 + 'px'
-                o.style.height = size.H - h1 + 'px';
-                // tb.style.width=o.offsetWidth;
-            });*/
         }
 
         while (objMain.childNodes.length > 0) {
@@ -6416,10 +6420,10 @@ function EWA_ListFrameClass() {
             if (ewa_click != null && ewa_click.toLowerCase().trim() == 'ewa_click') {
                 evt = this._GetSubValue("EventSet", 'EventValue', node);
             }
-
             txtCaption = txtCaption.replace(text, '');
+            var icon = this._GetSubValue("DataItem", "Icon", node);
 
-            var o1 = this._ReShowButton(text, title, null);
+            var o1 = icon ? this._ReShowButtonIcon(icon, text, itemName, null) : this._ReShowButton(text, title, null);
             this._ReshowButs[text] = o1;
             o1.setAttribute('f_id', this._Id);
             o1.setAttribute('t_id', itemName);
@@ -6547,7 +6551,12 @@ function EWA_ListFrameClass() {
         for (var i = 0;i < buts.length;i++) {
             var but = buts[i];
             if (but.name === tId) {
-                but.click();
+                var stopFn = function(e) {          // e = 浏览器传进来的 click 事件对象
+                    e.stopPropagation();            // 阻止它冒泡到外层 <a>
+                };
+                but.addEventListener('click', stopFn);
+                but.click();                        // 触发时浏览器自动把 Event 传进去
+                but.removeEventListener('click', stopFn);
                 return;
             }
         }
@@ -6556,7 +6565,28 @@ function EWA_ListFrameClass() {
         var o3 = EWA.UI.Utils.CreateObject(window, 'div', '', parentObj);
         o3.className = 'ewa_lf_func_split';
         o3 = null;
-    }
+    };
+    this._ReShowButtonIcon = function(icon, text, rid, eventId) {
+        var st = 'cursor:pointer';
+        var o1 = EWA.UI.Utils.CreateObject(window, 'div', st, document.body);
+        o1.innerHTML = '<nobr class="ewa-button-with-icon"><label><i class="'+icon+'">&nbsp;</i></label></nobr>';
+		$(o1).find('nobr').attr('title', text).attr('rid', rid);
+        if (eventId != null) {
+            o1.setAttribute('_ewa_event_id', eventId);
+            o1.onclick = function() {
+                var id = this.getAttribute('_ewa_event_id');
+                $X(id).click();
+            };
+        }
+        if (EWA.B.IE) {
+            o1.onselectstart = function() {
+                return false;
+            };
+        }
+        o1.className = 'ewa_lf_func_dact';
+        o1.title = text;
+        return o1;
+    };
     this._ReShowButton = function(text, title, eventId) {
         var st = 'cursor:pointer';
         var o1 = EWA.UI.Utils.CreateObject(window, 'div', st, document.body);
@@ -8408,6 +8438,9 @@ function EWA_ListFrameClass() {
                     }
                     if (c._isStickyHeaders) {
                         c.stickyHeaders();
+                    }
+                    if (c._isMergeButtonsInRow) {
+                        c.mergeButtonsInRow();
                     }
                     if (c.ReloadAfter) {
                         c.ReloadAfter(httpReferer);
