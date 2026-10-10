@@ -5037,8 +5037,8 @@ function EWA_ListFrameClass() {
         this.ReloadAfter
     };
     //将buttons显示在 row 的最后一个 td 里 2026-09-02
-    this.mergeButtonsInRow = function(herderText) {
-        herderText = herderText || EWA.LANG == 'enus' ? 'Options' : '操作';
+    this.mergeButtonsInRow = function(headerText) {
+        headerText = headerText || (EWA.LANG == 'enus' ? 'Actions' : '操作');
         const newButtons = [];
         const newButtonIds = {};
         const ewa = this;
@@ -5080,7 +5080,7 @@ function EWA_ListFrameClass() {
             for (let i = 0;i < tb.rows.length;i++) {
                 let $td = $(tb.rows[i].insertCell(-1));
                 if (i == 0) {
-                    $td.addClass('EWA_TD_H ewa-col-funcs').text(herderText);
+                    $td.addClass('EWA_TD_H ewa-col-funcs').text(headerText);
                     lastCellIndex = $td[0].cellIndex;
                 } else {
                     $td.addClass('EWA_TD_M ewa-col-funcs');
