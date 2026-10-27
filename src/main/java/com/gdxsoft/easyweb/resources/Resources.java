@@ -2,7 +2,6 @@ package com.gdxsoft.easyweb.resources;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,7 +16,22 @@ public class Resources {
 	 */
 	private static Logger LOGGER = LoggerFactory.getLogger(Resources.class);
 
-	private static Map<String, Resource> CACHED = new ConcurrentHashMap<String, Resource>();
+	/** 缓存加载成功的资源，数量受 jar 内文件数约束 */
+	private static final Map<String, Resource> CACHED = new ConcurrentHashMap<String, Resource>();
+
+	/**
+	 * 缓存失败结果（404 等）。jar 内资源不会变化，失败的结论同样稳定，
+	 * 缓存后可避免随机路径反复扫描类路径并刷日志；用上限防止被扫描器撑爆。
+	 */
+	private static final Map<String, Resource> MISS_CACHED = new ConcurrentHashMap<String, Resource>();
+	private static final int MAX_MISS_CACHED = 2048;
+
+	/** 单文件缓存上限，超过则每次请求重新读取；可用 -DempScriptStatic.maxCacheSize 覆盖 */
+	private static final long DEFAULT_MAX_CACHED_FILE_SIZE = 5L * 1024 * 1024;
+
+	static long maxCachedFileSize() {
+		return Long.getLong("empScriptStatic.maxCacheSize", DEFAULT_MAX_CACHED_FILE_SIZE);
+	}
 
 	public static boolean checkValidExt(String ext) {
 		if (ext.equalsIgnoreCase("exe") || ext.equalsIgnoreCase("bat") || ext.equalsIgnoreCase("cmd")
@@ -30,94 +44,83 @@ public class Resources {
 		return true;
 	}
 
-	private static synchronized Resource loadResource(String path) {
+	private static Resource loadResource(String path) {
 		String ext = FilenameUtils.getExtension(path);
-		Resource r = new Resource();
 
 		if (path.indexOf("..") >= 0) {
-			r.setPath(path);
-			r.setStatus(502);
-			LOGGER.error("Invalid path '..', {}", r.toString());
-			return r;
+			LOGGER.warn("Invalid path '..', {}", path);
+			return fail(path, 502);
 		}
 
 		// not allow blank ext or directory
 		if (ext.trim().length() == 0 || ext.trim().endsWith("/")) {
-			r.setPath(path);
-			r.setStatus(403);
-			LOGGER.error("Blank ext or directory. {}", r.toString());
-			return r;
+			LOGGER.debug("Blank ext or directory. {}", path);
+			return fail(path, 403);
 		}
 		if (!checkValidExt(ext)) {
-			r.setPath(path);
-			r.setStatus(500);
-			LOGGER.error("Invalid ext. {}", r.toString());
-			return r;
+			LOGGER.warn("Invalid ext. {}", path);
+			return fail(path, 500);
 		}
 
 		if (path.indexOf("ewa_conf") >= 0 || path.indexOf("appliaction.yml") >= 0) {
-			r.setPath(path);
-			r.setStatus(501);
-			LOGGER.error("Invalid file. {}", r.toString());
-			return r;
+			LOGGER.warn("Invalid file. {}", path);
+			return fail(path, 501);
 		}
 
 		String pathWithPrefix = "/EmpScriptV2" + path;
 		URL url = Resources.class.getResource(pathWithPrefix);
-		r.setPath(path);
 		if (url == null) {
-			r.setStatus(404);
-			LOGGER.error(r.toString());
-			return r;
+			LOGGER.debug("Not found: {}", path);
+			return fail(path, 404);
 		}
+
 		boolean binary = false;
+		String type;
 		if (ext.equalsIgnoreCase("js")) {
-			r.setType("application/javascript");
+			type = "application/javascript";
 		} else if (ext.equalsIgnoreCase("htm") || ext.equalsIgnoreCase("html")) {
-			r.setType("text/html");
+			type = "text/html";
 		} else if (ext.equalsIgnoreCase("txt") || ext.equalsIgnoreCase("csv")) {
-			r.setType("text/plain");
+			type = "text/plain";
 		} else if (ext.equalsIgnoreCase("json")) {
-			r.setType("application/json");
+			type = "application/json";
 		} else if (ext.equalsIgnoreCase("css")) {
-			r.setType("text/css");
+			type = "text/css";
 		} else if (ext.equalsIgnoreCase("xml")) {
-			r.setType("application/xml");
+			type = "application/xml";
 		} else if (ext.equalsIgnoreCase("jif") || ext.equalsIgnoreCase("jiff") || ext.equalsIgnoreCase("jpg")
 				|| ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif")
 				|| ext.equalsIgnoreCase("webp") || ext.equalsIgnoreCase("apng")) {
-			String type = ext;
+			type = ext;
 			if ("jpg".equalsIgnoreCase(type) || type.equalsIgnoreCase("jif") || type.equalsIgnoreCase("jiff")) {
 				type = "jpeg";
 			}
-			r.setType("image/" + type);
+			type = "image/" + type;
 			binary = true;
 		} else if (ext.equalsIgnoreCase("woff2") || ext.equalsIgnoreCase("ttf") || ext.equalsIgnoreCase("woff")) {
-			r.setType("font/" + ext);
+			type = "font/" + ext;
 			binary = true;
 		} else {
-			r.setType("application/octet-stream");
+			type = "application/octet-stream";
 			binary = true;
 		}
-		r.setBinary(binary);
 
 		try {
-			if (binary) {
-				byte[] buf = IOUtils.toByteArray(url);
-				r.setBuffer(buf);
-				r.setMd5(MyUtils.md5(buf));
-			} else {
-				String text = IOUtils.toString(url, StandardCharsets.UTF_8);
-				r.setContent(text);
-				r.setMd5(MyUtils.md5(text));
-			}
+			byte[] buf = IOUtils.toByteArray(url);
+			// 超过单文件上限的大文件不常驻堆，每次请求重新读取
+			boolean cacheable = buf.length <= maxCachedFileSize();
+			Resource r = new Resource(path, type, buf, 200, binary, MyUtils.md5(buf), cacheable);
 			LOGGER.debug(r.toString());
 			return r;
 		} catch (IOException e) {
-			r.setStatus(500);
-			LOGGER.error(r.toString());
-			return r;
+			// 读取故障可能是瞬时的，不写入缓存，下次请求重新读取
+			LOGGER.error("Read failed: {}", path, e);
+			return new Resource(path, type, null, 500, binary, null, false);
 		}
+	}
+
+	private static Resource fail(String path, int status) {
+		return new Resource(path, null, null, status, false, null, true);
 	}
 
 	private static String rewritePath(String resourcePath) {
@@ -159,13 +162,33 @@ public class Resources {
 		if (r != null) {
 			return r;
 		}
+		r = MISS_CACHED.get(path);
+		if (r != null) {
+			return r;
+		}
 
 		r = loadResource(path);
-		if (r.getStatus() == 200) {
-			CACHED.putIfAbsent(path, r);
+		if (r.isCacheable()) {
+			// 未命中时可能并发重复加载同一路径，以先入缓存的结果为准
+			Map<String, Resource> cache = r.getStatus() == 200 ? CACHED : MISS_CACHED;
+			if (cache == CACHED || cache.size() < MAX_MISS_CACHED) {
+				Resource prev = cache.putIfAbsent(path, r);
+				if (prev != null) {
+					return prev;
+				}
+			}
 		}
 
 		return r;
+	}
+
+	/**
+	 * 清空缓存。开发态（target/classes）改了资源文件后，或测试需要重新加载时调用；
+	 * 生产环境资源来自 jar，一般不需要。
+	 */
+	public static void clear() {
+		CACHED.clear();
+		MISS_CACHED.clear();
 	}
 
 }
