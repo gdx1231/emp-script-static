@@ -2820,6 +2820,149 @@ function EWA_FrameClass() {
 	};
 
 	/**
+	 * 检查所有对象合法性，返回所有未通过验证的对象 id 及错误信息
+	 *
+	 * 和 CheckValidAll 的区别：不显示错误提示、不聚焦，返回数组，便于脚本批量处理
+	 *
+	 * @param {}
+	 *            objForm 表单对象，不传则取当前 Frame 的 form
+	 * @param {}
+	 *            isSkipUnchecked 是否跳过隐含（type=hidden 或不可见）、只读、禁用的对象，默认 false
+	 * @return {Array} 例如 [{ id: "USR_NAME", msg: "需要输入", msgs: ["需要输入"] }]，
+	 *         全部通过返回空数组
+	 */
+	this.CheckValidAllExt = function (objForm, isSkipUnchecked) {
+		if (isSkipUnchecked === undefined) {
+			isSkipUnchecked = false;
+		}
+		var errors = [];
+		for (var name in this.ItemList.Items) {
+			var node = this.ItemList.Items[name];
+			var name1 = this.ItemList.GetItemValue(node, "Name", "Name");
+
+			var obj = this.GetObject(name1, objForm);
+			if (obj == null) {
+				continue;
+			}
+			if (isSkipUnchecked && this._IsUnchecked(obj)) {
+				continue;
+			}
+			var errorInfos = this.ItemList.CheckValidExt(obj);
+			if (errorInfos == null) {
+				continue;
+			}
+			errors.push({
+				id: obj.id,
+				msg: errorInfos.join(", "),
+				msgs: errorInfos
+			});
+		}
+		return errors;
+	};
+
+	/**
+	 * 是否为不需要检查的对象：隐含、只读、禁用
+	 *
+	 * 上传、拍照、图片上传、val_ref（签名等）的值对象是隐含的，但界面上的控件可见，仍需检查
+	 * droplist 的 id 在隐含的存值对象上，前面的显示对象才是界面上的控件
+	 *
+	 * @param {}
+	 *            obj html对象
+	 * @return {Boolean}
+	 */
+	this._IsUnchecked = function (obj) {
+		var ewaTag = obj.getAttribute ? obj.getAttribute('ewa_tag') : null;
+		if (ewaTag == 'ht5upload' || ewaTag == 'ht5takephoto' || ewaTag == 'IMG_UPLOAD'
+			|| (obj.getAttribute && obj.getAttribute('val_ref'))) {
+			return false;
+		}
+		// droplist 的显示对象
+		var showObj = this._GetDropListShowObject(obj);
+		if (showObj) {
+			if (this._IsHidden(showObj)) {
+				return true;
+			}
+			return this._IsReadOnlyOrDisabled(obj) || this._IsReadOnlyOrDisabled(showObj);
+		}
+		// 隐含
+		if (this._IsHidden(obj)) {
+			return true;
+		}
+		return this._IsReadOnlyOrDisabled(obj);
+	};
+
+	/**
+	 * 是否只读或禁用
+	 *
+	 * @param {}
+	 *            obj html对象
+	 * @return {Boolean}
+	 */
+	this._IsReadOnlyOrDisabled = function (obj) {
+		// 只读
+		if (obj.readOnly === true || $(obj).attr('readonly') != null) {
+			return true;
+		}
+		// 禁用
+		if (obj.disabled === true || $(obj).attr('disabled') != null) {
+			return true;
+		}
+		// REPT（radio、checkbox 组）、开关等容器对象，disabled 在内层控件上，全部禁用时视同禁用
+		if (obj.tagName && obj.tagName.toUpperCase() == 'DIV'
+			&& (obj.getAttribute('TAG') == 'REPT' || $(obj).hasClass('ewa-switch'))) {
+			var inputs = $(obj).find('input');
+			if (inputs.length > 0 && $(obj).find('input:enabled').length == 0) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	/**
+	 * 获取 droplist 的显示对象
+	 *
+	 * droplist 结构：input[ewa_class=droplist]（显示） + input[type=hidden]（存值，id 为 Item 的 Name）
+	 *
+	 * @param {}
+	 *            obj html对象
+	 * @return {Object} 不是 droplist 的存值对象返回 null
+	 */
+	this._GetDropListShowObject = function (obj) {
+		if (obj == null || obj.type != 'hidden') {
+			return null;
+		}
+		var o1 = $(obj).prev('input');
+		if (o1.length == 0) {
+			return null;
+		}
+		var cls = o1.attr('ewa_class');
+		if (cls && cls.toLowerCase() == 'droplist') {
+			return o1[0];
+		}
+		return null;
+	};
+
+	/**
+	 * 对象是否不可见（自身或父元素不可见）
+	 *
+	 * @param {}
+	 *            obj html对象
+	 * @return {Boolean}
+	 */
+	this._IsHidden = function (obj) {
+		// type=hidden；jQuery :hidden 已包含父元素 display:none、零尺寸、hidden 属性等
+		if (obj.type == 'hidden' || $(obj).is(":hidden")) {
+			return true;
+		}
+		// visibility:hidden 会继承，取自身的计算样式即可（:hidden 不判断 visibility）
+		var style = window.getComputedStyle ? window.getComputedStyle(obj) : null;
+		if (style && style.visibility == 'hidden') {
+			return true;
+		}
+		return false;
+	};
+
+	/**
 	 * 检查所有对象合法性
 	 * 
 	 * @param {}

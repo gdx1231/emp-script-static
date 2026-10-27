@@ -145,6 +145,75 @@ function EWA_FrameCommonItems() {
 		}
 	};
 	/**
+	 * 检查对象值的合法性，返回错误信息
+	 *
+	 * 和 CheckValid 的区别：不显示错误提示、不聚焦，返回错误信息，便于批量收集
+	 * （见 EWA_FrameClass.CheckValidAllExt）
+	 *
+	 * 提示文字直接取自 _EWA_VALIDS / _EWA_JS_ALERT / _EWA_INFO_MSG，随 EWA.LANG 中英文
+	 *
+	 * @param {}
+	 *            obj html对象
+	 * @param {}
+	 *            val 对象值，不传则自动获取
+	 * @return {Array} 合法返回 null，否则返回错误信息数组
+	 */
+	this.CheckValidExt = function(obj, val) {
+		if (obj == null || obj.tagName == 'SPAN' || obj.tagName == 'IMG') {
+			return null;
+		}
+		if (val === undefined) {
+			val = this.GetObjectValue(obj);
+		}
+		var nodeItem = this.GetItem(obj.id);
+		var errorInfos = [];
+		var errorInfo = null;
+
+		// 必须输入
+		errorInfo = this._CheckMustInput(obj, val, nodeItem);
+		if (errorInfo) {
+			if (errorInfo == "*") {
+				// _EWA_JS_ALERT 的 IsMustInput 是 *，这里给出中英文提示
+				errorInfo = EWA.LANG == "enus" ? "Required input" : "需要输入";
+			}
+			errorInfos.push(errorInfo);
+		}
+		if (val == null || val == "") {
+			return errorInfos.length == 0 ? null : errorInfos;
+		}
+
+		// 检查最大最小长度
+		errorInfo = this._CheckMaxMinLength(obj, val, nodeItem);
+		if (errorInfo)
+			errorInfos.push(errorInfo);
+
+		// 合法性检查
+		errorInfo = this._CheckDataValid(obj, val, nodeItem);
+		if (errorInfo)
+			errorInfos.push(errorInfo);
+
+		// 验证输入类型
+		errorInfo = this._CheckDataType(obj, val, nodeItem);
+		if (errorInfo)
+			errorInfos.push(errorInfo);
+
+		// 最大最小值检查
+		errorInfo = this._CheckMaxMinValue(obj, val, nodeItem);
+		if (errorInfo)
+			errorInfos.push(errorInfo);
+		// 检查密码
+		errorInfo = this._CheckPassword(obj, val, nodeItem);
+		if (errorInfo)
+			errorInfos.push(errorInfo);
+
+		// 扩展验证
+		errorInfo = this._CheckExtent(obj, val, nodeItem);
+		if (errorInfo)
+			errorInfos.push(errorInfo);
+
+		return errorInfos.length == 0 ? null : errorInfos;
+	};
+	/**
 	 * 检查扩展
 	 * 
 	 * @param {}
