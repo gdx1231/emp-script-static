@@ -1280,6 +1280,12 @@ function EWA_FrameClass() {
 	// 替代ReloadAfter
 	this.doPostAfter = null;// POST后的事件，用户定义
 	this.isShowPostWaitting = true; // 是否显示提交时的等待框
+	// 修改检查的初始值 {元素id: 初始值}，Init 时记录，用于判断页面元素是否修改
+	this._ModifyCheckOldValues = null;
+	// 初始值还不能读取的元素 {元素id: true}，例如编辑器、上传控件还没初始化完成
+	this._ModifyCheckPending = null;
+	// 最近一次 CreatePostData(objForm, true) 取不到值的元素 {元素id: true}
+	this._OnlyItemsErrors = null;
 
 	this.textareaAutoSize = function () {
 		// /third-party/autosize-master/dist/autosize.min.js
@@ -2988,6 +2994,9 @@ function EWA_FrameClass() {
 		this._InitEncyptions();
 
 		this._InitTriggerValids();
+
+		// 记录页面元素的初始值，用于判断是否修改
+		this.InitModifyCheck();
 	};
 	/**
 	 * 触发验证，例如拼图验证
@@ -3569,16 +3578,70 @@ function EWA_FrameClass() {
 		return ajax;
 	};
 	this.createAjax = this.CreateAjax;
+
+	/**
+	 * 读取页面元素的值（CreatePostData(objForm, true) 和修改检查共用）
+	 * 
+	 * DHTML 的数据来源是隐含的 textarea：dHtml5 编辑器把原 textarea 隐藏，
+	 * 编辑后把内容同步到它的 value（初始化时不改值），所以直接读 textarea 即可；
+	 * 只有已废弃的 div+iframe 模板才需要读 iframe，此时 iframe 可能还没有把
+	 * 初始值写入，返回 ok=false 并恢复隐含的存值对象，避免清空初始值或误判为修改
+	 * 
+	 * @param {}
+	 *            obj html对象
+	 * @return {Object} { ok: 是否取到可比较的值, val: 元素值 }
+	 */
+	this._ReadItemValue = function (obj) {
+		var tagName = obj.tagName ? obj.tagName.toUpperCase() : "";
+		if (tagName == "DIV" && obj.getAttribute && obj.getAttribute('EWA_DHTML') == "1") {
+			// 数据源是隐含的 textarea（部分模板把这个 textarea 放在 DHTML 容器内）
+			var textareas = obj.getElementsByTagName("textarea");
+			if (textareas.length > 0 && textareas[0].value !== undefined) {
+				return { ok: true, val: textareas[0].value };
+			}
+			// 已废弃的 div+iframe 模板，内容在 iframe 中，存值对象是隐含的 input
+			var inputs = obj.getElementsByTagName("input");
+			var holder = inputs.length > 0 ? inputs[0] : null;
+			var holderVal = holder ? holder.value : "";
+			try {
+				var val = this._GetObjectValue(obj);
+				if ((val == null || val === "") && holderVal !== "") {
+					// iframe 还没有加载初始内容，等加载后再记录
+					holder.value = holderVal;
+					return { ok: false, val: null };
+				}
+				return { ok: true, val: val };
+			} catch (e) {
+				return { ok: false, val: null };
+			}
+		}
+		try {
+			return { ok: true, val: this._GetObjectValue(obj) };
+		} catch (e) {
+			// 例如签名、上传控件的 val_ref 还没初始化
+			return { ok: false, val: null };
+		}
+	};
+
 	/**
 	 * 获取提交的数据 
 	 * 
 	 * @param objForm
 	 *            objForm
+	 * @param onlyItems
+	 *            是否只取页面元素的值（{元素id: 元素值}），不附加提交用的隐藏参数
+	 *            （PostAddData、xxx_CHANGED、xxx_imgs_split、UP_URL/UP_PARAS、
+	 *            xxx_TRIGGER_VALID_RESULT 等）；加密显示的字段也会返回当前显示值；
+	 *            取不到值的元素记录在 _OnlyItemsErrors 中
 	 * @returns data
 	 */
-	this.CreatePostData = function (objForm) {
+	this.CreatePostData = function (objForm, onlyItems) {
 		var objForm = objForm || $('#f_' + this._Id)[0];
 		var data = {};
+		this._OnlyItemsErrors = null;
+		if (onlyItems) {
+			this._OnlyItemsErrors = {};
+		}
 		for (var name in this.ItemList.Items) {
 			var node = this.ItemList.Items[name];
 			var id = this.ItemList.GetItemValue(node, "Name", "Name");
@@ -3588,12 +3651,28 @@ function EWA_FrameClass() {
 				continue;
 			}
 
-			if ($(o1).attr("ewa_encyrption")) {// 加密显示的对象
+			if (onlyItems) {
+				// 只比较页面元素的值，排除按钮、图片等
+				if (!this._IsItemValueObject(o1)) {
+					continue;
+				}
+			} else if ($(o1).attr("ewa_encyrption")) {// 加密显示的对象
 				continue;
 			}
 
 			var ewa_tag = o1.getAttribute('ewa_tag');
 			let val = null;
+
+			if (onlyItems) {
+				// 元素级取值：DHTML 读隐含的 textarea；编辑器/上传控件未就绪时不取值
+				let rst = this._ReadItemValue(o1);
+				if (!rst.ok) {
+					this._OnlyItemsErrors[id] = true;
+					continue;
+				}
+				data[id] = rst.val == null ? "" : rst.val;
+				continue;
+			}
 
 			// 检查签名数据是否变化，如果有就获取变化的数据，否则为空白字符串
 			if ("signature" == ewa_tag) {
@@ -3643,21 +3722,148 @@ function EWA_FrameClass() {
 				}
 			}
 		}
-		if (this.PostAddData) {
-			for (var n in this.PostAddData) {
-				data[n] = this.PostAddData[n];
+		if (!onlyItems) {
+			if (this.PostAddData) {
+				for (var n in this.PostAddData) {
+					data[n] = this.PostAddData[n];
+				}
 			}
-		}
-		if (this.triggerValids) {
-			for (let n in this.triggerValids) {
-				let name = n + "_TRIGGER_VALID_RESULT";
-				data[name] = this.triggerValids[n];
+			if (this.triggerValids) {
+				for (let n in this.triggerValids) {
+					let name = n + "_TRIGGER_VALID_RESULT";
+					data[name] = this.triggerValids[n];
+				}
 			}
 		}
 
 		return data;
 	};
 	this.createPostData = this.CreatePostData;
+
+	/**
+	 * 初始化修改检查：记录当前页面元素的值，作为判断是否修改的基准
+	 * 
+	 * 取值通过 CreatePostData(objForm, true)，保证和提交值同源（不包含提交用的隐藏参数）。
+	 * Frame 的 Init 中会自动调用；Frame 重新加载、脚本预填了初始值或提交成功后，
+	 * 可再次调用重新记录
+	 * 
+	 * @param {}
+	 *            objForm 表单对象，不传则取当前 Frame 的 form
+	 * @return {Number} 成功记录的元素数量
+	 */
+	this.InitModifyCheck = function (objForm) {
+		var data = this.CreatePostData(objForm, true);
+		var errors = this._OnlyItemsErrors || {};
+		this._ModifyCheckOldValues = {};
+		this._ModifyCheckPending = {};
+		var count = 0;
+		for (var id in data) {
+			this._ModifyCheckOldValues[id] = this._ToModifyCheckString(data[id]);
+			count++;
+		}
+		for (var pid in errors) {
+			// 例如 DHTML 编辑器、上传控件还没有初始化完成，首次读取成功时再记录
+			this._ModifyCheckPending[pid] = true;
+		}
+		return count;
+	};
+	this.initModifyCheck = this.InitModifyCheck;
+
+	/**
+	 * 页面元素是否修改（和 InitModifyCheck 记录的初始值比较）
+	 * 
+	 * @param {}
+	 *            objForm 表单对象，不传则取当前 Frame 的 form
+	 * @return {Boolean}
+	 */
+	this.IsModified = function (objForm) {
+		return this.GetModifiedItems(objForm).length > 0;
+	};
+	this.isModified = this.IsModified;
+
+	/**
+	 * 获取修改的页面元素列表，例如用于离开页面提示、只提交修改的数据
+	 * 
+	 * 取值通过 CreatePostData(objForm, true)；已被移除的页面元素不参与比较
+	 * 
+	 * @param {}
+	 *            objForm 表单对象，不传则取当前 Frame 的 form
+	 * @return {Array} [{ id: "元素id", oldVal: "初始值", newVal: "当前值" }]，没有修改返回空数组
+	 */
+	this.GetModifiedItems = function (objForm) {
+		if (this._ModifyCheckOldValues == null) {
+			// 没有记录初始值（例如 Frame 由外部脚本创建），此次记录，不视为修改
+			this.InitModifyCheck(objForm);
+			return [];
+		}
+		if (this._ModifyCheckPending == null) {
+			this._ModifyCheckPending = {};
+		}
+		var data = this.CreatePostData(objForm, true);
+		var list = [];
+		for (var id in data) {
+			var newVal = this._ToModifyCheckString(data[id]);
+			if (this._ModifyCheckPending[id]) {
+				// 首次取到初始值，记录下来，不算修改
+				this._ModifyCheckOldValues[id] = newVal;
+				delete this._ModifyCheckPending[id];
+				continue;
+			}
+			var oldVal = this._ModifyCheckOldValues[id];
+			if (oldVal == null) {
+				oldVal = "";
+			}
+			if (oldVal !== newVal) {
+				list.push({
+					id: id,
+					oldVal: oldVal,
+					newVal: newVal
+				});
+			}
+		}
+		return list;
+	};
+	this.getModifiedItems = this.GetModifiedItems;
+
+	/**
+	 * 修改检查的值统一转换为字符串，便于比较
+	 * 
+	 * @param {}
+	 *            val 元素值
+	 * @return {String}
+	 */
+	this._ToModifyCheckString = function (val) {
+		if (val == null) {
+			return "";
+		}
+		if (typeof val == "object") {
+			try {
+				return JSON.stringify(val);
+			} catch (e) {
+				return val + "";
+			}
+		}
+		return val + "";
+	};
+
+	/**
+	 * 是否是参与 CreatePostData(objForm, true) 取值的元素，排除无值比较意义的按钮、图片等
+	 * 
+	 * @param {}
+	 *            obj html对象
+	 * @return {Boolean}
+	 */
+	this._IsItemValueObject = function (obj) {
+		var tagName = obj.tagName ? obj.tagName.toUpperCase() : "";
+		if (tagName == "SPAN" || tagName == "IMG" || tagName == "BUTTON") {
+			return false;
+		}
+		var type = obj.type ? (obj.type + "").toLowerCase() : "";
+		if (type == "submit" || type == "button" || type == "reset" || type == "file") {
+			return false;
+		}
+		return true;
+	};
 	// 提交前检查，返回true or false;
 	this.DoPostBefore = function () {
 		return true;
