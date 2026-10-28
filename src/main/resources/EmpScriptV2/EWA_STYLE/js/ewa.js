@@ -4204,7 +4204,233 @@ EWA.UI.Utils.FadeInTimer = function() {
 		EWA.UI.Utils.FADE_OUT_OBJ.style.opacity = alpha * 1.0 / 100.0;
 	} catch (e) { }
 	window.setTimeout(EWA.UI.Utils.FadeInTimer, EWA.UI.Utils.FADE_TIME_SPAN);
-};/**
+};
+/**
+ * iframe 自适应高度
+ *
+ * 用法：EWA.UI.Iframe.autoHeight(iframes, cb);
+ *
+ * iframes 传 iframe 元素本身，支持：单个元素、数组、NodeList、HTMLCollection、
+ * jQuery 对象、选择器字符串（内部用 document.querySelectorAll）。
+ * 高度设置到 iframe.parentNode 上，不是 iframe 自身：iframe 通常 height:100%，
+ * 父元素撑开后 iframe 自然铺满，不会出现内部滚动条。
+ *
+ * 所有已注册 iframe 共用一个 500ms 定时器；内容变化在下一轮询生效。
+ * 不可见（display:none、祖先隐藏、visibility:hidden）时跳过，不测高度、不改父元素、不回调。
+ *
+ * 多个 iframe 可以共用同一个父元素（按钮先后创建 iframe、tab 切换）：
+ * 谁可见就按谁的内容高度设置父元素；从隐藏恢复时会重新应用高度，
+ * 避免沿用另一个 iframe 留下的高度。
+ */
+EWA.UI.Iframe = EWA.UI.Iframe || {};
+(function() {
+	var INTERVAL = 500; // 轮询间隔（毫秒）
+	var items = []; // 注册表：{ iframe, cb, height }
+	var timer = null; // 共享定时器，注册表为空时置空
+
+	/**
+	 * 统一整理为可按 length/下标遍历的集合
+	 *
+	 * 选择器字符串交给 querySelectorAll；单个 DOM 包成数组；
+	 * 数组、NodeList、HTMLCollection、jQuery 对象本身已满足遍历条件，原样返回。
+	 */
+	function toList(iframes) {
+		if (typeof iframes == 'string') {
+			return document.querySelectorAll(iframes);
+		}
+		if (iframes && iframes.tagName) {
+			return [ iframes ];
+		}
+		return iframes || [];
+	}
+
+	/**
+	 * 获取 iframe 内容高度（不含 iframe 自身的边框和内边距）
+	 *
+	 * 用 body.scrollHeight 加 body 上下 margin；不能用 documentElement.scrollHeight，
+	 * 因为它等于 max(内容高度, 当前 iframe 视口高度)，父元素一旦被撑高就缩不回来。
+	 * 跨域、文档未加载完成或内容为空时返回 0。
+	 */
+	function getContentHeight(iframe) {
+		var doc;
+		try {
+			doc = iframe.contentDocument
+					|| (iframe.contentWindow && iframe.contentWindow.document);
+		} catch (e) {
+			return 0; // 跨域
+		}
+		if (!doc || !doc.body) {
+			return 0;
+		}
+		// 不用 documentElement.scrollHeight：它包含当前 iframe 视口高度，会导致只能变高不能变矮
+		var h = doc.body.scrollHeight;
+		var style = doc.defaultView && doc.defaultView.getComputedStyle
+				? doc.defaultView.getComputedStyle(doc.body, null) : null;
+		if (style) {
+			h += (parseFloat(style.marginTop) || 0)
+					+ (parseFloat(style.marginBottom) || 0);
+		}
+		if (h <= 0 && doc.documentElement) {
+			h = doc.documentElement.scrollHeight;
+		}
+		return h > 0 ? Math.ceil(h) : 0;
+	}
+
+	/**
+	 * iframe 是否可见
+	 *
+	 * getClientRects().length == 0 覆盖 display:none、祖先 display:none、尚未参与布局；
+	 * visibility:hidden 会继承，用计算样式判断。opacity:0 仍占布局，按可见处理。
+	 */
+	function isVisible(o) {
+		if (o.getClientRects && o.getClientRects().length == 0) {
+			return false; // display:none 或尚未参与布局
+		}
+		var win = o.ownerDocument && o.ownerDocument.defaultView || window;
+		var style = win && win.getComputedStyle
+				? win.getComputedStyle(o, null) : null;
+		return !style || style.visibility != 'hidden';
+	}
+
+	/**
+	 * 测量并更新 iframe 父元素高度
+	 *
+	 * 只在可见、能取到内容高度且父元素可写时处理；不可见时保留注册信息，
+	 * 等下次可见再测量，避免隐藏的 iframe 反复触发布局计算。
+	 *
+	 * 从不可见恢复为可见时，即使内容高度没变也重新写一次父元素高度并回调：
+	 * 多个 iframe 可能共用同一个父元素（切换显示的 tab / 先后创建的 iframe），
+	 * 父元素高度可能已被另一个可见 iframe 改掉，不能只看自己缓存的高度。
+	 */
+	function update(item) {
+		var o = item.iframe;
+		if (!isVisible(o)) {
+			item.visible = false;
+			return; // 不可见时不处理，等下次可见再测量
+		}
+		var p = o.parentNode;
+		if (!p || !p.style) {
+			return;
+		}
+		var h = getContentHeight(o);
+		if (h <= 0) {
+			return; // 跨域、未加载完成或内容为空
+		}
+		var justShown = !item.visible; // 隐藏期间父元素高度可能已被别的 iframe 覆盖
+		item.visible = true;
+		var changed = h != item.height;
+		if (changed || justShown) {
+			item.height = h;
+			// 设置父元素高度，iframe 以 100% 高度撑满后不再出现滚动条
+			p.style.height = h + 'px';
+		}
+		if (changed || justShown || !item.notified) {
+			item.notified = true; // 先标记，避免回调报错后每个周期重复通知
+			if (item.cb) {
+				item.cb(o, h);
+			}
+		}
+	}
+
+	/**
+	 * 定时轮询入口
+	 *
+	 * 从后往前遍历，便于原地删除已从 DOM 移除的 iframe；
+	 * 注册表为空时停掉定时器，避免空转。
+	 */
+	function tick() {
+		for (var i = items.length - 1; i >= 0; i--) {
+			var item = items[i];
+			if (!item.iframe.parentNode) { // 已从文档移除
+				items.splice(i, 1);
+				continue;
+			}
+			update(item);
+		}
+		if (items.length == 0) {
+			clearInterval(timer);
+			timer = null;
+		}
+	}
+
+	/**
+	 * 开始监控 iframe，并把内容高度设置到 iframe 的父元素上
+	 *
+	 * @param {Object}
+	 *            iframes 单个 iframe 元素 / 数组 / NodeList / HTMLCollection /
+	 *            jQuery 对象 / 选择器字符串；非 IFRAME 节点会忽略
+	 * @param {Function}
+	 *            cb 可选，高度变化回调，参数为(iframeDom, height)；
+	 *            注册时若 iframe 可见会立即回调一次。同一 iframe 重复注册时，
+	 *            新 cb 会替换旧 cb，并以当前高度补一次回调（传同一个函数不会重复回调）
+	 * @example
+	 *            EWA.UI.Iframe.autoHeight($('#box').find('iframe'), function(f, h) {
+	 *                console.log(f.id, h);
+	 *            });
+	 */
+	EWA.UI.Iframe.autoHeight = function(iframes, cb) {
+		var list = toList(iframes);
+		for (var i = 0; i < list.length; i++) {
+			var o = list[i];
+			if (!o || !o.tagName || o.tagName.toUpperCase() != 'IFRAME') {
+				continue;
+			}
+			// 同一个 iframe 重复注册时只更新回调，避免重复登记和多个定时器
+			var item = null;
+			for (var k = 0; k < items.length; k++) {
+				if (items[k].iframe == o) {
+					item = items[k];
+					break;
+				}
+			}
+			if (!item) {
+				item = {
+					iframe : o,
+					cb : null,
+					height : -1,
+					notified : false,
+					visible : false
+				};
+				items.push(item);
+			}
+			if (typeof cb == 'function' && cb !== item.cb) {
+				item.cb = cb;
+				item.notified = false; // 新回调需要补一次当前高度
+			}
+			// 注册后立即测一次，不用等第一个 500ms 周期
+			update(item);
+		}
+		if (items.length > 0 && !timer) {
+			timer = setInterval(tick, INTERVAL);
+		}
+	};
+	/**
+	 * 停止监控
+	 *
+	 * @param {Object}
+	 *            iframes 同 autoHeight 的参数；不传则停止全部。
+	 *            传选择器时会在调用时重新查询，元素已被移除时请改传元素引用。
+	 */
+	EWA.UI.Iframe.stop = function(iframes) {
+		if (iframes == null) {
+			items.length = 0;
+		} else {
+			var list = toList(iframes);
+			for (var i = 0; i < list.length; i++) {
+				for (var k = items.length - 1; k >= 0; k--) {
+					if (items[k].iframe == list[i]) {
+						items.splice(k, 1);
+					}
+				}
+			}
+		}
+		if (items.length == 0 && timer) {
+			clearInterval(timer);
+			timer = null;
+		}
+	};
+})();
+/**
  * excel 类
  */
 function EWA_UI_ExcelClass() {
